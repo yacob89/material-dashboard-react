@@ -1,15 +1,35 @@
-import React from "react";
+// React Class
+
+import React, {Component} from 'react';
+import { RegularCard, Table, ItemGrid } from "components";
 import { Grid } from "material-ui";
 
-import { RegularCard, Table, ItemGrid } from "components";
+class TableList extends React.Component {
 
-function TableList({ ...props }) {
-  return (
-    <Grid container>
+  constructor() {
+    super()
+    this.state = {
+      selected: [1],
+    }
+  }
+
+  isSelected = (index) => {
+    return this.state.selected.indexOf(index) !== -1;
+  };
+
+  handleRowSelection = (selectedRows) => {
+    this.setState({
+      selected: selectedRows,
+    });
+  };
+
+  render() {
+    return (
+      <Grid container>
       <ItemGrid xs={12} sm={12} md={12}>
         <RegularCard
-          cardTitle="Simple Table"
-          cardSubtitle="Here is a subtitle for this table"
+          cardTitle="Geojson List"
+          cardSubtitle="Insert <username> here"
           content={
             <Table
               tableHeaderColor="primary"
@@ -60,7 +80,10 @@ function TableList({ ...props }) {
         />
       </ItemGrid>
     </Grid>
-  );
+    );
+  }
 }
+
+<TableList />
 
 export default TableList;

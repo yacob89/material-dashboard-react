@@ -13,6 +13,7 @@ import {
   LibraryBooks,
   BubbleChart,
   LocationOn,
+  FileUpload,
   Notifications
 } from "material-ui-icons";
 import Upload from "../views/Upload/Upload";
@@ -64,7 +65,7 @@ const appRoutes = [
     path: "/upload",
     sidebarName: "Upload",
     navbarName: "Upload",
-    icon: LocationOn,
+    icon: FileUpload,
     component: Upload
   },
   {

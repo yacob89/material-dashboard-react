@@ -15,6 +15,7 @@ import {
   LocationOn,
   Notifications
 } from "material-ui-icons";
+import Upload from "../views/Upload/Upload";
 
 const appRoutes = [
   {
@@ -58,6 +59,13 @@ const appRoutes = [
     navbarName: "Map",
     icon: LocationOn,
     component: Maps
+  },
+  {
+    path: "/upload",
+    sidebarName: "Upload",
+    navbarName: "Upload",
+    icon: LocationOn,
+    component: Upload
   },
   {
     path: "/notifications",

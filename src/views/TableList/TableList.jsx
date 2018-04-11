@@ -13,6 +13,19 @@ class TableList extends React.Component {
     }
   }
 
+  componentDidMount(){
+    const dUrl = "http://192.168.1.7:7555/getUser";
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (xhttp.readyState == 4 && xhttp.status == 200) {
+        console.log(xhttp.responseText);
+      }
+    };
+    xhttp.open("GET", dUrl, true);
+    xhttp.send();
+  }
+
   isSelected = (index) => {
     return this.state.selected.indexOf(index) !== -1;
   };

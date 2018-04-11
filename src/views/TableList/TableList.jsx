@@ -3,18 +3,20 @@
 import React, {Component} from 'react';
 import { RegularCard, Table, ItemGrid } from "components";
 import { Grid } from "material-ui";
+import axios from 'axios';
 
 class TableList extends React.Component {
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       selected: [1],
+      persons: []
     }
   }
 
   componentDidMount(){
-    const dUrl = "http://192.168.1.7:7555/getUser";
+    /*const dUrl = "http://192.168.1.7:7555/getUser";
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
@@ -23,7 +25,14 @@ class TableList extends React.Component {
       }
     };
     xhttp.open("GET", dUrl, true);
-    xhttp.send();
+    xhttp.send();*/
+
+    axios.get(`http://192.168.1.5:7555/getUser`)
+      .then(res => {
+        const persons = res.data;
+        this.setState({ persons });
+        console.log("Orang", persons);
+      })
   }
 
   isSelected = (index) => {
@@ -39,10 +48,13 @@ class TableList extends React.Component {
   render() {
     return (
       <Grid container>
+      <ul>
+        { this.state.persons.map(person => <li>{person.username}</li>)}
+      </ul>
       <ItemGrid xs={12} sm={12} md={12}>
         <RegularCard
           cardTitle="Geojson List"
-          cardSubtitle="Insert <username> here"
+          cardSubtitle="Geojson List"
           content={
             <Table
               tableHeaderColor="primary"

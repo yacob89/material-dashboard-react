@@ -31,7 +31,14 @@ class TableList extends React.Component {
       .then(res => {
         const persons = res.data;
         this.setState({ persons });
-        console.log("Orang", persons);
+
+        const converted = Object.keys(persons).map(function(key) {
+          var person = persons[key];
+          person.name = key;
+          return person;
+        });
+
+        console.log("Orang", converted);
       })
   }
 

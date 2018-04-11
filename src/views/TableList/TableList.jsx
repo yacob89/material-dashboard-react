@@ -5,6 +5,8 @@ import { RegularCard, Table, ItemGrid } from "components";
 import { Grid } from "material-ui";
 import axios from 'axios';
 
+const JsonTable = require('ts-react-json-table');
+
 class TableList extends React.Component {
 
   constructor(props) {
@@ -16,17 +18,6 @@ class TableList extends React.Component {
   }
 
   componentDidMount(){
-    /*const dUrl = "http://192.168.1.7:7555/getUser";
-
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-      if (xhttp.readyState == 4 && xhttp.status == 200) {
-        console.log(xhttp.responseText);
-      }
-    };
-    xhttp.open("GET", dUrl, true);
-    xhttp.send();*/
-
     axios.get(`http://192.168.1.5:7555/getUser`)
       .then(res => {
         const persons = res.data;
@@ -63,18 +54,7 @@ class TableList extends React.Component {
           cardTitle="Geojson List"
           cardSubtitle="Geojson List"
           content={
-            <Table
-              tableHeaderColor="primary"
-              tableHead={["Name", "Country", "City", "Salary"]}
-              tableData={[
-                ["Dakota Rice", "Niger", "Oud-Turnhout", "$36,738"],
-                ["Minerva Hooper", "Curaçao", "Sinaai-Waas", "$23,789"],
-                ["Sage Rodriguez", "Netherlands", "Baileux", "$56,142"],
-                ["Philip Chaney", "Korea, South", "Overland Park", "$38,735"],
-                ["Doris Greene", "Malawi", "Feldkirchen in Kärnten", "$63,542"],
-                ["Mason Porter", "Chile", "Gloucester", "$78,615"]
-              ]}
-            />
+            <JsonTable rows = {this.state.persons} />
           }
         />
       </ItemGrid>

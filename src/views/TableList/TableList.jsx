@@ -6,6 +6,14 @@ import { Grid } from "material-ui";
 import axios from 'axios';
 
 const JsonTable = require('ts-react-json-table');
+var columns = [
+  'username',
+  'created_at',
+  'updated_at'
+];
+var excludeColumns = [
+  'encrypted_password'
+];
 
 class TableList extends React.Component {
 
@@ -46,15 +54,12 @@ class TableList extends React.Component {
   render() {
     return (
       <Grid container>
-      <ul>
-        { this.state.persons.map(person => <li>{person.username}</li>)}
-      </ul>
       <ItemGrid xs={12} sm={12} md={12}>
         <RegularCard
           cardTitle="Geojson List"
           cardSubtitle="Geojson List"
           content={
-            <JsonTable rows = {this.state.persons} />
+            <JsonTable theadClassName={'thead-light'} className="table table-sm table-bordered" rows = {this.state.persons} excludeColumns ={excludeColumns} columns={columns} />
           }
         />
       </ItemGrid>

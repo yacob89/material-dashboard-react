@@ -1,56 +1,49 @@
-import React from "react";
-import Button from 'material-ui/Button';
-import Dropzone from 'react-dropzone';
-import {
-    RegularCard
-  } from "components";
+import React from 'react'
+import axios, { post } from 'axios';
 
 class Upload extends React.Component {
-    constructor() {
-      super()
-      this.state = {
-        accepted: [],
-        rejected: []
-      }
-    }
-  
-    render() {
-      return (
-        <RegularCard
-        cardTitle="Upload your geospatial files"
-        cardSubtitle="Only .geojson will be accepted"
-        content={
-            <section>
-          <div className="dropzone">
-            <Dropzone
-              accept="application/geojson"
-              onDrop={(accepted, rejected) => { this.setState({ accepted, rejected }); }}
-            >
-              <p>Try dropping some files here, or click to select files to upload.</p>
-              <p>Only *.jpeg and *.png images will be accepted</p>
-            </Dropzone>
-          </div>
-          <aside>
-            <h2>Accepted files</h2>
-            <ul>
-              {
-                this.state.accepted.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-              }
-            </ul>
-            <h2>Rejected files</h2>
-            <ul>
-              {
-                this.state.rejected.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-              }
-            </ul>
-          </aside>
-        </section>
-        }/>
-        
-      );
-    }
-  }
-  
-  <Upload />
 
-export default Upload;
+  constructor(props) {
+    super(props);
+    this.state ={
+      file:null
+    }
+    this.onFormSubmit = this.onFormSubmit.bind(this)
+    this.onChange = this.onChange.bind(this)
+    this.fileUpload = this.fileUpload.bind(this)
+  }
+  onFormSubmit(e){
+    e.preventDefault() // Stop form submit
+    this.fileUpload(this.state.file).then((response)=>{
+      console.log(response.data);
+    })
+  }
+  onChange(e) {
+    this.setState({file:e.target.files[0]})
+  }
+  fileUpload(file){
+    const url = 'http://192.168.1.6:7555/upload';
+    const formData = new FormData();
+    formData.append('file',file)
+    const config = {
+        headers: {
+            'content-type': 'multipart/form-data'
+        }
+    }
+    return  post(url, formData,config)
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.onFormSubmit}>
+        <h1>File Upload</h1>
+        <input type="file" onChange={this.onChange} />
+        <button type="submit">Upload</button>
+      </form>
+   )
+  }
+}
+
+
+
+export default Upload

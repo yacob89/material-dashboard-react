@@ -56,8 +56,8 @@ class TableList extends React.Component {
       <Grid container>
       <ItemGrid xs={12} sm={12} md={12}>
         <RegularCard
-          cardTitle="Geojson List"
-          cardSubtitle="Geojson List"
+          cardTitle="User List"
+          cardSubtitle="User List"
           content={
             <JsonTable theadClassName={'thead-light'} className="table table-sm table-bordered" rows = {this.state.persons} excludeColumns ={excludeColumns} columns={columns} />
           }

@@ -1,36 +1,52 @@
-import React from 'react'
-import axios, { post } from 'axios';
+import React from "react";
+import axios, { post } from "axios";
 
 class Upload extends React.Component {
-
   constructor(props) {
     super(props);
-    this.state ={
-      file:null
-    }
-    this.onFormSubmit = this.onFormSubmit.bind(this)
-    this.onChange = this.onChange.bind(this)
-    this.fileUpload = this.fileUpload.bind(this)
+    this.state = {
+      file: null
+    };
+    this.onFormSubmit = this.onFormSubmit.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.fileUpload = this.fileUpload.bind(this);
   }
-  onFormSubmit(e){
-    e.preventDefault() // Stop form submit
-    this.fileUpload(this.state.file).then((response)=>{
+  onFormSubmit(e) {
+    e.preventDefault(); // Stop form submit
+    this.fileUpload(this.state.file).then(response => {
       console.log(response.data);
-    })
+    });
   }
   onChange(e) {
-    this.setState({file:e.target.files[0]})
+    this.setState({
+      file: e.target.files[0]
+    });
   }
-  fileUpload(file){
-    const url = 'http://192.168.1.6:7555/upload';
+  fileUpload(file) {
+    const url = "http://192.168.1.2:7555/upload";
     const formData = new FormData();
-    formData.append('file',file)
+    console.log("Nama filenya adalah: ", file.name);
+    formData.append("file", file);
     const config = {
-        headers: {
-            'content-type': 'multipart/form-data'
-        }
-    }
-    return  post(url, formData,config)
+      headers: {
+        "content-type": "multipart/form-data"
+      }
+    };
+
+    // Update to database
+    axios
+      .post("http://192.168.1.2:7555/uploadfile", {
+        username: "yacob",
+        filename: file.name
+      })
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+    return post(url, formData, config);
   }
 
   render() {
@@ -40,10 +56,8 @@ class Upload extends React.Component {
         <input type="file" onChange={this.onChange} />
         <button type="submit">Upload</button>
       </form>
-   )
+    );
   }
 }
 
-
-
-export default Upload
+export default Upload;

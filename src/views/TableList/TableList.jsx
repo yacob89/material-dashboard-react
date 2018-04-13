@@ -6,15 +6,17 @@ import { Grid } from "material-ui";
 import axios from "axios";
 
 const JsonTable = require("ts-react-json-table");
-var columns = ["username", "created_at", "updated_at"];
-var excludeColumns = ["encrypted_password"];
+var userColumns = ["username", "created_at", "updated_at"];
+var userExcludeColumns = ["encrypted_password"];
+var layerColumns = ["username", "filename", "created_at", "updated_at"];
 
 class TableList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       selected: [1],
-      persons: []
+      persons: [],
+      layers: []
     };
   }
 
@@ -29,7 +31,20 @@ class TableList extends React.Component {
         return person;
       });
 
-      console.log("Orang", converted);
+      console.log("Orang ", converted);
+    });
+
+    axios.get(`http://192.168.1.2:7555/getUpload`).then(res => {
+      const layers = res.data;
+      this.setState({ layers });
+
+      const converted = Object.keys(layers).map(function(key) {
+        var layer = layers[key];
+        layer.name = key;
+        return layer;
+      });
+
+      console.log("Layers ", converted);
     });
   }
 
@@ -55,8 +70,8 @@ class TableList extends React.Component {
                 theadClassName={"thead-light"}
                 className="table table-sm table-bordered"
                 rows={this.state.persons}
-                excludeColumns={excludeColumns}
-                columns={columns}
+                excludeColumns={userExcludeColumns}
+                columns={userColumns}
               />
             }
           />
@@ -64,32 +79,14 @@ class TableList extends React.Component {
         <ItemGrid xs={12} sm={12} md={12}>
           <RegularCard
             plainCard
-            cardTitle="Table on Plain Background"
-            cardSubtitle="Here is a subtitle for this table"
+            cardTitle="Layers"
+            cardSubtitle="Uploaded by user"
             content={
-              <Table
-                tableHeaderColor="primary"
-                tableHead={["ID", "Name", "Country", "City", "Salary"]}
-                tableData={[
-                  ["1", "Dakota Rice", "$36,738", "Niger", "Oud-Turnhout"],
-                  ["2", "Minerva Hooper", "$23,789", "Curaçao", "Sinaai-Waas"],
-                  ["3", "Sage Rodriguez", "$56,142", "Netherlands", "Baileux"],
-                  [
-                    "4",
-                    "Philip Chaney",
-                    "$38,735",
-                    "Korea, South",
-                    "Overland Park"
-                  ],
-                  [
-                    "5",
-                    "Doris Greene",
-                    "$63,542",
-                    "Malawi",
-                    "Feldkirchen in Kärnten"
-                  ],
-                  ["6", "Mason Porter", "$78,615", "Chile", "Gloucester"]
-                ]}
+              <JsonTable
+                theadClassName={"thead-light"}
+                className="table table-sm table-bordered"
+                rows={this.state.layers}
+                columns={layerColumns}
               />
             }
           />

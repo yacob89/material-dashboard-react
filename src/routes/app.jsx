@@ -1,6 +1,7 @@
 import DashboardPage from "views/Dashboard/Dashboard.jsx";
 import UserProfile from "views/UserProfile/UserProfile.jsx";
 import TableList from "views/TableList/TableList.jsx";
+import UploadList from "views/UploadList/UploadList.jsx";
 import Typography from "views/Typography/Typography.jsx";
 import Icons from "views/Icons/Icons.jsx";
 import Maps from "views/Maps/Maps.jsx";
@@ -39,6 +40,13 @@ const appRoutes = [
     navbarName: "Table List",
     icon: ContentPaste,
     component: TableList
+  },
+  {
+    path: "/uploadlist",
+    sidebarName: "Upload List",
+    navbarName: "Upload List",
+    icon: ContentPaste,
+    component: UploadList
   },
   {
     path: "/typography",

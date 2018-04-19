@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import { RegularCard, Table, ItemGrid } from "components";
 import { Grid } from "material-ui";
 import axios from "axios";
+import auth from 'utils/auth';
 
 const JsonTable = require("ts-react-json-table");
 var userColumns = ["username", "created_at", "updated_at"];
@@ -20,6 +21,7 @@ class TableList extends React.Component {
   }
 
   componentDidMount() {
+    console.log("User info: ", auth.getUserInfo().username);
     axios.get(`http://192.168.1.2:7555/getUser`).then(res => {
       const persons = res.data;
       this.setState({ persons });

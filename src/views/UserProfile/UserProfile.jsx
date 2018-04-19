@@ -10,6 +10,7 @@ import {
 } from "components";
 
 import avatar from "assets/img/faces/marc.jpg";
+import auth from 'utils/auth';
 
 function UserProfile({ ...props }) {
   return (
@@ -18,7 +19,7 @@ function UserProfile({ ...props }) {
         <ItemGrid xs={12} sm={12} md={8}>
           <RegularCard
             cardTitle="Edit Profile"
-            cardSubtitle="Complete your profile"
+            cardSubtitle={auth.getToken()}
             content={
               <div>
                 <Grid container>

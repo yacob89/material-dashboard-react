@@ -1,5 +1,10 @@
 import React from "react";
 import axios, { post } from "axios";
+import auth from 'utils/auth';
+
+const strapi_url = 'http://192.168.1.2:1337';
+const backend_url = 'http://192.168.1.2:7555';
+const server_url = 'http://192.168.1.2:7555/geojson/';
 
 class Upload extends React.Component {
   constructor(props) {
@@ -11,11 +16,30 @@ class Upload extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.fileUpload = this.fileUpload.bind(this);
   }
+  componentDidMount(){
+    console.log("Pengguna saat ini: ", auth.getUserInfo().username);
+    axios.get('http://192.168.1.2:1337/fileuploads').then(res => {
+      const persons = res.data;
+      this.setState({ persons });
+
+      const converted = Object.keys(persons).map(function(key) {
+        var person = persons[key];
+        person.name = key;
+        return person;
+      });
+
+      console.log("FILE UPLOADS: ", converted);
+      console.log("FILE PATH: ", converted[0]);
+      //console.log("FILE NAME: ", converted[0].filename);
+      //console.log("FILE ALAMAT: ", converted[0].media_uploaded.url);
+    });
+  }
   onFormSubmit(e) {
     e.preventDefault(); // Stop form submit
     this.fileUpload(this.state.file).then(response => {
       console.log(response.data);
     });
+    //this.fileUpload(this.state.file);
   }
   onChange(e) {
     this.setState({
@@ -23,10 +47,11 @@ class Upload extends React.Component {
     });
   }
   fileUpload(file) {
-    const url = "http://192.168.1.2:7555/upload";
+    const url = backend_url + "/upload";
     const formData = new FormData();
-    console.log("Nama filenya adalah: ", file.name);
     formData.append("file", file);
+    formData.append("username", auth.getUserInfo().username);
+    console.log("Nama filenya adalah: ", formData);
     const config = {
       headers: {
         "content-type": "multipart/form-data"
@@ -34,10 +59,13 @@ class Upload extends React.Component {
     };
 
     // Update to database
+    console.log("Kondisi file: ",this.state.file);
     axios
-      .post("http://192.168.1.2:7555/uploadfile", {
-        username: "yacob",
-        filename: file.name
+      .post("http://192.168.1.2:1337/fileuploads", {
+        username: auth.getUserInfo().username,
+        filename: file.name,
+        media_uploaded: this.state.file,
+        server_url: server_url+file.name
       })
       .then(function(response) {
         console.log(response);

@@ -8,11 +8,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { findIndex, get, map, replace, set } from 'lodash';
 import { Link } from 'react-router-dom';
+import {
+  RegularCard,
+  Table,
+  Button,
+  ItemGrid
+} from "components";
 
-import Button from 'components/Button';
 import FormDivider from 'components/FormDivider';
 import Input from 'components/InputsIndex';
-import Logo from 'assets/logo_strapi.png';
+import Logo from 'assets/img/mapidlogo.png';
 import SocialLink from 'components/SocialLink';
 
 // Utils
@@ -141,7 +146,7 @@ class AuthPage extends React.Component {
         ? { marginTop: '3.2rem' }
         : { marginTop: '.9rem' };
     const inputs = get(form, ['views', this.props.match.params.authType], []);
-    const providers = ['facebook', 'github', 'google', 'twitter']; // To remove a provider from the list just delete it from this array...
+    const providers = ['facebook', 'google']; // To remove a provider from the list just delete it from this array...
 
     return (
       <div className="authPage">
@@ -198,10 +203,10 @@ class AuthPage extends React.Component {
                   <div className="col-md-12 buttonContainer">
                     <Button
                       label="Submit"
-                      style={{ width: '100%' }}
-                      primary
+                      color="primary"
                       type="submit"
-                    />
+                    >Submit
+                    </Button>
                   </div>
                 </div>
               </form>

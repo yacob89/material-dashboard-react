@@ -22,11 +22,7 @@ class Upload extends React.Component {
   async componentDidMount(){
     console.log("Pengguna saat ini: ", auth.getToken());
 
-    /*const requestURL = 'http://192.168.1.2:1337/user?username='+auth.getUserInfo().username;
-
-    const userinfo = await request(requestURL, { method: 'GET' });
-    //this.setState({ products });
-    console.log("User Info: ", userinfo);*/
+    // This is Example using AXIOS with custom header = User Token Authentication. Good Example!
 
     const token = auth.getToken();
 
@@ -69,20 +65,24 @@ class Upload extends React.Component {
       headers: {
         "content-type": "multipart/form-data"
       },
-      body:{
+      body: {
         "username": auth.getUserInfo().username
       }
     };
 
     // Update to database
     console.log("Kondisi file: ",this.state.file);
+    const token = auth.getToken();
+    var post_config = {
+      headers: {Authorization: `Bearer ${token}`}
+    };
     axios
       .post("http://192.168.1.2:1337/fileuploads", {
         username: auth.getUserInfo().username,
         filename: file.name,
         media_uploaded: this.state.file,
         server_url: server_url+file.name
-      })
+      },post_config)
       .then(function(response) {
         console.log(response);
       })

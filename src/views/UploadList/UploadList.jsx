@@ -4,7 +4,10 @@ import React, { Component } from "react";
 import { RegularCard, Table, ItemGrid } from "components";
 import { Grid } from "material-ui";
 import axios from "axios";
+
+// Utils
 import auth from 'utils/auth';
+import request from 'utils/request';
 
 const JsonTable = require("ts-react-json-table");
 var userColumns = ["username", "created_at", "updated_at"];
@@ -20,8 +23,15 @@ class UploadList extends React.Component {
     };
   }
 
-  componentDidMount() {
-    axios.get('http://192.168.1.2:1337/fileuploads?username='+auth.getUserInfo().username).then(res => {
+  async componentDidMount() {
+    const requestURL = 'http://192.168.1.2:1337/fileuploads?username='+auth.getUserInfo().username;
+
+    const fileuploadsinfo = await request(requestURL, { method: 'GET' });
+    const layers = fileuploadsinfo;
+    this.setState({ layers });
+    console.log("Uploads Info: ", fileuploadsinfo);
+
+    /*axios.get('http://192.168.1.2:1337/fileuploads?username='+auth.getUserInfo().username).then(res => {
       const layers = res.data;
       this.setState({ layers });
 
@@ -32,7 +42,7 @@ class UploadList extends React.Component {
       });
 
       console.log("Layers ", converted);
-    });
+    });*/
   }
 
   isSelected = index => {

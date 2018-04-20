@@ -1,6 +1,9 @@
 import React from "react";
 import axios, { post } from "axios";
+
+// Utils
 import auth from 'utils/auth';
+import request from 'utils/request';
 
 const strapi_url = 'http://192.168.1.2:1337';
 const backend_url = 'http://192.168.1.2:7555';
@@ -16,9 +19,22 @@ class Upload extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.fileUpload = this.fileUpload.bind(this);
   }
-  componentDidMount(){
-    console.log("Pengguna saat ini: ", auth.getUserInfo().username);
-    axios.get('http://192.168.1.2:1337/fileuploads?username='+auth.getUserInfo().username).then(res => {
+  async componentDidMount(){
+    console.log("Pengguna saat ini: ", auth.getToken());
+
+    /*const requestURL = 'http://192.168.1.2:1337/user?username='+auth.getUserInfo().username;
+
+    const userinfo = await request(requestURL, { method: 'GET' });
+    //this.setState({ products });
+    console.log("User Info: ", userinfo);*/
+
+    const token = auth.getToken();
+
+    var config = {
+      headers: {Authorization: `Bearer ${token}`}
+    };
+
+    axios.get('http://192.168.1.2:1337/fileuploads?username='+auth.getUserInfo().username,config).then(res => {
       const persons = res.data;
       this.setState({ persons });
 
@@ -27,11 +43,7 @@ class Upload extends React.Component {
         person.name = key;
         return person;
       });
-
-      console.log("FILE UPLOADS: ", converted);
-      console.log("FILE PATH: ", converted[0]);
-      //console.log("FILE NAME: ", converted[0].filename);
-      //console.log("FILE ALAMAT: ", converted[0].media_uploaded.url);
+      console.log("Uploads ", converted);
     });
   }
   onFormSubmit(e) {

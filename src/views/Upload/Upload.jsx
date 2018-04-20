@@ -18,7 +18,7 @@ class Upload extends React.Component {
   }
   componentDidMount(){
     console.log("Pengguna saat ini: ", auth.getUserInfo().username);
-    axios.get('http://192.168.1.2:1337/fileuploads').then(res => {
+    axios.get('http://192.168.1.2:1337/fileuploads?username='+auth.getUserInfo().username).then(res => {
       const persons = res.data;
       this.setState({ persons });
 
@@ -38,6 +38,7 @@ class Upload extends React.Component {
     e.preventDefault(); // Stop form submit
     this.fileUpload(this.state.file).then(response => {
       console.log(response.data);
+      alert("Upload success!");
     });
     //this.fileUpload(this.state.file);
   }
@@ -55,6 +56,9 @@ class Upload extends React.Component {
     const config = {
       headers: {
         "content-type": "multipart/form-data"
+      },
+      body:{
+        "username": auth.getUserInfo().username
       }
     };
 

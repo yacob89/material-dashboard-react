@@ -1,5 +1,7 @@
 import React from "react";
 import { Grid, InputLabel } from "material-ui";
+import axios from "axios";
+import auth from 'utils/auth';
 
 import {
   ProfileCard,
@@ -10,11 +12,45 @@ import {
 } from "components";
 
 import avatar from "assets/img/faces/marc.jpg";
-import auth from 'utils/auth';
 
-function UserProfile({ ...props }) {
-  return (
-    <div>
+class UserProfile extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selected: [1],
+      layers: []
+    };
+  }
+
+  componentDidMount() {
+    console.log("User Info", auth.getUserInfo());
+    axios.get('http://192.168.1.2:1337/user?username='+auth.getUserInfo().username).then(res => {
+      const layers = res.data;
+      this.setState({ layers });
+
+      const converted = Object.keys(layers).map(function(key) {
+        var layer = layers[key];
+        layer.name = key;
+        return layer;
+      });
+
+      console.log("Layers ", converted);
+    });
+  }
+
+  isSelected = index => {
+    return this.state.selected.indexOf(index) !== -1;
+  };
+
+  handleRowSelection = selectedRows => {
+    this.setState({
+      selected: selectedRows
+    });
+  };
+
+  render() {
+    return (
+      <div>
       <Grid container>
         <ItemGrid xs={12} sm={12} md={8}>
           <RegularCard
@@ -129,9 +165,9 @@ function UserProfile({ ...props }) {
         <ItemGrid xs={12} sm={12} md={4}>
           <ProfileCard
             avatar={avatar}
-            subtitle="CEO / CO-FOUNDER"
-            title="Alec Thompson"
-            description="Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is..."
+            subtitle={auth.getUserInfo().role.name}
+            title={auth.getUserInfo().username}
+            description={auth.getUserInfo().email}
             footer={
               <Button color="primary" round>
                 Follow
@@ -141,7 +177,10 @@ function UserProfile({ ...props }) {
         </ItemGrid>
       </Grid>
     </div>
-  );
+    );
+  }
 }
+
+<UserProfile />;
 
 export default UserProfile;

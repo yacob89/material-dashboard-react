@@ -83,7 +83,7 @@ const appRoutes = [
     icon: Notifications,
     component: NotificationsPage
   },*/
-  { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
+  { redirect: true, path: "/", to: "/user", navbarName: "Redirect" }
 ];
 
 export default appRoutes;

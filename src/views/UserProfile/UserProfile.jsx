@@ -51,6 +51,12 @@ class UserProfile extends React.Component {
   render() {
     return (
       <div>
+      <Button color="primary" onClick={() => {
+        auth.clearAppStorage();
+        this.props.history.push('/auth/login');
+      }} round>
+                Logout
+              </Button>
       <Grid container>
         <ItemGrid xs={12} sm={12} md={8}>
           <RegularCard

@@ -9,10 +9,7 @@ import PropTypes from 'prop-types';
 import { findIndex, get, map, replace, set } from 'lodash';
 import { Link } from 'react-router-dom';
 import {
-  RegularCard,
-  Table,
-  Button,
-  ItemGrid
+  Button
 } from "components";
 
 import FormDivider from 'components/FormDivider';

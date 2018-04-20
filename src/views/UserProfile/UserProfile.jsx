@@ -2,6 +2,7 @@ import React from "react";
 import { Grid, InputLabel } from "material-ui";
 import axios from "axios";
 import auth from 'utils/auth';
+import request from 'utils/request';
 
 import {
   ProfileCard,
@@ -22,9 +23,17 @@ class UserProfile extends React.Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     console.log("User Info", auth.getUserInfo());
-    axios.get('http://192.168.1.2:1337/user?username='+auth.getUserInfo().username).then(res => {
+
+    const requestURL = 'http://192.168.1.2:1337/user?username='+auth.getUserInfo().username;
+
+    const userinfo = await request(requestURL, { method: 'GET' });
+    //this.setState({ products });
+    console.log("User Info: ", userinfo);
+
+
+    /*axios.get('http://192.168.1.2:1337/user?username='+auth.getUserInfo().username).then(res => {
       const layers = res.data;
       this.setState({ layers });
 
@@ -35,7 +44,7 @@ class UserProfile extends React.Component {
       });
 
       console.log("Layers ", converted);
-    });
+    });*/
   }
 
   isSelected = index => {

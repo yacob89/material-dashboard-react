@@ -22,7 +22,7 @@ class TableList extends React.Component {
 
   componentDidMount() {
     console.log("User info: ", auth.getUserInfo().username);
-    axios.get(`http://192.168.1.2:7555/getUser`).then(res => {
+    axios.get(`http://192.168.1.5:7555/getUser`).then(res => {
       const persons = res.data;
       this.setState({ persons });
 

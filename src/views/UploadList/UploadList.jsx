@@ -24,7 +24,7 @@ class UploadList extends React.Component {
   }
 
   async componentDidMount() {
-    const requestURL = 'http://192.168.1.2:1337/fileuploads?username='+auth.getUserInfo().username;
+    const requestURL = 'http://192.168.1.4:1337/fileuploads?username='+auth.getUserInfo().username;
 
     const fileuploadsinfo = await request(requestURL, { method: 'GET' });
     const layers = fileuploadsinfo;

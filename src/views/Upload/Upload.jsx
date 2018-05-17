@@ -5,9 +5,9 @@ import axios, { post } from "axios";
 import auth from 'utils/auth';
 import request from 'utils/request';
 
-const strapi_url = 'http://192.168.1.2:1337';
-const backend_url = 'http://192.168.1.2:7555';
-const server_url = 'http://192.168.1.2:7555/geojson/';
+const strapi_url = 'http://192.168.1.4:7555';
+const backend_url = 'http://192.168.1.4:7555';
+const server_url = 'http://192.168.1.4:7555/geojson/';
 
 class Upload extends React.Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class Upload extends React.Component {
       headers: {Authorization: `Bearer ${token}`}
     };
 
-    axios.get('http://192.168.1.2:1337/fileuploads?username='+auth.getUserInfo().username,config).then(res => {
+    axios.get('http://192.168.1.4:1337/fileuploads?username='+auth.getUserInfo().username,config).then(res => {
       const persons = res.data;
       this.setState({ persons });
 
@@ -45,10 +45,10 @@ class Upload extends React.Component {
   onFormSubmit(e) {
     e.preventDefault(); // Stop form submit
     this.fileUpload(this.state.file).then(response => {
-      console.log(response.data);
+      console.log("Respon dari sebuah data: ", response.data);
       alert("Upload success!");
     });
-    //this.fileUpload(this.state.file);
+        
   }
   onChange(e) {
     this.setState({
@@ -56,28 +56,36 @@ class Upload extends React.Component {
     });
   }
   fileUpload(file) {
+    var FormData = require('form-data');
+    const token = auth.getToken();
     const url = backend_url + "/upload";
-    const formData = new FormData();
+
+    var formData = new FormData();
     formData.append("file", file);
     formData.append("username", auth.getUserInfo().username);
+    formData.append("token", auth.getToken());
     console.log("Nama filenya adalah: ", formData);
-    const config = {
+    var config = {
       headers: {
         "content-type": "multipart/form-data"
       },
-      body: {
-        "username": auth.getUserInfo().username
-      }
+      body: {"username":auth.getUserInfo().username}
     };
 
-    // Update to database
-    console.log("Kondisi file: ",this.state.file);
-    const token = auth.getToken();
-    var post_config = {
+    config.body = {"user_name":auth.getUserInfo().username};
+    //config.body.append("user_name", auth.getUserInfo().username);
+
+    console.log("Requestnya: ",config);
+    console.log("Kondisi config: ",config);
+
+    ////////////////////////////////////////////////////////
+    
+    ////////////////////////////////////////////////////////
+    /*var post_config = {
       headers: {Authorization: `Bearer ${token}`}
     };
     axios
-      .post("http://192.168.1.2:1337/fileuploads", {
+      .post("http://192.168.1.4:1337/fileuploads", {
         username: auth.getUserInfo().username,
         filename: file.name,
         media_uploaded: this.state.file,
@@ -88,7 +96,7 @@ class Upload extends React.Component {
       })
       .catch(function(error) {
         console.log(error);
-      });
+      });*/
 
     return post(url, formData, config);
   }
@@ -96,7 +104,7 @@ class Upload extends React.Component {
   render() {
     return (
       <form onSubmit={this.onFormSubmit}>
-        <h1>File Upload</h1>
+        <h1>File Uploadss</h1>
         <input type="file" onChange={this.onChange} />
         <button type="submit">Upload</button>
       </form>

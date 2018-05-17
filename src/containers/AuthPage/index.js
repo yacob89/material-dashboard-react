@@ -24,6 +24,8 @@ import request from 'utils/request';
 import form from './forms.json';
 import './styles.css';
 
+const server_url = 'http://192.168.1.4:1337';
+
 class AuthPage extends React.Component {
   state = { value: {}, errors: [], didCheckErrors: false };
 
@@ -42,16 +44,16 @@ class AuthPage extends React.Component {
 
     switch (this.props.match.params.authType) {
       case 'login':
-        requestURL = 'http://localhost:1337/auth/local';
+        requestURL = server_url+'/auth/local';
         break;
       case 'register':
-        requestURL = 'http://localhost:1337/auth/local/register';
+        requestURL = server_url+'/auth/local/register';
         break;
       case 'reset-password':
-        requestURL = 'http://localhost:1337/auth/reset-password';
+        requestURL = server_url+'/auth/reset-password';
         break;
       case 'forgot-password':
-        requestURL = 'http://localhost:1337/auth/forgot-password';
+        requestURL = server_url+'/auth/forgot-password';
         break;
       default:
     }
@@ -78,7 +80,7 @@ class AuthPage extends React.Component {
 
     // This line is required for the callback url to redirect your user to app
     if (this.props.match.params.authType === 'forgot-password') {
-      set(body, 'url', 'http://localhost:3000/auth/reset-password');
+      set(body, 'url', 'http://192.168.1.4:3000/auth/reset-password');
     }
 
     request(requestURL, { method: 'POST', body: this.state.value })

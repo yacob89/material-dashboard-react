@@ -26,11 +26,11 @@ class UserProfile extends React.Component {
   async componentDidMount() {
     console.log("User Info", auth.getUserInfo());
 
-    const requestURL = 'http://192.168.1.2:1337/user?username='+auth.getUserInfo().username;
+    /*const requestURL = 'http://192.168.1.2:1337/user?username='+auth.getUserInfo().username;
 
     const userinfo = await request(requestURL, { method: 'GET' });
     //this.setState({ products });
-    console.log("User Info: ", userinfo);
+    console.log("User Info: ", userinfo);*/
 
 
     /*axios.get('http://192.168.1.2:1337/user?username='+auth.getUserInfo().username).then(res => {

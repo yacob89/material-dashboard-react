@@ -25,26 +25,6 @@ class UserProfile extends React.Component {
 
   async componentDidMount() {
     console.log("User Info", auth.getUserInfo());
-
-    /*const requestURL = 'http://192.168.1.2:1337/user?username='+auth.getUserInfo().username;
-
-    const userinfo = await request(requestURL, { method: 'GET' });
-    //this.setState({ products });
-    console.log("User Info: ", userinfo);*/
-
-
-    /*axios.get('http://192.168.1.2:1337/user?username='+auth.getUserInfo().username).then(res => {
-      const layers = res.data;
-      this.setState({ layers });
-
-      const converted = Object.keys(layers).map(function(key) {
-        var layer = layers[key];
-        layer.name = key;
-        return layer;
-      });
-
-      console.log("Layers ", converted);
-    });*/
   }
 
   isSelected = index => {
@@ -56,6 +36,22 @@ class UserProfile extends React.Component {
       selected: selectedRows
     });
   };
+
+  createFolderOnClick() {
+    // Setelah selesai upload, baru insert data di strapi
+    console.log("User yang akan dibuatkan folder", auth.getUserInfo().username);
+    axios
+      .post("http://192.168.1.4:7555/createfolder", {
+        username: auth.getUserInfo().username
+      })
+      .then(function (response) {
+        console.log(response);
+        console.log("Create Folder Success");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
   render() {
     return (
@@ -184,8 +180,8 @@ class UserProfile extends React.Component {
             title={auth.getUserInfo().username}
             description={auth.getUserInfo().email}
             footer={
-              <Button color="primary" round>
-                Follow
+              <Button color="primary" round onClick={this.createFolderOnClick}>
+                Create Folder
               </Button>
             }
           />

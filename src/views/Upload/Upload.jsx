@@ -1,15 +1,22 @@
 import React from "react";
 import axios, { post } from "axios";
-import Dropzone from 'react-dropzone'
+import Dropzone from 'react-dropzone';
+import {
+  ProfileCard,
+  RegularCard,
+  Button,
+  CustomInput,
+  ItemGrid
+} from "components";
 
 // Utils
 import auth from 'utils/auth';
 import request from 'utils/request';
 var shp = require('gtran-shapefile');
 
-const strapi_url = 'http://192.168.1.11:7555';
-const backend_url = 'http://192.168.1.11:7555';
-const server_url = 'http://192.168.1.11:7555/geojson/';
+const strapi_url = 'http://192.168.1.4:7555';
+const backend_url = 'http://192.168.1.4:7555';
+const server_url = 'http://192.168.1.4:7555/geojson/';
 
 class Upload extends React.Component {
   constructor(props) {
@@ -33,7 +40,7 @@ class Upload extends React.Component {
       headers: {Authorization: `Bearer ${token}`}
     };
 
-    axios.get('http://192.168.1.11:1337/fileuploads?username='+auth.getUserInfo().username,config).then(res => {
+    axios.get('http://192.168.1.4:1337/fileuploads?username='+auth.getUserInfo().username,config).then(res => {
       const persons = res.data;
       this.setState({ persons });
 
@@ -92,10 +99,7 @@ class Upload extends React.Component {
 
     console.log("Requestnya: ",config);
     console.log("Kondisi config: ",config);
-
-    ////////////////////////////////////////////////////////
     
-    ////////////////////////////////////////////////////////
     /*var post_config = {
       headers: {Authorization: `Bearer ${token}`}
     };
@@ -119,7 +123,7 @@ class Upload extends React.Component {
   render() {
     return (
       <form onSubmit={this.onFormSubmit}>
-        <h1>File Upload</h1>
+        <h1>Geojson Upload</h1>
         <section>
           <div className="dropzone">
             <Dropzone multiple={false} onDrop={this.onDrop.bind(this)}>
@@ -135,7 +139,7 @@ class Upload extends React.Component {
           </ul>
           </aside>
         </section>
-        <button type="submit">Upload</button>
+        <Button color="primary" type="submit" round>Upload</Button>
       </form>
     );
   }

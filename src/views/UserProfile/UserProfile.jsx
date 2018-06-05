@@ -47,6 +47,7 @@ class UserProfile extends React.Component {
       .then(function (response) {
         console.log(response);
         console.log("Create Folder Success");
+        alert("Create folder success!");
       })
       .catch(function (error) {
         console.log(error);

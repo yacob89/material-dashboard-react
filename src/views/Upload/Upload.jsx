@@ -8,6 +8,7 @@ import {
   CustomInput,
   ItemGrid
 } from "components";
+import CustomTabs from "components/CustomTabs/CustomTabs.jsx";
 
 // Utils
 import auth from 'utils/auth';
@@ -18,12 +19,20 @@ const strapi_url = 'http://192.168.1.4:7555';
 const backend_url = 'http://192.168.1.4:7555';
 const server_url = 'http://192.168.1.4:7555/geojson/';
 
+const styles = {
+  textCenter: {
+    textAlign: "center"
+  }
+};
+
 class Upload extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       file: null,
-      filesDrop:[]
+      multifile:null,
+      filesDrop:[],
+      multifilesDrop:[]
     };
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -77,6 +86,12 @@ class Upload extends React.Component {
       file:filesDrop[0]
     });
   }
+  onMultipleDrop(multifilesDrop) {
+    this.setState({
+      multifilesDrop,
+      multifile:[]
+    });
+  }
   fileUpload(file) {
     var FormData = require('form-data');
     const token = auth.getToken();
@@ -121,26 +136,78 @@ class Upload extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
-      <form onSubmit={this.onFormSubmit}>
-        <h1>Geojson Upload</h1>
-        <section>
-          <div className="dropzone">
-            <Dropzone multiple={false} onDrop={this.onDrop.bind(this)}>
-              <p>Drop a geojson file here, or click to select files to upload.</p>
-            </Dropzone>
-          </div>
-          <aside>
-            <h2>Accepted file</h2>
-            <ul>
+      <CustomTabs
+          headerColor="primary"
+          tabs={[
             {
-              this.state.filesDrop.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
+              tabName: "Geojson",
+              tabContent: (
+                <form onSubmit={this.onFormSubmit}>
+                  <h1>Geojson Upload</h1>
+                  <section>
+                    <div className="dropzone">
+                      <Dropzone multiple={false} onDrop={this.onDrop.bind(this)}>
+                        <p>Drop a geojson file here, or click to select files to upload.</p>
+                      </Dropzone>
+                    </div>
+                    <aside>
+                      <h2>Accepted file</h2>
+                    <ul>
+                      {
+                        this.state.filesDrop.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
+                      }
+                    </ul>
+                    </aside>
+                 </section>
+                  <Button color="primary" type="submit" round>Upload</Button>
+                </form>
+              )
+            },
+            {
+              tabName: "Shapefile",
+              tabContent: (
+                <form onSubmit={this.onFormSubmit}>
+                  <h1>Shapefile Upload</h1>
+                  <section>
+                    <div className="dropzone">
+                      <Dropzone multiple={true} onDrop={this.onMultipleDrop.bind(this)}>
+                        <p>Drop shp, dbf, and shx file here, or click to select files to upload.</p>
+                      </Dropzone>
+                    </div>
+                    <aside>
+                      <h2>Accepted file</h2>
+                    <ul>
+                      {
+                        this.state.multifilesDrop.map(g => <li key={g.name}>{g.name} - {g.size} bytes</li>)
+                      }
+                    </ul>
+                    </aside>
+                 </section>
+                  <Button color="primary" type="submit" round>Upload</Button>
+                </form>
+              )
+            },
+            {
+              tabName: "Settings",
+              tabContent: (
+                <p>
+                  think that’s a responsibility that I have, to push
+                  possibilities, to show people, this is the level that
+                  things could be at. So when you get something that has
+                  the name Kanye West on it, it’s supposed to be pushing
+                  the furthest possibilities. I will be the leader of a
+                  company that ends up being worth billions of dollars,
+                  because I got the answers. I understand culture. I am
+                  the nucleus.
+                </p>
+              )
             }
-          </ul>
-          </aside>
-        </section>
-        <Button color="primary" type="submit" round>Upload</Button>
-      </form>
+          ]}
+        />
+
+      
     );
   }
 }

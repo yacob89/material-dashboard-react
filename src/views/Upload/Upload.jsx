@@ -1,13 +1,7 @@
 import React from "react";
 import axios, { post } from "axios";
 import Dropzone from 'react-dropzone';
-import {
-  ProfileCard,
-  RegularCard,
-  Button,
-  CustomInput,
-  ItemGrid
-} from "components";
+import {Button} from "components";
 import CustomTabs from "components/CustomTabs/CustomTabs.jsx";
 
 // Utils
@@ -15,9 +9,20 @@ import auth from 'utils/auth';
 import request from 'utils/request';
 var shp = require('gtran-shapefile');
 
-const strapi_url = 'http://192.168.1.4:7555';
-const backend_url = 'http://192.168.1.4:7555';
-const server_url = 'http://192.168.1.4:7555/geojson/';
+const Uppy = require('uppy/lib/core')
+const Tus = require('uppy/lib/plugins/Tus')
+const GoogleDrive = require('uppy/lib/plugins/GoogleDrive')
+const { Dashboard, DashboardModal, DragDrop, ProgressBar } = require('uppy/lib/react')
+
+const AWS = require('aws-sdk/dist/aws-sdk-react-native');
+
+const strapi_url = 'http://54.245.202.137:1337';
+const backend_url = 'http://54.245.202.137:7555';
+const server_url = 'http://54.245.202.137:7555/geojson/';
+
+/*const strapi_url = 'http://192.168.1.8:1337';
+const backend_url = 'http://192.168.1.8:7555';
+const server_url = 'http://192.168.1.8:7555/geojson/';*/
 
 const styles = {
   textCenter: {
@@ -32,11 +37,14 @@ class Upload extends React.Component {
       file: null,
       multifile:null,
       filesDrop:[],
-      multifilesDrop:[]
+      multifilesDrop:[],
+      showInlineDashboard: false,
+      open: false
     };
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.fileUpload = this.fileUpload.bind(this);
+    this.handleModalClick = this.handleModalClick.bind(this)
   }
   async componentDidMount(){
     console.log("Pengguna saat ini: ", auth.getToken());
@@ -49,7 +57,7 @@ class Upload extends React.Component {
       headers: {Authorization: `Bearer ${token}`}
     };
 
-    axios.get('http://192.168.1.4:1337/fileuploads?username='+auth.getUserInfo().username,config).then(res => {
+    axios.get(strapi_url+'/fileuploads?username='+auth.getUserInfo().username,config).then(res => {
       const persons = res.data;
       this.setState({ persons });
 
@@ -60,6 +68,24 @@ class Upload extends React.Component {
       });
       console.log("Uploads ", converted);
     });
+  }
+  componentWillMount () {
+    this.uppy = new Uppy({ autoProceed: false })
+      .use(Tus, { endpoint: 'http://54.245.202.137:7555' })
+      .use(GoogleDrive, { host: 'https://server.uppy.io' })
+
+    this.uppy2 = new Uppy({ autoProceed: false })
+      .use(Tus, { endpoint: 'http://54.245.202.137:7555' })
+  }
+  componentWillUnmount () {
+    this.uppy.close()
+    this.uppy2.close()
+  }
+
+  handleModalClick () {
+    this.setState({
+      open: !this.state.open
+    })
   }
   onFormSubmit(e) {
     e.preventDefault(); // Stop form submit
@@ -192,16 +218,61 @@ class Upload extends React.Component {
             {
               tabName: "Settings",
               tabContent: (
-                <p>
-                  think that’s a responsibility that I have, to push
-                  possibilities, to show people, this is the level that
-                  things could be at. So when you get something that has
-                  the name Kanye West on it, it’s supposed to be pushing
-                  the furthest possibilities. I will be the leader of a
-                  company that ends up being worth billions of dollars,
-                  because I got the answers. I understand culture. I am
-                  the nucleus.
-                </p>
+                <div>
+        <h1>React Examples</h1>
+
+        <h2>Inline Dashboard</h2>
+        <label>
+          <input
+            type="checkbox"
+            checked={this.showInlineDashboard}
+            onChange={(event) => {
+              this.setState({
+                showInlineDashboard: event.target.checked
+              })
+            }}
+          />
+          Show Dashboard
+        </label>
+        {this.showInlineDashboard && (
+          <Dashboard
+            uppy={this.uppy}
+            plugins={['GoogleDrive']}
+            metaFields={[
+              { id: 'name', name: 'Name', placeholder: 'File name' }
+            ]}
+          />
+        )}
+
+        <h2>Modal Dashboard</h2>
+        <div>
+          <button onClick={this.handleModalClick}>
+            {this.state.open ? 'Close dashboard' : 'Open dashboard'}
+          </button>
+          <DashboardModal
+            uppy={this.uppy2}
+            open={this.state.open}
+            target={document.body}
+            onRequestClose={() => this.setState({ open: false })}
+          />
+        </div>
+
+        <h2>Drag Drop Area</h2>
+        <DragDrop
+          uppy={this.uppy}
+          locale={{
+            strings: {
+              chooseFile: 'Boop a file',
+              orDragDrop: 'or yoink it here'
+            }
+          }}
+        />
+
+        <h2>Progress Bar</h2>
+        <ProgressBar
+          uppy={this.uppy}
+        />
+      </div>
               )
             }
           ]}

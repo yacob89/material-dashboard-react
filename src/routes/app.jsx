@@ -48,13 +48,13 @@ const appRoutes = [
     icon: ContentPaste,
     component: UploadList
   },
-  /*{
+  {
     path: "/typography",
     sidebarName: "Typography",
     navbarName: "Typography",
     icon: LibraryBooks,
     component: Typography
-  },*/
+  },
   /*{
     path: "/icons",
     sidebarName: "Icons",

@@ -41,7 +41,7 @@ class UserProfile extends React.Component {
     // Setelah selesai upload, baru insert data di strapi
     console.log("User yang akan dibuatkan folder", auth.getUserInfo().username);
     axios
-      .post("http://192.168.1.4:7555/createfolder", {
+      .post("http://54.245.202.137:7555/createfolder", {
         username: auth.getUserInfo().username
       })
       .then(function (response) {

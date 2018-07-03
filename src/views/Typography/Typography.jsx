@@ -1,140 +1,105 @@
-import React from "react";
-import { withStyles } from "material-ui";
+// React Class
 
-import {
-  P,
-  Quote,
-  Muted,
-  Primary,
-  Info,
-  Success,
-  Warning,
-  Danger,
-  Small,
-  RegularCard
-} from "components";
+import React, { Component } from "react";
+import ReactDOM from 'react-dom';
+import { RegularCard, ItemGrid } from "components";
+import { Grid } from "material-ui";
+import axios from "axios";
+import auth from 'utils/auth';
+// Components
+import FileBrowser from 'react-keyed-file-browser'
+import 'views/Typography/react-keyed-file-browser.css'
+import Moment from 'moment'
 
-const style = {
-  typo: {
-    paddingLeft: "25%",
-    marginBottom: "40px",
-    position: "relative"
-  },
-  note: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    bottom: "10px",
-    color: "#c0c1c2",
-    display: "block",
-    fontWeight: "400",
-    fontSize: "13px",
-    lineHeight: "13px",
-    left: "0",
-    marginLeft: "20px",
-    position: "absolute",
-    width: "260px"
+const rows = [];
+
+class Typography extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      files:[]
+      /*files: [
+        {
+          key: 'photos/animals/cat in a hat.png',
+          modified: +Moment().subtract(1, 'hours'),
+          size: 1.5 * 1024 * 1024,
+        },
+        {
+          key: 'photos/animals/kitten_ball.png',
+          modified: +Moment().subtract(3, 'days'),
+          size: 545 * 1024,
+        },
+        {
+          key: 'photos/animals/elephants.png',
+          modified: +Moment().subtract(3, 'days'),
+          size: 52 * 1024,
+        },
+        {
+          key: 'photos/funny fall.gif',
+          modified: +Moment().subtract(2, 'months'),
+          size: 13.2 * 1024 * 1024,
+        },
+        {
+          key: 'photos/holiday.jpg',
+          modified: +Moment().subtract(25, 'days'),
+          size: 85 * 1024,
+        },
+        {
+          key: 'documents/letter chunks.doc',
+          modified: +Moment().subtract(15, 'days'),
+          size: 480 * 1024,
+        },
+        {
+          key: 'documents/export.pdf',
+          modified: +Moment().subtract(15, 'days'),
+          size: 4.2 * 1024 * 1024,
+        },
+      ]*/
+    };
+    this.loadFileList = this.loadFileList.bind(this);
   }
-};
-function TypographyPage({ ...props }) {
-  return (
-    <RegularCard
-      cardTitle={"Material Dashboard Heading"}
-      cardSubtitle={"Created using Roboto Font Family"}
-      content={
-        <div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Header 1</div>
-            <h1>The Life of Material Dashboard</h1>
-          </div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Header 2</div>
-            <h2>The Life of Material Dashboard</h2>
-          </div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Header 3</div>
-            <h3>The Life of Material Dashboard</h3>
-          </div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Header 4</div>
-            <h4>The Life of Material Dashboard</h4>
-          </div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Header 5</div>
-            <h5>The Life of Material Dashboard</h5>
-          </div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Header 6</div>
-            <h6>The Life of Material Dashboard</h6>
-          </div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Paragraph</div>
-            <P>
-              I will be the leader of a company that ends up being worth
-              billions of dollars, because I got the answers. I understand
-              culture. I am the nucleus. I think that’s a responsibility that I
-              have, to push possibilities, to show people, this is the level
-              that things could be at.
-            </P>
-          </div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Quote</div>
-            <Quote
-              text="I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at."
-              author=" Kanye West, Musician"
-            />
-          </div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Muted Text</div>
-            <Muted>
-              I will be the leader of a company that ends up being worth
-              billions of dollars, because I got the answers...
-            </Muted>
-          </div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Primary Text</div>
-            <Primary>
-              I will be the leader of a company that ends up being worth
-              billions of dollars, because I got the answers...
-            </Primary>
-          </div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Info Text</div>
-            <Info>
-              I will be the leader of a company that ends up being worth
-              billions of dollars, because I got the answers...
-            </Info>
-          </div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Success Text</div>
-            <Success>
-              I will be the leader of a company that ends up being worth
-              billions of dollars, because I got the answers...
-            </Success>
-          </div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Warning Text</div>
-            <Warning>
-              I will be the leader of a company that ends up being worth
-              billions of dollars, because I got the answers...
-            </Warning>
-          </div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Danger Text</div>
-            <Danger>
-              I will be the leader of a company that ends up being worth
-              billions of dollars, because I got the answers...
-            </Danger>
-          </div>
-          <div className={props.classes.typo}>
-            <div className={props.classes.note}>Small Tag</div>
-            <h2>
-              Header with small subtitle<br />
-              <Small>Use "Small" tag for the headers</Small>
-            </h2>
-          </div>
-        </div>
-      }
+
+  componentDidMount(){
+    console.log("User info: ", auth.getUserInfo().username);
+    this.loadFileList();
+  }
+
+  loadFileList() {
+    // Make a request for a user with a given ID
+
+      axios.get('http://192.168.1.5:7555/api/filelist').then(response => {
+        // handle success
+        console.log(response);
+        const fileList = response.data.Contents
+        console.log(fileList);
+
+        var i;
+        for (i = 0; i < fileList.length; i++) {
+          console.log("Key: ", i, " : ", fileList[i].Key);
+          console.log("Last Modified: ", i, " : ", fileList[i].LastModified);
+          console.log("Size: ", i, " : ", fileList[i].Size);
+          rows.push({
+            key: fileList[i].Key,
+            modified: fileList[i].LastModified,
+            size: fileList[i].Size
+          });
+        }
+        this.setState({ files:rows });
+      });
+  }
+
+  render() {
+    return (
+      <div>
+      <FileBrowser
+      files={this.state.files}
     />
-  );
+      </div>
+    );
+  }
 }
 
-export default withStyles(style)(TypographyPage);
+<Typography />;
+
+export default Typography;

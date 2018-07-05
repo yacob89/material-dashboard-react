@@ -16,6 +16,7 @@ import FormDivider from 'components/FormDivider';
 import Input from 'components/InputsIndex';
 import Logo from 'assets/img/mapidlogo.png';
 import SocialLink from 'components/SocialLink';
+import axios, { post } from "axios"
 
 // Utils
 import auth from 'utils/auth';
@@ -102,6 +103,19 @@ class AuthPage extends React.Component {
 
   redirectUser = () => {
     this.props.history.push('/');
+    /*axios.post('http://localhost:7555/createfolder', {
+      username: auth.getUserInfo().username
+    })
+    .then(function (response) {
+      console.log(response.data);
+      if(response.data == 'success'){
+        alert("Folder Created");
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+      alert(error);
+    });*/
   };
 
   /**

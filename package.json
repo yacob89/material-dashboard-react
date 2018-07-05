@@ -37,6 +37,8 @@
     "react-bootstrap-table": "^4.3.1",
     "react-chartist": "^0.13.1",
     "react-data-grid": "^4.0.7",
+    "react-dnd": "^5.0.0",
+    "react-dnd-html5-backend": "^5.0.1",
     "react-dom": "^16.2.0",
     "react-dropzone": "^4.2.9",
     "react-file-explorer": "^1.0.0",
@@ -50,6 +52,7 @@
     "react-scripts": "^1.1.4",
     "react-simple-file-input": "^2.1.0",
     "react-swipeable-views": "^0.12.12",
+    "sematable": "^1.9.1",
     "shpjs": "^3.4.2",
     "ts-react-json-table": "^0.1.1",
     "uppy": "^0.25.2"

@@ -98,6 +98,7 @@ class AuthPage extends React.Component {
           { name: 'identifier', errors: [err.response.payload.message] },
         ];
         this.setState({ didCheckErrors: !this.state.didCheckErrors, errors });
+        console.log("Pesan Error: ", err.response.payload.message);
       });
   };
 

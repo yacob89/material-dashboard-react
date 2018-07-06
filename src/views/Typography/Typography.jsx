@@ -153,7 +153,7 @@ class Typography extends React.Component {
     // Make a request for a user with a given ID
     let rows = [];
 
-      axios.get('http://192.168.1.5:7555/api/filelist', {
+      axios.get('http://192.168.1.14:7555/api/filelist', {
           params: {
             username: auth.getUserInfo().username
           }

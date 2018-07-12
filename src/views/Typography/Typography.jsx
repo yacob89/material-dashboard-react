@@ -12,6 +12,12 @@ import auth from 'utils/auth'
 import FileBrowser, { BaseFileConnectors, FileRenderers } from 'react-keyed-file-browser'
 import 'views/Typography/react-keyed-file-browser.css'
 import Moment from 'moment'
+import shp from 'shpjs'
+const AWS = require('aws-sdk');
+var path = require('path');
+
+//const SERVER_URL = 'http://54.245.202.137';
+const SERVER_URL = 'http://192.168.1.4';
 
 class Typography extends React.Component {
 
@@ -31,6 +37,7 @@ class Typography extends React.Component {
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.fileUpload = this.fileUpload.bind(this);
+    this.s3Upload = this.s3Upload.bind(this);
   }
 
   componentDidMount(){
@@ -153,7 +160,7 @@ class Typography extends React.Component {
     // Make a request for a user with a given ID
     let rows = [];
 
-      axios.get('http://192.168.1.14:7555/api/filelist', {
+      axios.get(SERVER_URL+':7555/api/filelist', {
           params: {
             username: auth.getUserInfo().username
           }
@@ -192,7 +199,7 @@ class Typography extends React.Component {
   onFormSubmit(e) {
     e.preventDefault(); // Stop form submit
 
-    this.fileUpload(this.state.file).then(response => {
+    /*this.fileUpload(this.state.file).then(response => {
       console.log("Respon dari sebuah data: ", response.data);
       if(response.data == 'success'){
         alert("Upload success!");
@@ -201,8 +208,115 @@ class Typography extends React.Component {
       else if(response.data == 'extension'){
         alert("File extension error make sure you uploaded correct file!");
       }
+    });*/
+
+    this.s3Upload(this.state.file);
+
+  }
+
+  s3Upload(file) {
+
+    const IAM_USER_KEY = 'AKIAIM6VCNND5THHPV5A';
+    const IAM_USER_SECRET = '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';
+
+    let s3bucket = new AWS.S3({
+      accessKeyId: IAM_USER_KEY,
+      secretAccessKey: IAM_USER_SECRET,
+      Bucket: 'yacob'
     });
-        
+
+    var params = {
+      Bucket: auth.getUserInfo().username,
+      ACL: 'public-read',
+      Key: auth.getUserInfo().username + '/' + file.name,
+      Body: file
+    };
+    s3bucket.upload(params, function (err, data) {
+      if (err) {
+        console.log('error in callback');
+        console.log(err);
+      } else {
+        console.log('success');
+        console.log(data.Location);
+
+        var filetype = path.extname(file.name);
+        console.log("File Extension: ", filetype);
+        //var fetchUrl = require("fetch").fetchUrl;
+
+        if (filetype == '.zip'){
+          console.log("File Path: ", data.Location);
+          shp(data.Location).then(function(geojson) {
+            //see bellow for whats here this internally call shp.parseZip()
+            console.log("Geojsonnya: ", geojson);
+            // Send request to convert shp file to geojson and upload to S3
+            axios.post(SERVER_URL+':7555/api/convertshp', {
+              username: auth.getUserInfo().username,
+              filename: file.name,
+              geojson: geojson
+            })
+            .then(function (response) {
+              console.log(response.data);
+              if (response.data == 'success') {
+                alert("Convert and Upload success!!");
+              }
+            })
+            .catch(function (error) {
+              console.log(error);
+              alert(error);
+            });
+          });
+        }
+
+        if (filetype == '.geojson') {
+          // source file is iso-8859-15 but it is converted to utf-8 automatically
+
+          axios.get(data.Location).then(res => {
+            console.log("Masuk axios");
+            const persons = res.data;
+            //var jsonContent = JSON.parse(persons);
+
+            //var geojsonType = jsonContent.features;
+            if (persons) {
+              var geojsonType = persons.features[0].geometry.type;
+              var htmlType = '';
+
+              if (geojsonType == 'Polygon' || geojsonType == 'MultiPolygon') {
+                htmlType = 'fill';
+              }
+              if (geojsonType == 'Point' || geojsonType == 'MultiPoint') {
+                htmlType = 'symbol';
+              }
+              if (geojsonType == 'LineString' || geojsonType == 'MultiLineString') {
+                htmlType = 'line';
+              }
+              console.log("GEOJSON TYPE: ", htmlType);
+
+              // Setelah selesai upload, baru insert data di strapi
+              axios
+                .post(SERVER_URL + ':1337/fileuploads', {
+                  //.post("http://192.168.1.11:1337/fileuploads", {
+                  username: auth.getUserInfo().username,
+                  filename: file.name,
+                  server_url: data.Location,
+                  type: htmlType,
+                  active: false
+                })
+                .then(function (response) {
+                  console.log(response);
+                  console.log("Upload Success");
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+            } else {
+              console.log("Something broke!");
+            }
+          });
+        }
+        console.log("Upload Success");
+      }
+    });
+    /* End of CORS Configuration */
   }
 
   fileUpload(file) {
@@ -219,7 +333,7 @@ class Typography extends React.Component {
     console.log("Nama filenya adalah: ", file.name);
     console.log("Filekey nya adalah: ", file.name);
 
-    const url = 'http://localhost:7555/api/upload';
+    const url = SERVER_URL+':7555/api/upload';
     const config = {
       headers: {
         'content-type': 'multipart/form-data'
@@ -229,7 +343,7 @@ class Typography extends React.Component {
   }
 
   deleteObject(fileKey){
-    axios.post('http://localhost:7555/api/deleteobject', {
+    axios.post(SERVER_URL+':7555/api/deleteobject', {
       bucket: auth.getUserInfo().username,
       key: fileKey
     })
@@ -246,7 +360,7 @@ class Typography extends React.Component {
   }
 
   createFolder(fileKey){
-    axios.post('http://localhost:7555/api/createfolder', {
+    axios.post(SERVER_URL+':7555/api/createfolder', {
       bucket: auth.getUserInfo().username,
       key: fileKey
     })
@@ -267,7 +381,7 @@ class Typography extends React.Component {
       <div>
         <FileBrowser
           files={this.state.files}
-          
+
           onCreateFolder={this.handleCreateFolder}
           onCreateFiles={this.handleCreateFiles}
           onMoveFolder={this.handleRenameFolder}

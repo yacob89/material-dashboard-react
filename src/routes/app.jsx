@@ -69,13 +69,13 @@ const appRoutes = [
     icon: LocationOn,
     component: Maps
   },
-  {
+  /*{
     path: "/upload",
     sidebarName: "Upload",
     navbarName: "Upload",
     icon: FileUpload,
     component: Upload
-  },
+  },*/
   /*{
     path: "/notifications",
     sidebarName: "Notifications",

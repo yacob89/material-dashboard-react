@@ -12,6 +12,9 @@ import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
 import auth from 'utils/auth';
 import request from 'utils/request';
 
+//const SERVER_URL = 'http://54.245.202.137';
+const SERVER_URL = 'http://192.168.1.4';
+
 const columns = [{
     dataField: 'filename',
     text: 'File Name'
@@ -48,6 +51,9 @@ class UploadList extends React.Component {
       column: [],
       rowData: []
     }
+
+    this.updateRemoteData = this.updateRemoteData.bind(this);
+    this.loadFileList = this.loadFileList.bind(this);
   }
 
   componentDidMount() {
@@ -72,7 +78,7 @@ class UploadList extends React.Component {
     // Make a request for a user with a given ID
     let rows = [];
 
-      axios.get('http://localhost:1337/fileuploads', {
+      axios.get(SERVER_URL+':1337/fileuploads', {
           params: {
             username: auth.getUserInfo().username
           }
@@ -101,7 +107,8 @@ class UploadList extends React.Component {
     console.log("Row ID: ", id);
     console.log("Row Active Value: ", activevalue);
 
-    axios.put(`http://192.168.1.14:1337/fileuploads/${id}`, /*{
+    //axios.put(`http://54.245.202.137:1337/fileuploads/${id}`, /*{
+      axios.put(`http://192.168.1.4:1337/fileuploads/${id}`, /*{
         params: {
           _id:id
         }
@@ -109,8 +116,8 @@ class UploadList extends React.Component {
         active: activevalue
       })
       .then(function (response) {
-        console.log(response.data);
-        if (response.data == 'success') {
+        console.log("Respon Data: ",response.data);
+        if (response.data.ok == 1) {
           alert('Success!');
         }
       })
@@ -118,6 +125,7 @@ class UploadList extends React.Component {
         console.log(error);
         alert(error);
       });
+
   }
 
   render() {
@@ -138,7 +146,7 @@ class UploadList extends React.Component {
                   blurToSave: true,
                   beforeSaveCell: (oldValue, newValue, row, column) => { console.log('Before Saving Cell!!'); },
                   afterSaveCell: (oldValue, newValue, row, column) => {
-                     console.log('After Saving Cell!!',' row ', row); 
+                     console.log('After Saving Cell!!',' row ', row);
                      this.updateRemoteData(row._id, newValue);
                     }
                 }) }

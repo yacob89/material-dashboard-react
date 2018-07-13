@@ -17,7 +17,7 @@ const AWS = require('aws-sdk');
 var path = require('path');
 
 //const SERVER_URL = 'http://54.245.202.137';
-const SERVER_URL = 'http://192.168.1.4';
+const SERVER_URL = 'http://192.168.1.6';
 
 class Typography extends React.Component {
 

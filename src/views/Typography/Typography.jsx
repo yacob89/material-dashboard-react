@@ -215,106 +215,114 @@ class Typography extends React.Component {
   }
 
   s3Upload(file) {
+    // Due to security reasons, cannot expose user and secret key
+    axios.get(SERVER_URL + ':7555/api/getsecretkey', {
+      params: {
+        username: auth.getUserInfo().username
+      }
+    }).then(response => {
+      // handle success
+      console.log(response);
+      const userkey = response.data.user_key;
+      const secretkey = response.data.secret_key;
 
-    const IAM_USER_KEY = '';
-    const IAM_USER_SECRET = '';
+      let s3bucket = new AWS.S3({
+        accessKeyId: userkey,
+        secretAccessKey: secretkey,
+        Bucket: 'yacob'
+      });
 
-    let s3bucket = new AWS.S3({
-      accessKeyId: IAM_USER_KEY,
-      secretAccessKey: IAM_USER_SECRET,
-      Bucket: 'yacob'
-    });
+      var params = {
+        Bucket: auth.getUserInfo().username,
+        ACL: 'public-read',
+        Key: auth.getUserInfo().username + '/' + file.name,
+        Body: file
+      };
+      s3bucket.upload(params, function (err, data) {
+        if (err) {
+          console.log('error in callback');
+          console.log(err);
+        } else {
+          console.log('success');
+          console.log(data.Location);
 
-    var params = {
-      Bucket: auth.getUserInfo().username,
-      ACL: 'public-read',
-      Key: auth.getUserInfo().username + '/' + file.name,
-      Body: file
-    };
-    s3bucket.upload(params, function (err, data) {
-      if (err) {
-        console.log('error in callback');
-        console.log(err);
-      } else {
-        console.log('success');
-        console.log(data.Location);
+          var filetype = path.extname(file.name);
+          console.log("File Extension: ", filetype);
+          //var fetchUrl = require("fetch").fetchUrl;
 
-        var filetype = path.extname(file.name);
-        console.log("File Extension: ", filetype);
-        //var fetchUrl = require("fetch").fetchUrl;
-
-        if (filetype == '.zip'){
-          console.log("File Path: ", data.Location);
-          shp(data.Location).then(function(geojson) {
-            //see bellow for whats here this internally call shp.parseZip()
-            console.log("Geojsonnya: ", geojson);
-            // Send request to convert shp file to geojson and upload to S3
-            axios.post(SERVER_URL+':7555/api/convertshp', {
-              username: auth.getUserInfo().username,
-              filename: file.name,
-              geojson: geojson
-            })
-            .then(function (response) {
-              console.log(response.data);
-              if (response.data == 'success') {
-                alert("Convert and Upload success!!");
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-              alert(error);
-            });
-          });
-        }
-
-        if (filetype == '.geojson') {
-          // source file is iso-8859-15 but it is converted to utf-8 automatically
-
-          axios.get(data.Location).then(res => {
-            console.log("Masuk axios");
-            const persons = res.data;
-            //var jsonContent = JSON.parse(persons);
-
-            //var geojsonType = jsonContent.features;
-            if (persons) {
-              var geojsonType = persons.features[0].geometry.type;
-              var htmlType = '';
-
-              if (geojsonType == 'Polygon' || geojsonType == 'MultiPolygon') {
-                htmlType = 'fill';
-              }
-              if (geojsonType == 'Point' || geojsonType == 'MultiPoint') {
-                htmlType = 'symbol';
-              }
-              if (geojsonType == 'LineString' || geojsonType == 'MultiLineString') {
-                htmlType = 'line';
-              }
-              console.log("GEOJSON TYPE: ", htmlType);
-
-              // Setelah selesai upload, baru insert data di strapi
-              axios
-                .post(SERVER_URL + ':1337/fileuploads', {
-                  //.post("http://192.168.1.11:1337/fileuploads", {
+          if (filetype == '.zip') {
+            console.log("File Path: ", data.Location);
+            shp(data.Location).then(function (geojson) {
+              //see bellow for whats here this internally call shp.parseZip()
+              console.log("Geojsonnya: ", geojson);
+              // Send request to convert shp file to geojson and upload to S3
+              axios.post(SERVER_URL + ':7555/api/convertshp', {
                   username: auth.getUserInfo().username,
                   filename: file.name,
-                  server_url: data.Location,
-                  type: htmlType,
-                  active: false
+                  geojson: geojson
                 })
                 .then(function (response) {
-                  console.log(response);
-                  console.log("Upload Success");
+                  console.log(response.data);
+                  if (response.data == 'success') {
+                    alert("Convert and Upload success!!");
+                  }
                 })
                 .catch(function (error) {
                   console.log(error);
+                  alert(error);
                 });
-            } else {
-              console.log("Something broke!");
-            }
-          });
+            });
+          }
+
+          if (filetype == '.geojson') {
+            // source file is iso-8859-15 but it is converted to utf-8 automatically
+
+            axios.get(data.Location).then(res => {
+              console.log("Masuk axios");
+              const persons = res.data;
+              //var jsonContent = JSON.parse(persons);
+
+              //var geojsonType = jsonContent.features;
+              if (persons) {
+                var geojsonType = persons.features[0].geometry.type;
+                var htmlType = '';
+
+                if (geojsonType == 'Polygon' || geojsonType == 'MultiPolygon') {
+                  htmlType = 'fill';
+                }
+                if (geojsonType == 'Point' || geojsonType == 'MultiPoint') {
+                  htmlType = 'symbol';
+                }
+                if (geojsonType == 'LineString' || geojsonType == 'MultiLineString') {
+                  htmlType = 'line';
+                }
+                console.log("GEOJSON TYPE: ", htmlType);
+
+                // Setelah selesai upload, baru insert data di strapi
+                axios
+                  .post(SERVER_URL + ':1337/fileuploads', {
+                    //.post("http://192.168.1.11:1337/fileuploads", {
+                    username: auth.getUserInfo().username,
+                    filename: file.name,
+                    server_url: data.Location,
+                    type: htmlType,
+                    active: false
+                  })
+                  .then(function (response) {
+                    console.log(response);
+                    console.log("Upload Success");
+                  })
+                  .catch(function (error) {
+                    console.log(error);
+                  });
+              } else {
+                console.log("Something broke!");
+              }
+            });
+          }
+          console.log("Upload Success");
         }
-        console.log("Upload Success");
-      }
+      });
     });
     /* End of CORS Configuration */
   }

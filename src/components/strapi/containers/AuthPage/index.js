@@ -9,20 +9,18 @@ import PropTypes from 'prop-types';
 import { findIndex, get, map, replace, set } from 'lodash';
 import { Link } from 'react-router-dom';
 
-import Button from 'components/strapi/components/Button';
-import Input from 'components/InputsIndex';
-import Logo from 'assets/img/mapidlogo.png';
-import SocialLink from 'components/strapi/components/SocialLink';
+import Button from '../../components/Button';
+import FormDivider from '../../components/FormDivider';
+import Input from '../../components/InputsIndex';
+import Logo from '../../assets/logo_strapi.png';
+import SocialLink from '../../components/SocialLink';
 
 // Utils
-import auth from 'utils/auth';
-import request from 'utils/request';
+import auth from '../../utils/auth';
+import request from '../../utils/request';
 
 import form from './forms.json';
 import './styles.css';
-
-//const server_url = 'http://54.245.202.137:1337';
-const server_url = 'http://192.168.1.14:1337';
 
 class AuthPage extends React.Component {
   state = { value: {}, errors: [], didCheckErrors: false };
@@ -42,16 +40,16 @@ class AuthPage extends React.Component {
 
     switch (this.props.match.params.authType) {
       case 'login':
-        requestURL = server_url+'/auth/local';
+        requestURL = 'http://localhost:1337/auth/local';
         break;
       case 'register':
-        requestURL = server_url+'/auth/local/register';
+        requestURL = 'http://localhost:1337/auth/local/register';
         break;
       case 'reset-password':
-        requestURL = server_url+'/auth/reset-password';
+        requestURL = 'http://localhost:1337/auth/reset-password';
         break;
       case 'forgot-password':
-        requestURL = server_url+'/auth/forgot-password';
+        requestURL = 'http://localhost:1337/auth/forgot-password';
         break;
       default:
     }
@@ -78,7 +76,7 @@ class AuthPage extends React.Component {
 
     // This line is required for the callback url to redirect your user to app
     if (this.props.match.params.authType === 'forgot-password') {
-      set(body, 'url', 'http://54.245.202.137:3000/auth/reset-password');
+      set(body, 'url', 'http://localhost:3000/auth/reset-password');
     }
 
     request(requestURL, { method: 'POST', body: this.state.value })
@@ -94,25 +92,11 @@ class AuthPage extends React.Component {
           { name: 'identifier', errors: [err.response.payload.message] },
         ];
         this.setState({ didCheckErrors: !this.state.didCheckErrors, errors });
-        console.log("Pesan Error: ", err.response.payload.message);
       });
   };
 
   redirectUser = () => {
     this.props.history.push('/');
-    /*axios.post('http://localhost:7555/createfolder', {
-      username: auth.getUserInfo().username
-    })
-    .then(function (response) {
-      console.log(response.data);
-      if(response.data == 'success'){
-        alert("Folder Created");
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-      alert(error);
-    });*/
   };
 
   /**
@@ -157,7 +141,7 @@ class AuthPage extends React.Component {
         ? { marginTop: '3.2rem' }
         : { marginTop: '.9rem' };
     const inputs = get(form, ['views', this.props.match.params.authType], []);
-    const providers = []; // To remove a provider from the list just delete it from this array...
+    const providers = ['facebook', 'github', 'google', 'twitter']; // To remove a provider from the list just delete it from this array...
 
     return (
       <div className="authPage">
@@ -185,6 +169,7 @@ class AuthPage extends React.Component {
                   ))}
                 </div>
               </div>
+              <FormDivider />
               <form onSubmit={this.handleSubmit}>
                 <div className="row" style={{ textAlign: 'start' }}>
                   {map(inputs, (input, key) => (
@@ -213,7 +198,7 @@ class AuthPage extends React.Component {
                   <div className="col-md-12 buttonContainer">
                     <Button
                       label="Submit"
-                      style={{ width: '100%', textAlign:'center' }}
+                      style={{ width: '100%' }}
                       primary
                       type="submit"
                     />

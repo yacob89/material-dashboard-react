@@ -2,7 +2,8 @@ import React from "react";
 import { Grid, InputLabel } from "material-ui";
 import axios from "axios";
 import auth from 'utils/auth';
-import request from 'utils/request';
+import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import green from '@material-ui/core/colors/green';
 
 import {
   ProfileCard,
@@ -13,6 +14,12 @@ import {
 } from "components";
 
 import avatar from "assets/img/faces/marc.jpg";
+
+const theme = createMuiTheme({
+  palette: {
+    primary: green,
+  },
+});
 
 class UserProfile extends React.Component {
   constructor(props) {
@@ -41,7 +48,8 @@ class UserProfile extends React.Component {
     // Setelah selesai upload, baru insert data di strapi
     console.log("User yang akan dibuatkan folder", auth.getUserInfo().username);
     axios
-      .post("http://192.168.1.6:7555/createfolder", {
+      //.post("http://192.168.1.14:7555/createfolder", {
+      .post("http://54.245.202.137:7555/createfolder", {
         username: auth.getUserInfo().username
       })
       .then(function (response) {
@@ -55,9 +63,16 @@ class UserProfile extends React.Component {
   }
 
   render() {
+
     return (
       <div>
-      <Button color="primary" onClick={() => {
+      <MuiThemeProvider theme={theme}>
+        <Button variant="contained" color="primary" className="custom-button">
+          MuiThemeProvider
+        </Button>
+      </MuiThemeProvider>
+      <Button color="info" 
+        onClick={() => {
         auth.clearAppStorage();
         this.props.history.push('/auth/login');
       }} round>

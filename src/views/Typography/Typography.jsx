@@ -17,7 +17,7 @@ const AWS = require('aws-sdk');
 var path = require('path');
 
 //const SERVER_URL = 'http://54.245.202.137';
-const SERVER_URL = 'http://192.168.1.6';
+const SERVER_URL = 'http://192.168.1.14';
 
 class Typography extends React.Component {
 
@@ -216,8 +216,8 @@ class Typography extends React.Component {
 
   s3Upload(file) {
 
-    const IAM_USER_KEY = 'AKIAIM6VCNND5THHPV5A';
-    const IAM_USER_SECRET = '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';
+    const IAM_USER_KEY = '';
+    const IAM_USER_SECRET = '';
 
     let s3bucket = new AWS.S3({
       accessKeyId: IAM_USER_KEY,

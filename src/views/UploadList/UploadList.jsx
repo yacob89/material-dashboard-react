@@ -7,26 +7,57 @@ import axios from "axios";
 
 import BootstrapTable from 'react-bootstrap-table-next';
 import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
+import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 
 // Utils
 import auth from 'utils/auth';
 import request from 'utils/request';
 
 //const SERVER_URL = 'http://54.245.202.137';
-const SERVER_URL = 'http://192.168.1.14';
+const SERVER_URL = 'http://192.168.1.11';
 
 const columns = [{
     dataField: 'filename',
-    text: 'File Name'
+    text: 'File Name',
+    filter: textFilter(),
+    sort: true,
+    headerStyle: {
+      backgroundColor: '#6495ED'
+    }
   }, {
     dataField: 'location',
-    text: 'Location'
+    text: 'Location',
+    sort: true,
+    headerStyle: {
+      backgroundColor: '#6495ED'
+    },
+    hidden: true
   }, {
     dataField: 'type',
-    text: 'Geojson Type'
+    text: 'Geojson Type',
+    filter: textFilter(),
+    sort: true,
+    headerStyle: {
+      backgroundColor: '#6495ED'
+    }
   }, {
     dataField: 'active',
     text: 'Active',
+    filter: textFilter(),
+    sort: true,
+    headerStyle: {
+      backgroundColor: '#6495ED'
+    },
+    style: (cell, row, rowIndex, colIndex) => {
+      if (row.active === 'true') {
+        return {
+          backgroundColor: '#87CEEB'
+        };
+      }
+      return {
+        backgroundColor: '#CD5C5C'
+      };
+    },
     editor: {
       type: Type.SELECT,
       options: [{
@@ -40,7 +71,11 @@ const columns = [{
   },
   {
     dataField: '_id',
-    text: 'ID'
+    text: 'ID',
+    headerStyle: {
+      backgroundColor: '#6495ED'
+    },
+    hidden: true
   }
 ];
 
@@ -111,7 +146,7 @@ class UploadList extends React.Component {
 
     var promise = new Promise(function (resolve, reject) {
       //axios.put(`http://54.245.202.137:1337/fileuploads/${id}`, /*{
-      axios.put(`http://192.168.1.14:1337/fileuploads/${id}`,
+      axios.put(`http://192.168.1.11:1337/fileuploads/${id}`,
           /*{
                  params: {
                    _id:id
@@ -150,6 +185,11 @@ class UploadList extends React.Component {
                 keyField="id"
                 data={ this.state.rowData }
                 columns={ columns }
+                striped
+                hover
+                condensed
+                noDataIndication="No Layer is Uploaded"
+                filter={ filterFactory() }
                 cellEdit={ cellEditFactory({
                   mode: 'click',
                   blurToSave: true,

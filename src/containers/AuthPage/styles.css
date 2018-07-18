@@ -49,10 +49,8 @@
   margin: 14px auto;
   margin-bottom: 0;
   padding: 33px 15px 15px 15px;
-  border-radius: 2px;
-  border-top: 2px solid #1C5DE7;
-  background-color: #FFFFFF;
-  box-shadow: 0 2px 4px 0 #E3E9F3;
+  border-radius: 0px;
+  background-color: transparent;
 }
 
 .loginButton {
@@ -71,14 +69,6 @@
 
 .linkContainer {
   padding-top: 18px;
-   > a {
-    color: #262931;
-    font-size: 13px;
-    &:hover, &:active, &:focus {
-      text-decoration: none;
-      outline: 0;
-    }
-  }
 }
 
 .linkContainer, a {
@@ -100,4 +90,26 @@
   height: 2px;
   margin: 10px 0;
   background-color: rgba(14, 22, 34, 0.04);
+}
+
+img.bg {
+  /* Set rules to fill background */
+  min-height: 100%;
+  min-width: 1024px;
+	
+  /* Set up proportionate scaling */
+  width: 100%;
+  height: auto;
+	
+  /* Set up positioning */
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+@media screen and (max-width: 1024px) { /* Specific to this particular image */
+  img.bg {
+    left: 50%;
+    margin-left: -512px;   /* 50% */
+  }
 }

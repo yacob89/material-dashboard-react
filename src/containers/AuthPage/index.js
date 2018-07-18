@@ -22,7 +22,7 @@ import form from './forms.json';
 import './styles.css';
 
 //const server_url = 'http://54.245.202.137:1337';
-const server_url = 'http://192.168.1.14:1337';
+const server_url = 'http://192.168.1.11:1337';
 
 class AuthPage extends React.Component {
   state = { value: {}, errors: [], didCheckErrors: false };
@@ -159,23 +159,30 @@ class AuthPage extends React.Component {
     const inputs = get(form, ['views', this.props.match.params.authType], []);
     const providers = []; // To remove a provider from the list just delete it from this array...
 
+    /* Style */
+    const mapBackgroundImage = { 
+      backgroundImage: 'url("https://s3-us-west-2.amazonaws.com/geomapid-assets/img/login_bg.svg")', 
+      backgroundSize: 'cover',
+      overflow: 'hidden'
+    };
+    const mapidLogo = {
+      width: '111px',
+      height: '113px'
+    };
+    const mapidText = {
+      width: '172px',
+      height: '20px'
+    };
+
+    const mapidTextURL = 'https://s3-us-west-2.amazonaws.com/geomapid-assets/img/mapid_text.png';
+    const mapidLogoURL = 'https://s3-us-west-2.amazonaws.com/geomapid-assets/img/mapid_logo.png';
+
     return (
-      <div className="authPage">
+
+      <div className="authPage" style ={ mapBackgroundImage }>
         <div className="wrapper">
-          <div className="headerContainer">
-            {this.props.match.params.authType === 'register' ? (
-              <span>Welcome !</span>
-            ) : (
-              <img src={Logo} alt="logo" />
-            )}
-          </div>
-          <div className="headerDescription">
-            {this.props.match.params.authType === 'register' ? (
-              <span>Please register to access the app.</span>
-            ) : (
-              ''
-            )}
-          </div>
+          <div><p><img src={mapidLogoURL} alt="logo" style={mapidLogo} /></p></div>
+          <div><p><img src={mapidTextURL} alt="logo" style={mapidText} /></p></div>
           <div className="formContainer" style={divStyle}>
             <div className="container-fluid">
               <div className="row">

@@ -2,8 +2,6 @@ import React from "react";
 import { Grid, InputLabel } from "material-ui";
 import axios from "axios";
 import auth from 'utils/auth';
-import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import green from '@material-ui/core/colors/green';
 
 import {
   ProfileCard,
@@ -14,12 +12,6 @@ import {
 } from "components";
 
 import avatar from "assets/img/faces/marc.jpg";
-
-const theme = createMuiTheme({
-  palette: {
-    primary: green,
-  },
-});
 
 class UserProfile extends React.Component {
   constructor(props) {
@@ -48,8 +40,8 @@ class UserProfile extends React.Component {
     // Setelah selesai upload, baru insert data di strapi
     console.log("User yang akan dibuatkan folder", auth.getUserInfo().username);
     axios
-      //.post("http://192.168.1.14:7555/createfolder", {
-      .post("http://54.245.202.137:7555/createfolder", {
+      .post("http://192.168.1.11:7555/createfolder", {
+      //.post("http://54.245.202.137:7555/createfolder", {
         username: auth.getUserInfo().username
       })
       .then(function (response) {
@@ -66,12 +58,7 @@ class UserProfile extends React.Component {
 
     return (
       <div>
-      <MuiThemeProvider theme={theme}>
-        <Button variant="contained" color="primary" className="custom-button">
-          MuiThemeProvider
-        </Button>
-      </MuiThemeProvider>
-      <Button color="info" 
+      <Button color="danger" 
         onClick={() => {
         auth.clearAppStorage();
         this.props.history.push('/auth/login');
@@ -79,117 +66,8 @@ class UserProfile extends React.Component {
                 Logout
               </Button>
       <Grid container>
-        <ItemGrid xs={12} sm={12} md={8}>
-          <RegularCard
-            cardTitle="Edit Profile"
-            cardSubtitle={auth.getUserInfo().username}
-            content={
-              <div>
-                <Grid container>
-                  <ItemGrid xs={12} sm={12} md={5}>
-                    <CustomInput
-                      labelText="Company (disabled)"
-                      id="company-disabled"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                      inputProps={{
-                        disabled: true
-                      }}
-                    />
-                  </ItemGrid>
-                  <ItemGrid xs={12} sm={12} md={3}>
-                    <CustomInput
-                      // labelText="Username"
-                      id="username"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                    />
-                  </ItemGrid>
-                  <ItemGrid xs={12} sm={12} md={4}>
-                    <CustomInput
-                      labelText="Email address"
-                      id="email-address"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                    />
-                  </ItemGrid>
-                </Grid>
-                <Grid container>
-                  <ItemGrid xs={12} sm={12} md={6}>
-                    <CustomInput
-                      labelText="First Name"
-                      id="first-name"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                    />
-                  </ItemGrid>
-                  <ItemGrid xs={12} sm={12} md={6}>
-                    <CustomInput
-                      labelText="Last Name"
-                      id="last-name"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                    />
-                  </ItemGrid>
-                </Grid>
-                <Grid container>
-                  <ItemGrid xs={12} sm={12} md={4}>
-                    <CustomInput
-                      labelText="City"
-                      id="city"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                    />
-                  </ItemGrid>
-                  <ItemGrid xs={12} sm={12} md={4}>
-                    <CustomInput
-                      labelText="Country"
-                      id="country"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                    />
-                  </ItemGrid>
-                  <ItemGrid xs={12} sm={12} md={4}>
-                    <CustomInput
-                      labelText="Postal Code"
-                      id="postal-code"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                    />
-                  </ItemGrid>
-                </Grid>
-                <Grid container>
-                  <ItemGrid xs={12} sm={12} md={12}>
-                    <InputLabel style={{ color: "#AAAAAA" }}>
-                      About me
-                    </InputLabel>
-                    <CustomInput
-                      labelText="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
-                      id="about-me"
-                      formControlProps={{
-                        fullWidth: true
-                      }}
-                      inputProps={{
-                        multiline: true,
-                        rows: 5
-                      }}
-                    />
-                  </ItemGrid>
-                </Grid>
-              </div>
-            }
-            footer={<Button color="primary">Update Profile</Button>}
-          />
-        </ItemGrid>
-        <ItemGrid xs={12} sm={12} md={4}>
+        <ItemGrid xs={12} sm={12} md={3}></ItemGrid>
+        <ItemGrid xs={12} sm={12} md={6}>
           <ProfileCard
             avatar={avatar}
             subtitle={auth.getUserInfo().role.name}
@@ -202,6 +80,7 @@ class UserProfile extends React.Component {
             }
           />
         </ItemGrid>
+        <ItemGrid xs={12} sm={12} md={3}></ItemGrid>
       </Grid>
     </div>
     );

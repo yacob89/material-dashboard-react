@@ -113,7 +113,7 @@ const sidebarStyle = theme => ({
       content: '""',
       display: "block",
       background: "#000",
-      opacity: ".8"
+      opacity: "0.0"
     }
   },
   list: {
@@ -147,17 +147,17 @@ const sidebarStyle = theme => ({
     marginRight: "15px",
     textAlign: "center",
     verticalAlign: "middle",
-    color: "rgba(255, 255, 255, 0.8)"
+    color: "rgba(0, 0, 0, 0.8)"
   },
   itemText: {
     ...defaultFont,
     margin: "0",
     lineHeight: "30px",
     fontSize: "14px",
-    color: "#FFFFFF"
+    color: "#000000"
   },
   whiteFont: {
-    color: "#FFFFFF"
+    color: "#000000"
   },
   purple: {
     backgroundColor: primaryColor,
@@ -213,7 +213,7 @@ const sidebarStyle = theme => ({
     overflow: "auto",
     width: "260px",
     zIndex: "4",
-    overflowScrolling: 'touch'
+    overflowScrolling: 'touch',
   }
 });
 

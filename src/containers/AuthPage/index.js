@@ -22,7 +22,7 @@ import form from './forms.json';
 import './styles.css';
 
 //const server_url = 'http://54.245.202.137:1337';
-const server_url = 'http://192.168.1.11:1337';
+const server_url = 'http://192.168.1.12:1337';
 
 class AuthPage extends React.Component {
   state = { value: {}, errors: [], didCheckErrors: false };
@@ -230,6 +230,7 @@ class AuthPage extends React.Component {
             </div>
           </div>
           <div className="linkContainer">{this.renderLink()}</div>
+          <span><p>WE DEVELOP TECHNOLOGIES</p></span>
         </div>
       </div>
     );

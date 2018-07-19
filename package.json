@@ -55,6 +55,7 @@
     "react-dropzone": "^4.2.9",
     "react-file-explorer": "^1.0.0",
     "react-google-maps": "^9.4.5",
+    "react-iframe": "^1.2.0",
     "react-keyed-file-browser": "^1.2.9",
     "react-mapbox-gl": "^3.8.0",
     "react-redux": "^5.0.7",

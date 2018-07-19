@@ -12,14 +12,12 @@
     "login": [
       {
         "customBootstrapClass": "col-md-12",
-        "label": "Username",
         "name": "identifier",
         "type": "text",
         "placeholder": "johndoe@gmail.com"
       },
       {
         "customBootstrapClass": "col-md-12",
-        "label": "Password",
         "name": "password",
         "type": "password"
       },

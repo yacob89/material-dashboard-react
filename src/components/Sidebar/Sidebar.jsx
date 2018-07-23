@@ -54,11 +54,19 @@ const Sidebar = ({ ...props }) => {
       })}
     </List>
   );
+
+  const topSideBar = { 
+    backgroundImage: 'url("https://s3-us-west-2.amazonaws.com/geomapid-assets/img/sidebar_top.png")', 
+    backgroundSize: 'cover',
+    overflow: 'hidden'
+  };
+  const mapidIcon = 'https://s3-us-west-2.amazonaws.com/geomapid-assets/img/mapid_logo.png';
+
   var brand = (
-    <div className={classes.logo}>
-      <a href="https://www.creative-tim.com" className={classes.logoLink}>
+    <div className={classes.logo} style ={ topSideBar }>
+      <a href="https://www.mapid.co.id" className={classes.logoLink}>
         <div className={classes.logoImage}>
-          <img src={logo} alt="logo" className={classes.img} />
+          <img src={mapidIcon} alt="logo" className={classes.img} />
         </div>
         {logoText}
       </a>

@@ -22,6 +22,7 @@ import {
   TasksCard,
   RegularCard,
   Table,
+  Button,
   ItemGrid
 } from "components";
 
@@ -32,6 +33,7 @@ import {
 } from "variables/charts";
 
 import dashboardStyle from "variables/styles/dashboardStyle";
+import auth from 'utils/auth';
 
 class Dashboard extends React.Component {
   state = {
@@ -47,6 +49,12 @@ class Dashboard extends React.Component {
   render() {
     return (
       <div>
+      <Button color="primary" onClick={() => {
+        auth.clearAppStorage();
+        this.props.history.push('/auth/login');
+      }} round>
+                Logout
+              </Button>
         <Grid container>
           <ItemGrid xs={12} sm={6} md={3}>
             <StatsCard

@@ -13,7 +13,7 @@ import appRoutes from "routes/app.jsx";
 import appStyle from "variables/styles/appStyle.jsx";
 
 import image from "assets/img/sidebar-2.jpg";
-import logo from "assets/img/reactlogo.png";
+import logo from "assets/img/mapidlogo.png";
 
 const switchRoutes = (
   <Switch>
@@ -46,24 +46,28 @@ class App extends React.Component {
   }
   render() {
     const { classes, ...rest } = this.props;
+    const mapBackgroundImage = { 
+      backgroundImage: 'url("https://s3-us-west-2.amazonaws.com/geomapid-assets/img/login_bg.svg")', 
+      backgroundSize: 'cover',
+      overflow: 'hidden'
+    };
+
+    const sidebarImage = 'https://s3-us-west-2.amazonaws.com/geomapid-assets/img/sidebar.svg';
+    const sidebarTop = 'https://s3-us-west-2.amazonaws.com/geomapid-assets/img/sidebar_top.png';
+
     return (
-      <div className={classes.wrapper}>
+      <div className={classes.wrapper} style ={ mapBackgroundImage }>
         <Sidebar
           routes={appRoutes}
-          logoText={"Creative Tim"}
+          logoText={"Geomapid"}
           logo={logo}
-          image={image}
+          image={sidebarImage}
           handleDrawerToggle={this.handleDrawerToggle}
           open={this.state.mobileOpen}
-          color="blue"
+          color="gray"
           {...rest}
         />
         <div className={classes.mainPanel} ref="mainPanel">
-          <Header
-            routes={appRoutes}
-            handleDrawerToggle={this.handleDrawerToggle}
-            {...rest}
-          />
           {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
           {this.getRoute() ? (
             <div className={classes.content}>

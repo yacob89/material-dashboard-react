@@ -41,7 +41,7 @@ const sidebarStyle = theme => ({
       right: "0",
       left: "auto",
       zIndex: "1032",
-      visibility: "visible",
+      visibility: "hidden",
       overflowY: "visible",
       borderTop: "none",
       textAlign: "left",
@@ -113,7 +113,7 @@ const sidebarStyle = theme => ({
       content: '""',
       display: "block",
       background: "#000",
-      opacity: ".8"
+      opacity: "0.0"
     }
   },
   list: {
@@ -147,17 +147,17 @@ const sidebarStyle = theme => ({
     marginRight: "15px",
     textAlign: "center",
     verticalAlign: "middle",
-    color: "rgba(255, 255, 255, 0.8)"
+    color: "rgba(0, 0, 0, 0.8)"
   },
   itemText: {
     ...defaultFont,
     margin: "0",
     lineHeight: "30px",
     fontSize: "14px",
-    color: "#FFFFFF"
+    color: "#000000"
   },
   whiteFont: {
-    color: "#FFFFFF"
+    color: "#000000"
   },
   purple: {
     backgroundColor: primaryColor,
@@ -175,6 +175,16 @@ const sidebarStyle = theme => ({
       backgroundColor: infoColor,
       boxShadow:
         "0 12px 20px -10px rgba(0,188,212,.28), 0 4px 20px 0 rgba(0,0,0,.12), 0 7px 8px -5px rgba(0,188,212,.2)"
+    }
+  },
+  gray: {
+    backgroundColor: "#848484",
+    boxShadow:
+      "0 12px 20px -10px rgba(205,200,198,.28), 0 4px 20px 0 rgba(0,0,0,.12), 0 7px 8px -5px rgba(205,200,198,.2)",
+    "&:hover": {
+      backgroundColor: "#848484",
+      boxShadow:
+        "0 12px 20px -10px rgba(205,200,198,.28), 0 4px 20px 0 rgba(0,0,0,.12), 0 7px 8px -5px rgba(205,200,198,.2)"
     }
   },
   green: {
@@ -213,7 +223,7 @@ const sidebarStyle = theme => ({
     overflow: "auto",
     width: "260px",
     zIndex: "4",
-    overflowScrolling: 'touch'
+    overflowScrolling: 'touch',
   }
 });
 

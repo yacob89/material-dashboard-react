@@ -13,8 +13,8 @@ import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import auth from 'utils/auth';
 import request from 'utils/request';
 
-//const SERVER_URL = 'http://54.245.202.137';
-const SERVER_URL = 'http://192.168.1.12';
+const SERVER_URL = 'http://54.245.202.137';
+//const SERVER_URL = 'http://192.168.1.2';
 
 const columns = [{
     dataField: 'filename',
@@ -145,8 +145,8 @@ class UploadList extends React.Component {
     console.log("Row Active Value: ", activevalue);
 
     var promise = new Promise(function (resolve, reject) {
-      //axios.put(`http://54.245.202.137:1337/fileuploads/${id}`, /*{
-      axios.put(`http://192.168.1.12:1337/fileuploads/${id}`,
+      axios.put(`http://54.245.202.137:1337/fileuploads/${id}`, /*{
+      //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
           /*{
                  params: {
                    _id:id

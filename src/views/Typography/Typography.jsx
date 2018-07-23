@@ -16,8 +16,8 @@ import shp from 'shpjs'
 const AWS = require('aws-sdk');
 var path = require('path');
 
-//const SERVER_URL = 'http://54.245.202.137';
-const SERVER_URL = 'http://192.168.1.12';
+const SERVER_URL = 'http://54.245.202.137';
+//const SERVER_URL = 'http://192.168.1.2';
 
 class Typography extends React.Component {
 
@@ -418,7 +418,7 @@ class Typography extends React.Component {
                   </ul>
                 </aside>
               </section>
-              <Button color="primary" type="submit" round>Upload</Button>
+              <Button color="bluemapid" type="submit" round>Upload</Button>
             </form>
           </ItemGrid>
           <ItemGrid xs={12} sm={12} md={4}>

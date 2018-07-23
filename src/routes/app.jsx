@@ -43,15 +43,15 @@ const appRoutes = [
   },*/
   {
     path: "/uploadlist",
-    sidebarName: "Upload List",
-    navbarName: "Upload List",
+    sidebarName: "Layer List",
+    navbarName: "Layer List",
     icon: ContentPaste,
     component: UploadList
   },
   {
     path: "/typography",
-    sidebarName: "Typography",
-    navbarName: "Typography",
+    sidebarName: "Uploads",
+    navbarName: "Uploads",
     icon: LibraryBooks,
     component: Typography
   },
@@ -64,8 +64,8 @@ const appRoutes = [
   },*/
   {
     path: "/maps",
-    sidebarName: "Maps",
-    navbarName: "Map",
+    sidebarName: "Preview",
+    navbarName: "Preview",
     icon: LocationOn,
     component: Maps
   },

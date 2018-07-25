@@ -233,7 +233,7 @@ class Typography extends React.Component {
       });
 
       var params = {
-        Bucket: auth.getUserInfo().username,
+        Bucket: 'yacob',
         ACL: 'public-read',
         Key: auth.getUserInfo().username + '/' + file.name,
         Body: file
@@ -311,6 +311,7 @@ class Typography extends React.Component {
                   .then(function (response) {
                     console.log(response);
                     console.log("Upload Success");
+                    alert("Upload Success!");
                   })
                   .catch(function (error) {
                     console.log(error);

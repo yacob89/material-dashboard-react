@@ -181,12 +181,13 @@ class AuthPage extends React.Component {
 
       <div className="authPage" style ={ mapBackgroundImage }>
         <div className="wrapper">
-          <div><p><img src={mapidLogoURL} alt="logo" style={mapidLogo} /></p></div>
-          <div><p><img src={mapidTextURL} alt="logo" style={mapidText} /></p></div>
+          
           <div className="formContainer" style={divStyle}>
             <div className="container-fluid">
               <div className="row">
                 <div className="col-md-12">
+                <div><img src={mapidLogoURL} alt="logo" style={mapidLogo} /></div>
+          <div><img src={mapidTextURL} alt="logo" style={mapidText} /></div>
                   {providers.map(provider => (
                     <SocialLink provider={provider} key={provider} />
                   ))}

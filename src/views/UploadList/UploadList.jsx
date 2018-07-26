@@ -185,7 +185,7 @@ class UploadList extends React.Component {
           <RegularCard
             headerColor = "blue"
             plainCard
-            cardTitle="Layers"
+            cardTitle="Current Active Layers"
             cardSubtitle="Uploaded by user"
             content={
               <BootstrapTable

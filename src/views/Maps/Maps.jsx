@@ -32,16 +32,23 @@ class Maps extends React.Component {
 
     return (
       <Grid container>
-        <ItemGrid xs={12} sm={12} md={12}>
-          <Iframe url={'http://geomapid.co.id/'+this.state.username}
-            width="100%"
-            height="768px"
-            id="myId"
-            className="myClassname"
-            display="initial"
-            position="relative"
-            allowFullScreen />
-        </ItemGrid>
+        <RegularCard
+          headerColor="blue"
+          cardTitle="MAPID Portal Preview"
+          cardSubtitle={'geomapid.co.id/'+auth.getUserInfo().username}
+          content={
+            <ItemGrid xs={12} sm={12} md={12}>
+              <Iframe url={'http://geomapid.co.id/' + this.state.username}
+                width="100%"
+                height="768px"
+                id="myId"
+                className="myClassname"
+                display="initial"
+                position="relative"
+                allowFullScreen />
+            </ItemGrid>
+          }
+        />
       </Grid>
     );
   }

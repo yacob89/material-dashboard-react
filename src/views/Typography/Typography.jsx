@@ -389,44 +389,53 @@ class Typography extends React.Component {
     /* Style */
 
     return (
-      <div>
-        <FileBrowser
-          files={this.state.files}
+      <Grid container>
+        <RegularCard
+          headerColor="blue"
+          cardTitle="Uploads"
+          cardSubtitle={'Upload Your geojson and zipped shapefiles here'}
+          content={
+            <div>
+              <FileBrowser
+                files={this.state.files}
 
-          onCreateFolder={this.handleCreateFolder}
-          onCreateFiles={this.handleCreateFiles}
-          onMoveFolder={this.handleRenameFolder}
-          onMoveFile={this.handleRenameFile}
-          onRenameFolder={this.handleRenameFolder}
-          onRenameFile={this.handleRenameFile}
-          onDeleteFolder={this.handleDeleteFolder}
-          onDeleteFile={this.handleDeleteFile}
+                onCreateFolder={this.handleCreateFolder}
+                onCreateFiles={this.handleCreateFiles}
+                onMoveFolder={this.handleRenameFolder}
+                onMoveFile={this.handleRenameFile}
+                onRenameFolder={this.handleRenameFolder}
+                onRenameFile={this.handleRenameFile}
+                onDeleteFolder={this.handleDeleteFolder}
+                onDeleteFile={this.handleDeleteFile}
+              />
+              <Grid container>
+                <ItemGrid xs={12} sm={12} md={8}>
+                  <form onSubmit={this.onFormSubmit}>
+                    <section>
+                      <div className="dropzone">
+                        <Dropzone multiple={false} onDrop={this.onDrop.bind(this)}>
+                          <p>Drop a geojson file here, or click to select files to upload.</p>
+                        </Dropzone>
+                      </div>
+                      <aside>
+                        <ul>
+                          {
+                            this.state.filesDrop.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
+                          }
+                        </ul>
+                      </aside>
+                    </section>
+                    <Button color="bluemapid" type="submit" round>Upload</Button>
+                  </form>
+                </ItemGrid>
+                <ItemGrid xs={12} sm={12} md={4}>
+
+                </ItemGrid>
+              </Grid>
+            </div>
+          }
         />
-        <Grid container>
-          <ItemGrid xs={12} sm={12} md={8}>
-            <form onSubmit={this.onFormSubmit}>
-              <section>
-                <div className="dropzone">
-                  <Dropzone multiple={false} onDrop={this.onDrop.bind(this)}>
-                    <p>Drop a geojson file here, or click to select files to upload.</p>
-                  </Dropzone>
-                </div>
-                <aside>
-                  <ul>
-                  {
-                    this.state.filesDrop.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-                  }
-                  </ul>
-                </aside>
-              </section>
-              <Button color="bluemapid" type="submit" round>Upload</Button>
-            </form>
-          </ItemGrid>
-          <ItemGrid xs={12} sm={12} md={4}>
-
-          </ItemGrid>
-        </Grid>
-      </div>
+      </Grid>
     );
   }
 }

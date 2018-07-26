@@ -42,7 +42,7 @@ const columns = [{
     }
   }, {
     dataField: 'active',
-    text: 'Active',
+    text: 'Show/Hide',
     filter: textFilter(),
     sort: true,
     headerStyle: {
@@ -78,6 +78,12 @@ const columns = [{
     hidden: true
   }
 ];
+
+const rowEvents = {
+  onClick: (e, row, rowIndex) => {
+    alert(`clicked on row with index: ${rowIndex}`);
+  }
+};
 
 class UploadList extends React.Component {
   constructor(props) {
@@ -177,6 +183,7 @@ class UploadList extends React.Component {
       <Grid container>
         <ItemGrid xs={12} sm={12} md={12}>
           <RegularCard
+            headerColor = "blue"
             plainCard
             cardTitle="Layers"
             cardSubtitle="Uploaded by user"

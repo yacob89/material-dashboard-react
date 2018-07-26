@@ -58,31 +58,143 @@ class UserProfile extends React.Component {
 
     return (
       <div>
-      <Button color="danger" 
-        onClick={() => {
-        auth.clearAppStorage();
-        this.props.history.push('/auth/login');
-      }} round>
-                Logout
+        <Button color="danger"
+          onClick={() => {
+            auth.clearAppStorage();
+            this.props.history.push('/auth/login');
+          }} round>
+          Logout
               </Button>
-      <Grid container>
-        <ItemGrid xs={12} sm={12} md={3}></ItemGrid>
-        <ItemGrid xs={12} sm={12} md={6}>
-          <ProfileCard
-            avatar={avatar}
-            subtitle={auth.getUserInfo().role.name}
-            title={auth.getUserInfo().username}
-            description={auth.getUserInfo().email}
-            footer={
-              <Button color="bluemapid" round onClick={this.createFolderOnClick}>
-                Create Folder
+        <Grid container>
+          <ItemGrid xs={12} sm={12} md={8}>
+            <RegularCard
+              headerColor="blue"
+              cardTitle="Edit Profile"
+              cardSubtitle={auth.getUserInfo().username}
+              content={
+                <div>
+                  <Grid container>
+                    <ItemGrid xs={12} sm={12} md={11}>
+                      <CustomInput
+                        labelText="First Name"
+                        id="first-name"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                      />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
+                  </Grid>
+                  <Grid container>
+                    <ItemGrid xs={12} sm={12} md={11}>
+                      <CustomInput
+                        labelText="Last Name"
+                        id="last-name"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                      />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
+                  </Grid>
+                  <Grid container>
+                    <ItemGrid xs={12} sm={12} md={11}>
+                      <CustomInput
+                        labelText="Your Email"
+                        id="email"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                      />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
+                  </Grid>
+                  <Grid container>
+                    <ItemGrid xs={12} sm={12} md={11}>
+                      <CustomInput
+                        labelText="Street Address"
+                        id="address"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                      />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
+                  </Grid>
+                  <Grid container>
+                    <ItemGrid xs={12} sm={12} md={11}>
+                      <CustomInput
+                        labelText="Post Code"
+                        id="postcode"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                      />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
+                  </Grid>
+                  <Grid container>
+                    <ItemGrid xs={12} sm={12} md={11}>
+                      <CustomInput
+                        labelText="Country"
+                        id="country"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                      />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
+                  </Grid>
+                  <Grid container>
+                    <ItemGrid xs={12} sm={12} md={11}>
+                      <CustomInput
+                        labelText="Your Organization"
+                        id="organization"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                      />
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
+                  </Grid>
+                  <Grid container>
+                    <ItemGrid xs={12} sm={12} md={12}>
+                      <InputLabel style={{ color: "#AAAAAA" }}>
+                        About me
+                </InputLabel>
+                      <CustomInput
+                        labelText="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
+                        id="about-me"
+                        formControlProps={{
+                          fullWidth: true
+                        }}
+                        inputProps={{
+                          multiline: true,
+                          rows: 5
+                        }}
+                      />
+                    </ItemGrid>
+                  </Grid>
+                </div>
+              }
+              footer={<Button color="bluemapid">Update Profile</Button>}
+            />
+          </ItemGrid>
+          <ItemGrid xs={12} sm={12} md={4}>
+            <ProfileCard
+              avatar={avatar}
+              subtitle={auth.getUserInfo().role.name}
+              title={auth.getUserInfo().username}
+              description={auth.getUserInfo().email}
+              footer={
+                <Button color="bluemapid" round onClick={this.createFolderOnClick}>
+                  Create Folder
               </Button>
-            }
-          />
-        </ItemGrid>
-        <ItemGrid xs={12} sm={12} md={3}></ItemGrid>
-      </Grid>
-    </div>
+              }
+            />
+          </ItemGrid>
+        </Grid>
+      </div>
     );
   }
 }

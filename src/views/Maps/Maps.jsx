@@ -17,9 +17,15 @@ class Maps extends React.Component {
 
   async componentDidMount() {
     console.log("User Info", auth.getUserInfo());
-    this.setState({
-      username:auth.getUserInfo().username
-    });
+    if (auth.getUserInfo() == null){
+      auth.clearAppStorage();
+      //this.props.history.push('/auth/login');
+    }
+    else{
+      this.setState({
+        username:auth.getUserInfo().username
+      });
+    }
   }
 
   render() {

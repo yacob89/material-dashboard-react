@@ -306,7 +306,7 @@ class Typography extends React.Component {
                     filename: file.name,
                     server_url: data.Location,
                     type: htmlType,
-                    active: false
+                    active: 'false'
                   })
                   .then(function (response) {
                     console.log(response);

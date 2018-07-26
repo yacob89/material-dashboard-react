@@ -54,6 +54,48 @@
         "name": "email",
         "placeholder": "johndoe@gmail.com",
         "type": "email"
+      },
+      {
+        "customBootstrapClass": "col-md-12",
+        "label": "First Name",
+        "name": "first_name",
+        "placeholder": "John",
+        "type": "text"
+      },
+      {
+        "customBootstrapClass": "col-md-12",
+        "label": "Last Name",
+        "name": "last_name",
+        "placeholder": "Doe",
+        "type": "text"
+      },
+      {
+        "customBootstrapClass": "col-md-12",
+        "label": "Street Address",
+        "name": "address",
+        "placeholder": "",
+        "type": "text"
+      },
+      {
+        "customBootstrapClass": "col-md-12",
+        "label": "Post Code",
+        "name": "post_code",
+        "placeholder": "40552",
+        "type": "text"
+      },
+      {
+        "customBootstrapClass": "col-md-12",
+        "label": "Country",
+        "name": "country",
+        "placeholder": "Indonesia",
+        "type": "text"
+      },
+      {
+        "customBootstrapClass": "col-md-12",
+        "label": "Your Organization",
+        "name": "organization",
+        "placeholder": "MAPID",
+        "type": "text"
       }
     ],
     "reset-password": [

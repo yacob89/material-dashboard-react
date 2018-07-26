@@ -35,7 +35,7 @@ class Maps extends React.Component {
         <RegularCard
           headerColor="blue"
           cardTitle="MAPID Portal Preview"
-          cardSubtitle={'geomapid.co.id/'+auth.getUserInfo().username}
+          cardSubtitle={'geomapid.co.id/'+this.state.username}
           content={
             <ItemGrid xs={12} sm={12} md={12}>
               <Iframe url={'http://geomapid.co.id/' + this.state.username}

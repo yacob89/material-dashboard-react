@@ -11,6 +11,7 @@ import auth from 'utils/auth'
 // Components
 import FileBrowser, { BaseFileConnectors, FileRenderers } from 'react-keyed-file-browser'
 import 'views/Typography/react-keyed-file-browser.css'
+import 'views/Typography/typography.css'
 import Moment from 'moment'
 import shp from 'shpjs'
 const AWS = require('aws-sdk');
@@ -389,53 +390,56 @@ class Typography extends React.Component {
     /* Style */
 
     return (
-      <Grid container>
-        <RegularCard
-          headerColor="blue"
-          cardTitle="Uploads"
-          cardSubtitle={'Upload Your geojson and zipped shapefiles here'}
-          content={
-            <div>
-              <FileBrowser
-                files={this.state.files}
+      <div>
+        <Grid container>
+          <RegularCard
+            headerColor="blue"
+            cardTitle="Uploads"
+            cardSubtitle={'Upload Your geojson and zipped shapefiles here'}
+            content={
+              <div>
+                <FileBrowser
+                  files={this.state.files}
 
-                onCreateFolder={this.handleCreateFolder}
-                onCreateFiles={this.handleCreateFiles}
-                onMoveFolder={this.handleRenameFolder}
-                onMoveFile={this.handleRenameFile}
-                onRenameFolder={this.handleRenameFolder}
-                onRenameFile={this.handleRenameFile}
-                onDeleteFolder={this.handleDeleteFolder}
-                onDeleteFile={this.handleDeleteFile}
-              />
-              <Grid container>
-                <ItemGrid xs={12} sm={12} md={8}>
-                  <form onSubmit={this.onFormSubmit}>
+                  onCreateFolder={this.handleCreateFolder}
+                  onCreateFiles={this.handleCreateFiles}
+                  onMoveFolder={this.handleRenameFolder}
+                  onMoveFile={this.handleRenameFile}
+                  onRenameFolder={this.handleRenameFolder}
+                  onRenameFile={this.handleRenameFile}
+                  onDeleteFolder={this.handleDeleteFolder}
+                  onDeleteFile={this.handleDeleteFile}
+                />
+                <Grid container>
+                  <ItemGrid xs={12} sm={12} md={8}>
+                    <form onSubmit={this.onFormSubmit}>
+                      <section>
+                        <div className="dropzone">
+                          <Dropzone className="dropzone" multiple={false} onDrop={this.onDrop.bind(this)}>
+                            <p>Drop a geojson file here, or click to select files to upload.</p>
+                          </Dropzone>
+                        </div>
+                        <aside>
+                          <ul>
+                            {
+                              this.state.filesDrop.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
+                            }
+                          </ul>
+                        </aside>
+                      </section>
+                    </form>
+                  </ItemGrid>
+                  <ItemGrid xs={12} sm={12} md={4}>
                     <section>
-                      <div className="dropzone">
-                        <Dropzone multiple={false} onDrop={this.onDrop.bind(this)}>
-                          <p>Drop a geojson file here, or click to select files to upload.</p>
-                        </Dropzone>
-                      </div>
-                      <aside>
-                        <ul>
-                          {
-                            this.state.filesDrop.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-                          }
-                        </ul>
-                      </aside>
+                      <Button color="bluemapid" type="submit" round>Upload</Button>
                     </section>
-                    <Button color="bluemapid" type="submit" round>Upload</Button>
-                  </form>
-                </ItemGrid>
-                <ItemGrid xs={12} sm={12} md={4}>
-
-                </ItemGrid>
-              </Grid>
-            </div>
-          }
-        />
-      </Grid>
+                  </ItemGrid>
+                </Grid>
+              </div>
+            }
+          />
+        </Grid>
+      </div>
     );
   }
 }

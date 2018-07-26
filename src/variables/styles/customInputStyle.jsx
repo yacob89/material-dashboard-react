@@ -6,6 +6,7 @@ import {
   primaryColor,
   dangerColor,
   successColor,
+  blueColor,
   defaultFont
 } from "variables/styles";
 
@@ -17,13 +18,13 @@ const customInputStyle = {
   },
   underline: {
     "&:before": {
-      backgroundColor: "#D2D2D2",
+      backgroundColor: "#2789D2",
       height: "1px !important"
     }
   },
   inkbar: {
     "&:after": {
-      backgroundColor: primaryColor
+      backgroundColor: blueColor
     }
   },
   inkbarError: {

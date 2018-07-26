@@ -58,13 +58,6 @@ class UserProfile extends React.Component {
 
     return (
       <div>
-        <Button color="danger"
-          onClick={() => {
-            auth.clearAppStorage();
-            this.props.history.push('/auth/login');
-          }} round>
-          Logout
-              </Button>
         <Grid container>
           <ItemGrid xs={12} sm={12} md={8}>
             <RegularCard
@@ -157,41 +150,41 @@ class UserProfile extends React.Component {
                     </ItemGrid>
                     <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
                   </Grid>
-                  <Grid container>
-                    <ItemGrid xs={12} sm={12} md={12}>
-                      <InputLabel style={{ color: "#AAAAAA" }}>
-                        About me
-                </InputLabel>
-                      <CustomInput
-                        labelText="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
-                        id="about-me"
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                        inputProps={{
-                          multiline: true,
-                          rows: 5
-                        }}
-                      />
-                    </ItemGrid>
-                  </Grid>
                 </div>
               }
               footer={<Button color="bluemapid">Update Profile</Button>}
             />
           </ItemGrid>
           <ItemGrid xs={12} sm={12} md={4}>
-            <ProfileCard
-              avatar={avatar}
-              subtitle={auth.getUserInfo().role.name}
-              title={auth.getUserInfo().username}
-              description={auth.getUserInfo().email}
-              footer={
-                <Button color="bluemapid" round onClick={this.createFolderOnClick}>
-                  Create Folder
+            <Grid container>
+              <ProfileCard
+                avatar={avatar}
+                subtitle={auth.getUserInfo().role.name}
+                title={auth.getUserInfo().username}
+                description={auth.getUserInfo().email}
+                footer={
+                  <Button color="bluemapid" round onClick={this.createFolderOnClick}>
+                    Create Folder
               </Button>
-              }
-            />
+                }
+              />
+            </Grid>
+            <Grid container>
+              <ItemGrid xs={12} sm={12} md={4}>
+              
+              </ItemGrid>
+              <ItemGrid xs={12} sm={12} md={4}>
+                <Button color="danger"
+                  onClick={() => {
+                    auth.clearAppStorage();
+                    this.props.history.push('/auth/login');
+                  }} round>
+                  Logout
+                </Button>
+              </ItemGrid>
+              <ItemGrid xs={12} sm={12} md={4}>
+              </ItemGrid>
+            </Grid>
           </ItemGrid>
         </Grid>
       </div>

@@ -76,6 +76,16 @@ const columns = [{
       backgroundColor: '#6495ED'
     },
     hidden: true
+  },
+  {
+    dataField: 'delete',
+    text: 'Delete',
+    headerStyle: {
+      backgroundColor: '#6495ED'
+    },
+    events: {
+      onClick: () => alert('Click on Product ID field')
+    }
   }
 ];
 
@@ -139,7 +149,8 @@ class UploadList extends React.Component {
             location: fileList[i].server_url,
             type:fileList[i].type,
             active: fileList[i].active,
-            _id: fileList[i]._id
+            _id: fileList[i]._id,
+            delete:"Delete"
           });
         }
         this.setState({ rowData:rows });
@@ -165,8 +176,8 @@ class UploadList extends React.Component {
           console.log("Respon Data: ", responses.data);
           if (responses.data.ok == 1) {
             alert('Success!');
-            resolve(true);
           }
+          resolve('true');
         })
         .catch(function (error) {
           console.log(error);
@@ -183,33 +194,39 @@ class UploadList extends React.Component {
       <Grid container>
         <ItemGrid xs={12} sm={12} md={12}>
           <RegularCard
-            headerColor = "blue"
+            headerColor="blue"
             plainCard
             cardTitle="Current Active Layers"
             cardSubtitle="Uploaded by user"
             content={
               <BootstrapTable
                 keyField="id"
-                data={ this.state.rowData }
-                columns={ columns }
+                data={this.state.rowData}
+                columns={columns}
                 striped
                 hover
                 condensed
                 noDataIndication="No Layer is Uploaded"
-                filter={ filterFactory() }
-                cellEdit={ cellEditFactory({
+                filter={filterFactory()}
+                cellEdit={cellEditFactory({
                   mode: 'click',
                   blurToSave: true,
                   beforeSaveCell: (oldValue, newValue, row, column) => { console.log('Before Saving Cell!!'); },
                   afterSaveCell: (oldValue, newValue, row, column) => {
-                     console.log('After Saving Cell!!', ' row ', row._id);
-                     this.setState({
-                      rowID: row._id,
-                      newValue: newValue
-                    });
-                     this.updateRemoteData(row._id, newValue);
+                    console.log('After Saving Cell!!', ' row ', row._id);
+                    console.log('After saving cell column: ', column);
+                    if (column.dataField == "active") {
+                      this.setState({
+                        rowID: row._id,
+                        newValue: newValue
+                      });
+                      this.updateRemoteData(row._id, newValue);
                     }
-                }) }
+                    if(column.dataField == "delete"){
+                      console.log("Delete activated!");
+                    }
+                  }
+                })}
               />
             }
           />

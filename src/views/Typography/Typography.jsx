@@ -427,11 +427,12 @@ class Typography extends React.Component {
                           </ul>
                         </aside>
                       </section>
+                      <Button color="bluemapid" type="submit" round>Upload</Button>
                     </form>
                   </ItemGrid>
                   <ItemGrid xs={12} sm={12} md={4}>
                     <section>
-                      <Button color="bluemapid" type="submit" round>Upload</Button>
+                      
                     </section>
                   </ItemGrid>
                 </Grid>

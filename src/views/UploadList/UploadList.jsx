@@ -91,7 +91,7 @@ const columns = [{
 
 const rowEvents = {
   onClick: (e, row, rowIndex) => {
-    alert(`clicked on row with index: ${rowIndex}`);
+    alert(`Layer Deleted at: ${rowIndex}`);
   }
 };
 
@@ -155,6 +155,28 @@ class UploadList extends React.Component {
         }
         this.setState({ rowData:rows });
       });
+  }
+
+  deleteRemoteData(id) {
+    console.log("Row ID: ", id);
+
+    var promise = new Promise(function (resolve, reject) {
+      axios.delete(`http://54.245.202.137:1337/fileuploads/${id}`)
+        .then(function (responses) {
+          console.log("Respon Data: ", responses.data);
+          if (responses.data.ok == 1) {
+            alert('Success!');
+          }
+          resolve('true');
+        })
+        .catch(function (error) {
+          console.log(error);
+          alert(error);
+        });
+      // call resolve if the method succeeds
+      
+    })
+    promise.then(bool => this.loadFileList())
   }
 
   updateRemoteData(id, activevalue) {
@@ -224,6 +246,7 @@ class UploadList extends React.Component {
                     }
                     if(column.dataField == "delete"){
                       console.log("Delete activated!");
+                      this.deleteRemoteData(row._id);
                     }
                   }
                 })}

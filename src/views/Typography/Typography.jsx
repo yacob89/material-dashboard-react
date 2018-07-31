@@ -8,6 +8,9 @@ import Dropzone from 'react-dropzone'
 import {Button} from "components"
 import axios, { post } from "axios"
 import auth from 'utils/auth'
+// Material UI
+import ReactModal from 'react-modal';
+
 // Components
 import FileBrowser, { BaseFileConnectors, FileRenderers } from 'react-keyed-file-browser'
 import 'views/Typography/react-keyed-file-browser.css'
@@ -17,8 +20,8 @@ import shp from 'shpjs'
 const AWS = require('aws-sdk');
 var path = require('path');
 
-const SERVER_URL = 'http://54.245.202.137';
-//const SERVER_URL = 'http://192.168.1.2';
+//const SERVER_URL = 'http://54.245.202.137';
+const SERVER_URL = 'http://192.168.1.11';
 
 class Typography extends React.Component {
 
@@ -29,7 +32,8 @@ class Typography extends React.Component {
       multifile:null,
       filesDrop:[],
       multifilesDrop:[],
-      files:[]
+      files:[],
+      showModal: false
     };
     this.loadFileList = this.loadFileList.bind(this);
     this.deleteObject = this.deleteObject.bind(this);
@@ -38,7 +42,8 @@ class Typography extends React.Component {
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.onChange = this.onChange.bind(this);
     this.fileUpload = this.fileUpload.bind(this);
-    this.s3Upload = this.s3Upload.bind(this);
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
   componentDidMount(){
@@ -200,7 +205,7 @@ class Typography extends React.Component {
   onFormSubmit(e) {
     e.preventDefault(); // Stop form submit
 
-    /*this.fileUpload(this.state.file).then(response => {
+    this.fileUpload(this.state.file).then(response => {
       console.log("Respon dari sebuah data: ", response.data);
       if(response.data == 'success'){
         alert("Upload success!");
@@ -209,124 +214,8 @@ class Typography extends React.Component {
       else if(response.data == 'extension'){
         alert("File extension error make sure you uploaded correct file!");
       }
-    });*/
-
-    this.s3Upload(this.state.file);
-
-  }
-
-  s3Upload(file) {
-    // Due to security reasons, cannot expose user and secret key
-    axios.get(SERVER_URL + ':7555/api/getsecretkey', {
-      params: {
-        username: auth.getUserInfo().username
-      }
-    }).then(response => {
-      // handle success
-      console.log(response);
-      const userkey = response.data.user_key;
-      const secretkey = response.data.secret_key;
-
-      let s3bucket = new AWS.S3({
-        accessKeyId: userkey,
-        secretAccessKey: secretkey,
-        Bucket: 'yacob'
-      });
-
-      var params = {
-        Bucket: 'yacob',
-        ACL: 'public-read',
-        Key: auth.getUserInfo().username + '/' + file.name,
-        Body: file
-      };
-      s3bucket.upload(params, function (err, data) {
-        if (err) {
-          console.log('error in callback');
-          console.log(err);
-        } else {
-          console.log('success');
-          console.log(data.Location);
-
-          var filetype = path.extname(file.name);
-          console.log("File Extension: ", filetype);
-          //var fetchUrl = require("fetch").fetchUrl;
-
-          if (filetype == '.zip') {
-            console.log("File Path: ", data.Location);
-            shp(data.Location).then(function (geojson) {
-              //see bellow for whats here this internally call shp.parseZip()
-              console.log("Geojsonnya: ", geojson);
-              // Send request to convert shp file to geojson and upload to S3
-              axios.post(SERVER_URL + ':7555/api/convertshp', {
-                  username: auth.getUserInfo().username,
-                  filename: file.name,
-                  geojson: geojson
-                })
-                .then(function (response) {
-                  console.log(response.data);
-                  if (response.data == 'success') {
-                    alert("Convert and Upload success!!");
-                  }
-                })
-                .catch(function (error) {
-                  console.log(error);
-                  alert(error);
-                });
-            });
-          }
-
-          if (filetype == '.geojson') {
-            // source file is iso-8859-15 but it is converted to utf-8 automatically
-
-            axios.get(data.Location).then(res => {
-              console.log("Masuk axios");
-              const persons = res.data;
-              //var jsonContent = JSON.parse(persons);
-
-              //var geojsonType = jsonContent.features;
-              if (persons) {
-                var geojsonType = persons.features[0].geometry.type;
-                var htmlType = '';
-
-                if (geojsonType == 'Polygon' || geojsonType == 'MultiPolygon') {
-                  htmlType = 'fill';
-                }
-                if (geojsonType == 'Point' || geojsonType == 'MultiPoint') {
-                  htmlType = 'symbol';
-                }
-                if (geojsonType == 'LineString' || geojsonType == 'MultiLineString') {
-                  htmlType = 'line';
-                }
-                console.log("GEOJSON TYPE: ", htmlType);
-
-                // Setelah selesai upload, baru insert data di strapi
-                axios
-                  .post(SERVER_URL + ':1337/fileuploads', {
-                    //.post("http://192.168.1.11:1337/fileuploads", {
-                    username: auth.getUserInfo().username,
-                    filename: file.name,
-                    server_url: data.Location,
-                    type: htmlType,
-                    active: 'false'
-                  })
-                  .then(function (response) {
-                    console.log(response);
-                    console.log("Upload Success");
-                    alert("Upload Success!");
-                  })
-                  .catch(function (error) {
-                    console.log(error);
-                  });
-              } else {
-                console.log("Something broke!");
-              }
-            });
-          }
-          console.log("Upload Success");
-        }
-      });
     });
-    /* End of CORS Configuration */
+
   }
 
   fileUpload(file) {
@@ -343,7 +232,7 @@ class Typography extends React.Component {
     console.log("Nama filenya adalah: ", file.name);
     console.log("Filekey nya adalah: ", file.name);
 
-    const url = SERVER_URL+':7555/api/upload';
+    const url = SERVER_URL+':7555/apiuploads';
     const config = {
       headers: {
         'content-type': 'multipart/form-data'
@@ -386,12 +275,30 @@ class Typography extends React.Component {
     });
   }
 
+  handleOpenModal () {
+    this.setState({ showModal: true });
+  }
+  
+  handleCloseModal () {
+    this.setState({ showModal: false });
+  }
+
   render() {
     /* Style */
 
     return (
       <div>
         <Grid container>
+          <ReactModal
+            isOpen={this.state.showModal}
+            contentLabel="onRequestClose Example"
+            onRequestClose={this.handleCloseModal}
+            className="Modal"
+            overlayClassName="Overlay"
+          >
+            <p>Modal text!</p>
+            <button onClick={this.handleCloseModal}>Close Modal</button>
+          </ReactModal>
           <RegularCard
             headerColor="blue"
             cardTitle="Uploads"
@@ -400,7 +307,6 @@ class Typography extends React.Component {
               <div>
                 <FileBrowser
                   files={this.state.files}
-
                   onCreateFolder={this.handleCreateFolder}
                   onCreateFiles={this.handleCreateFiles}
                   onMoveFolder={this.handleRenameFolder}
@@ -432,7 +338,7 @@ class Typography extends React.Component {
                   </ItemGrid>
                   <ItemGrid xs={12} sm={12} md={4}>
                     <section>
-                      
+
                     </section>
                   </ItemGrid>
                 </Grid>

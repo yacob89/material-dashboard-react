@@ -8,6 +8,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { findIndex, get, map, replace, set } from 'lodash';
 import { Link } from 'react-router-dom';
+import axios, { post } from "axios"
 
 import Button from 'components/strapi/components/Button';
 import Input from 'components/InputsIndex';
@@ -21,8 +22,11 @@ import request from 'utils/request';
 import form from './forms.json';
 import './styles.css';
 
-const server_url = 'http://54.245.202.137:1337';
-//const server_url = 'http://192.168.1.2:1337';
+//const SERVER_URL = 'http://54.245.202.137:1337';
+const SERVER_URL = 'http://192.168.1.12:1337';
+
+var requestType = 'login';
+// This to determine what kind of request
 
 class AuthPage extends React.Component {
   state = { value: {}, errors: [], didCheckErrors: false };
@@ -42,16 +46,18 @@ class AuthPage extends React.Component {
 
     switch (this.props.match.params.authType) {
       case 'login':
-        requestURL = server_url+'/auth/local';
+        requestURL = SERVER_URL+'/auth/local';
+        requestType = 'login';
         break;
       case 'register':
-        requestURL = server_url+'/auth/local/register';
+        requestURL = SERVER_URL+'/auth/local/register';
+        requestType = 'register';
         break;
       case 'reset-password':
-        requestURL = server_url+'/auth/reset-password';
+        requestURL = SERVER_URL+'/auth/reset-password';
         break;
       case 'forgot-password':
-        requestURL = server_url+'/auth/forgot-password';
+        requestURL = SERVER_URL+'/auth/forgot-password';
         break;
       default:
     }
@@ -85,6 +91,24 @@ class AuthPage extends React.Component {
       .then(response => {
         auth.setToken(response.jwt, body.rememberMe);
         auth.setUserInfo(response.user, body.rememberMe);
+
+        /*if(requestType === 'register'){
+          axios.post(SERVER_URL+':7555/api/deleteobject', {
+            bucket: auth.getUserInfo().username,
+            key: fileKey
+          })
+          .then(function (response) {
+            console.log(response.data);
+            if(response.data === 'success'){
+              alert(fileKey+ ' Deleted!');
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+            alert(error);
+          });
+        }*/
+
         this.redirectUser();
       })
       .catch(err => {
@@ -231,6 +255,7 @@ class AuthPage extends React.Component {
             </div>
           </div>
           <div className="linkContainer">{this.renderLink()}</div>
+          <span><p></p></span>
           <span><p>WE DEVELOP TECHNOLOGIES</p></span>
         </div>
       </div>

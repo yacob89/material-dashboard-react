@@ -1,7 +1,6 @@
 // React Class
 
 import React, { Component } from "react"
-import ReactDOM from 'react-dom'
 import { RegularCard, ItemGrid } from "components"
 import { Grid } from "material-ui"
 import Dropzone from 'react-dropzone'
@@ -17,9 +16,6 @@ import FileBrowser, { BaseFileConnectors, FileRenderers } from 'react-keyed-file
 import 'views/Typography/react-keyed-file-browser.css'
 import 'views/Typography/typography.css'
 import Moment from 'moment'
-import shp from 'shpjs'
-const AWS = require('aws-sdk');
-var path = require('path');
 
 const customMessageElement = (
   <div>custom message element</div>
@@ -42,7 +38,8 @@ class Typography extends React.Component {
       filesDrop:[],
       multifilesDrop:[],
       files:[],
-      showModal: false
+      showModal: false,
+      errormessage:''
     };
     this.loadFileList = this.loadFileList.bind(this);
     this.deleteObject = this.deleteObject.bind(this);
@@ -213,30 +210,38 @@ class Typography extends React.Component {
 
   onFormSubmit(e) {
     e.preventDefault(); // Stop form submit
-    this.setState({
-      showModal: true
-    });
 
-    this.fileUpload(this.state.file).then(response => {
-      console.log("Respon dari sebuah data: ", response.data);
-      if(response.data == 'success'){
-        this.setState({
-          showModal: false
-        });
-        this.loadFileList();
-      }
-      else if(response.data == 'extension'){
-        this.setState({
-          showModal: false
-        });
-        alert("File extension error make sure you uploaded correct file!");
-      }
-      else{
-        this.setState({
-          showModal: false
-        });
-      }
-    });
+    if(this.state.file){
+      this.setState({
+        showModal: true
+      });
+  
+      this.fileUpload(this.state.file).then(response => {
+        console.log("Respon dari sebuah data: ", response.data);
+        if(response.data === 'success'){
+          this.setState({
+            showModal: false,
+            errormessage: 'File Uploaded successfully'
+          });
+          this.loadFileList();
+        }
+        else if(response.data === 'extension'){
+          this.setState({
+            showModal: false
+          });
+          alert("File extension error make sure you uploaded correct file!");
+        }
+        else{
+          this.setState({
+            showModal: false,
+            errormessage: 'Upload error, please try again'
+          });
+        }
+      });
+    }
+    else{
+      alert('There is no file selected!');
+    }
 
   }
 
@@ -270,7 +275,7 @@ class Typography extends React.Component {
     })
     .then(function (response) {
       console.log(response.data);
-      if(response.data == 'success'){
+      if(response.data === 'success'){
         alert(fileKey+ ' Deleted!');
       }
     })
@@ -287,7 +292,7 @@ class Typography extends React.Component {
     })
     .then(function (response) {
       console.log(response.data);
-      if(response.data == 'success'){
+      if(response.data === 'success'){
         alert("Folder Created");
       }
     })
@@ -354,6 +359,9 @@ class Typography extends React.Component {
 
                       </section>
                     </ItemGrid>
+                  </Grid>
+                  <Grid container>
+                  <span><p>{this.state.errormessage}</p></span>
                   </Grid>
                 </div>
               }

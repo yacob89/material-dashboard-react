@@ -9,7 +9,8 @@ import {Button} from "components"
 import axios, { post } from "axios"
 import auth from 'utils/auth'
 // Material UI
-import ReactModal from 'react-modal';
+import Loader from 'react-loader-advanced';
+import Spinner from 'react-spinkit';
 
 // Components
 import FileBrowser, { BaseFileConnectors, FileRenderers } from 'react-keyed-file-browser'
@@ -20,8 +21,16 @@ import shp from 'shpjs'
 const AWS = require('aws-sdk');
 var path = require('path');
 
+const customMessageElement = (
+  <div>custom message element</div>
+);
+
+const spinner = (
+  <Spinner name="line-scale"/>
+);
+
 //const SERVER_URL = 'http://54.245.202.137';
-const SERVER_URL = 'http://192.168.1.11';
+const SERVER_URL = 'http://192.168.1.12';
 
 class Typography extends React.Component {
 
@@ -204,15 +213,28 @@ class Typography extends React.Component {
 
   onFormSubmit(e) {
     e.preventDefault(); // Stop form submit
+    this.setState({
+      showModal: true
+    });
 
     this.fileUpload(this.state.file).then(response => {
       console.log("Respon dari sebuah data: ", response.data);
       if(response.data == 'success'){
-        alert("Upload success!");
+        this.setState({
+          showModal: false
+        });
         this.loadFileList();
       }
       else if(response.data == 'extension'){
+        this.setState({
+          showModal: false
+        });
         alert("File extension error make sure you uploaded correct file!");
+      }
+      else{
+        this.setState({
+          showModal: false
+        });
       }
     });
 
@@ -288,64 +310,56 @@ class Typography extends React.Component {
 
     return (
       <div>
-        <Grid container>
-          <ReactModal
-            isOpen={this.state.showModal}
-            contentLabel="onRequestClose Example"
-            onRequestClose={this.handleCloseModal}
-            className="Modal"
-            overlayClassName="Overlay"
-          >
-            <p>Modal text!</p>
-            <button onClick={this.handleCloseModal}>Close Modal</button>
-          </ReactModal>
-          <RegularCard
-            headerColor="blue"
-            cardTitle="Uploads"
-            cardSubtitle={'Upload Your geojson and zipped shapefiles here'}
-            content={
-              <div>
-                <FileBrowser
-                  files={this.state.files}
-                  onCreateFolder={this.handleCreateFolder}
-                  onCreateFiles={this.handleCreateFiles}
-                  onMoveFolder={this.handleRenameFolder}
-                  onMoveFile={this.handleRenameFile}
-                  onRenameFolder={this.handleRenameFolder}
-                  onRenameFile={this.handleRenameFile}
-                  onDeleteFolder={this.handleDeleteFolder}
-                  onDeleteFile={this.handleDeleteFile}
-                />
-                <Grid container>
-                  <ItemGrid xs={12} sm={12} md={8}>
-                    <form onSubmit={this.onFormSubmit}>
+        <Loader show={this.state.showModal} message={spinner}>
+          <Grid container>
+            <RegularCard
+              headerColor="blue"
+              cardTitle="Uploads"
+              cardSubtitle={'Upload Your geojson and zipped shapefiles here'}
+              content={
+                <div>
+                  <FileBrowser
+                    files={this.state.files}
+                    onCreateFolder={this.handleCreateFolder}
+                    onCreateFiles={this.handleCreateFiles}
+                    onMoveFolder={this.handleRenameFolder}
+                    onMoveFile={this.handleRenameFile}
+                    onRenameFolder={this.handleRenameFolder}
+                    onRenameFile={this.handleRenameFile}
+                    onDeleteFolder={this.handleDeleteFolder}
+                    onDeleteFile={this.handleDeleteFile}
+                  />
+                  <Grid container>
+                    <ItemGrid xs={12} sm={12} md={8}>
+                      <form onSubmit={this.onFormSubmit}>
+                        <section>
+                          <div className="dropzone">
+                            <Dropzone className="dropzone" multiple={false} onDrop={this.onDrop.bind(this)}>
+                              <p>Drop a geojson file here, or click to select files to upload.</p>
+                            </Dropzone>
+                          </div>
+                          <aside>
+                            <ul>
+                              {
+                                this.state.filesDrop.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
+                              }
+                            </ul>
+                          </aside>
+                        </section>
+                        <Button color="bluemapid" type="submit" round>Upload</Button>
+                      </form>
+                    </ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={4}>
                       <section>
-                        <div className="dropzone">
-                          <Dropzone className="dropzone" multiple={false} onDrop={this.onDrop.bind(this)}>
-                            <p>Drop a geojson file here, or click to select files to upload.</p>
-                          </Dropzone>
-                        </div>
-                        <aside>
-                          <ul>
-                            {
-                              this.state.filesDrop.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
-                            }
-                          </ul>
-                        </aside>
-                      </section>
-                      <Button color="bluemapid" type="submit" round>Upload</Button>
-                    </form>
-                  </ItemGrid>
-                  <ItemGrid xs={12} sm={12} md={4}>
-                    <section>
 
-                    </section>
-                  </ItemGrid>
-                </Grid>
-              </div>
-            }
-          />
-        </Grid>
+                      </section>
+                    </ItemGrid>
+                  </Grid>
+                </div>
+              }
+            />
+          </Grid>
+        </Loader>
       </div>
     );
   }

@@ -22,11 +22,15 @@ import request from 'utils/request';
 import form from './forms.json';
 import './styles.css';
 
-//const SERVER_URL = 'http://54.245.202.137:1337';
-const SERVER_URL = 'http://192.168.1.12:1337';
+const SERVER_URL = 'http://54.245.202.137:1337';
+//const SERVER_URL = 'http://192.168.1.12:1337';
 
 var requestType = 'login';
 // This to determine what kind of request
+
+const linkColor = { 
+  color: 'white'
+};
 
 class AuthPage extends React.Component {
   state = { value: {}, errors: [], didCheckErrors: false };
@@ -87,28 +91,34 @@ class AuthPage extends React.Component {
       set(body, 'url', 'http://54.245.202.137:3000/auth/reset-password');
     }
 
+    //console.log('Form yang perlu disubmit: ', this.state.value);
+    //console.log('Form yang perlu disubmit negara: ', this.state.value.country);
     request(requestURL, { method: 'POST', body: this.state.value })
       .then(response => {
         auth.setToken(response.jwt, body.rememberMe);
         auth.setUserInfo(response.user, body.rememberMe);
 
-        /*if(requestType === 'register'){
-          axios.post(SERVER_URL+':7555/api/deleteobject', {
-            bucket: auth.getUserInfo().username,
-            key: fileKey
+        if(requestType === 'register'){
+          axios.post(SERVER_URL+'/userdetail', {
+            username: auth.getUserInfo().username,
+            token: auth.getUserInfo().token,
+            firstname: this.state.value.first_name,
+            lastname: this.state.value.last_name,
+            address: this.state.value.address,
+            postcode: this.state.value.post_code,
+            country: this.state.value.country,
+            organization: this.state.value.organization
           })
           .then(function (response) {
             console.log(response.data);
-            if(response.data === 'success'){
-              alert(fileKey+ ' Deleted!');
+            if(response.data){
+              console.log('Success');
             }
           })
           .catch(function (error) {
-            console.log(error);
-            alert(error);
+            console.log('Registration error: ',error);
           });
-        }*/
-
+        }
         this.redirectUser();
       })
       .catch(err => {
@@ -161,9 +171,9 @@ class AuthPage extends React.Component {
     if (this.props.match.params.authType === 'login') {
       return (
         <div>
-          <Link to="/auth/forgot-password">Forgot Password</Link>
+          <Link to="/auth/forgot-password" style={linkColor}>Forgot Password</Link>
           &nbsp;or&nbsp;
-          <Link to="/auth/register">register</Link>
+          <Link to="/auth/register" style={linkColor}>register</Link>
         </div>
       );
     }
@@ -185,21 +195,34 @@ class AuthPage extends React.Component {
 
     /* Style */
     const mapBackgroundImage = { 
-      backgroundImage: 'url("https://s3-us-west-2.amazonaws.com/geomapid-assets/img/login_bg.svg")', 
+      backgroundImage: 'url("https://s3-us-west-2.amazonaws.com/geomapid-assets/img/background-light.png")', 
       backgroundSize: 'cover',
       overflow: 'hidden'
     };
     const mapidLogo = {
       width: '111px',
-      height: '113px'
+      height: '113px',
+      marginBottom: '50px'
     };
     const mapidText = {
-      width: '172px',
-      height: '20px'
+      width: '107px',
+      height: '29px',
+      marginBottom: '50px'
+    };
+    const weDevelopText = {
+      width: '223px',
+      height: '23px',
+      marginTop:'10%'
+    };
+    const customInputText = {
+      color: 'black'
     };
 
-    const mapidTextURL = 'https://s3-us-west-2.amazonaws.com/geomapid-assets/img/mapid_text.png';
+    /* End of Style */
+
+    const mapidTextURL = 'https://s3-us-west-2.amazonaws.com/geomapid-assets/img/mapid-io-light.png';
     const mapidLogoURL = 'https://s3-us-west-2.amazonaws.com/geomapid-assets/img/mapid_logo.png';
+    const wedevelopTextURL = 'https://s3-us-west-2.amazonaws.com/geomapid-assets/img/we-develop-text-light.png';
 
     return (
 
@@ -240,6 +263,7 @@ class AuthPage extends React.Component {
                       type={get(input, 'type')}
                       validations={{ required: true }}
                       value={get(this.state.value, get(input, 'name'), '')}
+                      style={customInputText}
                     />
                   ))}
                   <div className="col-md-12 buttonContainer">
@@ -256,7 +280,7 @@ class AuthPage extends React.Component {
           </div>
           <div className="linkContainer">{this.renderLink()}</div>
           <span><p></p></span>
-          <span><p>WE DEVELOP TECHNOLOGIES</p></span>
+          <span><img src={wedevelopTextURL} style={weDevelopText} alt="logo" /></span>
         </div>
       </div>
     );

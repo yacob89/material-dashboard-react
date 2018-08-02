@@ -47,20 +47,20 @@ class App extends React.Component {
   render() {
     const { classes, ...rest } = this.props;
     const mapBackgroundImage = { 
-      backgroundImage: 'url("https://s3-us-west-2.amazonaws.com/geomapid-assets/img/login_bg.svg")', 
+      backgroundImage: 'url("https://s3-us-west-2.amazonaws.com/geomapid-assets/img/background.png")', 
       backgroundSize: 'cover',
       overflow: 'hidden'
     };
 
     const sidebarImage = 'https://s3-us-west-2.amazonaws.com/geomapid-assets/img/sidebar.svg';
-    const sidebarTop = 'https://s3-us-west-2.amazonaws.com/geomapid-assets/img/sidebar_top.png';
+    const sidebarTop = 'https://s3-us-west-2.amazonaws.com/geomapid-assets/img/top-banner.png';
 
     return (
       <div className={classes.wrapper} style ={ mapBackgroundImage }>
         <Sidebar
           routes={appRoutes}
-          logoText={"Geomapid"}
-          logo={logo}
+          logoText={""}
+          logo={sidebarTop}
           image={sidebarImage}
           handleDrawerToggle={this.handleDrawerToggle}
           open={this.state.mobileOpen}

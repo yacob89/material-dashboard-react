@@ -13,18 +13,88 @@ import {
 
 import avatar from "assets/img/faces/marc.jpg";
 
+//const SERVER_URL = 'http://192.168.1.12';
+const SERVER_URL = 'http://54.245.202.137';
+
 class UserProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       selected: [1],
-      layers: []
+      layers: [],
+      firstname:' ',
+      lastname:' ',
+      email:' ',
+      address:' ',
+      postcode:' ',
+      country:' ',
+      organization:' ',
+      storage:0
     };
+    this.loadUserProfile = this.loadUserProfile.bind(this);
   }
 
   async componentDidMount() {
     console.log("User Info", auth.getUserInfo());
+    this.loadUserProfile();
   }
+
+  loadUserProfile() {
+    axios
+      .get(SERVER_URL + ':1337/userdetail', {
+        params: {
+          username: auth.getUserInfo().username
+        }
+      })
+      .then(response => {
+        // handle success
+        if (response) {
+          console.log(response);
+          const userdetails = response.data
+          console.log(userdetails);
+          this.setState({
+            firstname: userdetails[0].firstname,
+            lastname: userdetails[0].lastname,
+            email: auth.getUserInfo().email,
+            address: userdetails[0].address,
+            postcode: userdetails[0].postcode,
+            country: userdetails[0].country,
+            organization: userdetails[0].organization
+          });
+        }
+
+      });
+  }
+
+updateUserProfile(){
+  var userid = auth.getUserInfo()._id;
+  var promise = new Promise(function (resolve, reject) {
+    axios.put(`http://192.168.1.12:1337/userdetail/${userid}`, /*{
+    //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
+        /*{
+               params: {
+                 _id:id
+               }
+             },*/
+        {
+          //active: activevalue
+        })
+      .then(function (responses) {
+        console.log("Respon Data: ", responses.data);
+        if (responses.data.ok == 1) {
+          alert('Success!');
+        }
+        resolve('true');
+      })
+      .catch(function (error) {
+        console.log(error);
+        alert(error);
+      });
+    // call resolve if the method succeeds
+    
+  })
+  promise.then(bool => this.loadFileList())
+}
 
   isSelected = index => {
     return this.state.selected.indexOf(index) !== -1;
@@ -69,7 +139,7 @@ class UserProfile extends React.Component {
                   <Grid container>
                     <ItemGrid xs={12} sm={12} md={11}>
                       <CustomInput
-                        labelText="First Name"
+                        labelText={this.state.firstname}
                         id="first-name"
                         formControlProps={{
                           fullWidth: true
@@ -81,7 +151,7 @@ class UserProfile extends React.Component {
                   <Grid container>
                     <ItemGrid xs={12} sm={12} md={11}>
                       <CustomInput
-                        labelText="Last Name"
+                        labelText={this.state.lastname}
                         id="last-name"
                         formControlProps={{
                           fullWidth: true
@@ -93,7 +163,7 @@ class UserProfile extends React.Component {
                   <Grid container>
                     <ItemGrid xs={12} sm={12} md={11}>
                       <CustomInput
-                        labelText="Your Email"
+                        labelText={this.state.email}
                         id="email"
                         formControlProps={{
                           fullWidth: true
@@ -105,7 +175,7 @@ class UserProfile extends React.Component {
                   <Grid container>
                     <ItemGrid xs={12} sm={12} md={11}>
                       <CustomInput
-                        labelText="Street Address"
+                        labelText={this.state.address}
                         id="address"
                         formControlProps={{
                           fullWidth: true
@@ -117,7 +187,7 @@ class UserProfile extends React.Component {
                   <Grid container>
                     <ItemGrid xs={12} sm={12} md={11}>
                       <CustomInput
-                        labelText="Post Code"
+                        labelText={this.state.postcode}
                         id="postcode"
                         formControlProps={{
                           fullWidth: true
@@ -129,7 +199,7 @@ class UserProfile extends React.Component {
                   <Grid container>
                     <ItemGrid xs={12} sm={12} md={11}>
                       <CustomInput
-                        labelText="Country"
+                        labelText={this.state.country}
                         id="country"
                         formControlProps={{
                           fullWidth: true
@@ -141,7 +211,7 @@ class UserProfile extends React.Component {
                   <Grid container>
                     <ItemGrid xs={12} sm={12} md={11}>
                       <CustomInput
-                        labelText="Your Organization"
+                        labelText={this.state.organization}
                         id="organization"
                         formControlProps={{
                           fullWidth: true

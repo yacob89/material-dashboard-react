@@ -56,7 +56,7 @@ const Sidebar = ({ ...props }) => {
   );
 
   const topSideBar = { 
-    backgroundImage: 'url("https://s3-us-west-2.amazonaws.com/geomapid-assets/img/sidebar_top.png")', 
+    backgroundImage: 'url("https://s3-us-west-2.amazonaws.com/geomapid-assets/img/top-banner.png")', 
     backgroundSize: 'cover',
     overflow: 'hidden'
   };
@@ -66,7 +66,7 @@ const Sidebar = ({ ...props }) => {
     <div className={classes.logo} style ={ topSideBar }>
       <a href="https://www.mapid.co.id" className={classes.logoLink}>
         <div className={classes.logoImage}>
-          <img src={mapidIcon} alt="logo" className={classes.img} />
+          
         </div>
         {logoText}
       </a>

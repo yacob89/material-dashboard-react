@@ -6,7 +6,7 @@
         "label": "Enter your email",
         "name": "email",
         "type": "email",
-        "placeholder": "johndoe@gmail.com"
+        "placeholder": "email"
       }
     ],
     "login": [
@@ -14,12 +14,13 @@
         "customBootstrapClass": "col-md-12",
         "name": "identifier",
         "type": "text",
-        "placeholder": "johndoe@gmail.com"
+        "placeholder": "username"
       },
       {
         "customBootstrapClass": "col-md-12",
         "name": "password",
-        "type": "password"
+        "type": "password",
+        "placeholder": "password"
       },
       {
         "customBootstrapClass": "col-md-6",
@@ -52,7 +53,7 @@
         "customBootstrapClass": "col-md-12",
         "label": "Email",
         "name": "email",
-        "placeholder": "johndoe@gmail.com",
+        "placeholder": "email",
         "type": "email"
       },
       {
@@ -131,7 +132,13 @@
         "username": "",
         "password": "",
         "confirmPassword": "",
-        "email": ""
+        "email": "",
+        "first_name":"",
+        "last_name":"",
+        "address":"",
+        "post_code":"",
+        "country":"",
+        "organization":""
       }
     },
     "reset-password": {

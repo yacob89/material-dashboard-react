@@ -13,8 +13,8 @@ import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import auth from 'utils/auth';
 import request from 'utils/request';
 
-const SERVER_URL = 'http://54.245.202.137';
-//const SERVER_URL = 'http://192.168.1.2';
+//const SERVER_URL = 'http://54.245.202.137';
+const SERVER_URL = 'http://192.168.1.14';
 
 const columns = [{
     dataField: 'filename',
@@ -23,6 +23,10 @@ const columns = [{
     sort: true,
     headerStyle: {
       backgroundColor: '#6495ED'
+    },style: (cell, row, rowIndex, colIndex) => {
+      return {
+        backgroundColor: 'white'
+      };
     }
   }, {
     dataField: 'location',
@@ -30,6 +34,11 @@ const columns = [{
     sort: true,
     headerStyle: {
       backgroundColor: '#6495ED'
+    },
+    style: (cell, row, rowIndex, colIndex) => {
+      return {
+        backgroundColor: 'white'
+      };
     },
     hidden: true
   }, {
@@ -39,6 +48,24 @@ const columns = [{
     sort: true,
     headerStyle: {
       backgroundColor: '#6495ED'
+    },
+    style: (cell, row, rowIndex, colIndex) => {
+      return {
+        backgroundColor: 'white'
+      };
+    },
+    editor: {
+      type: Type.SELECT,
+      options: [{
+        value: 'symbol',
+        label: 'symbol'
+      }, {
+        value: 'line',
+        label: 'line'
+      }, {
+        value: 'fill',
+        label: 'fill'
+      }]
     }
   }, {
     dataField: 'active',
@@ -83,8 +110,25 @@ const columns = [{
     headerStyle: {
       backgroundColor: '#6495ED'
     },
+    style: (cell, row, rowIndex, colIndex) => {
+      return {
+        backgroundColor: 'white'
+      };
+    },
     events: {
       onClick: () => alert('Click on Product ID field')
+    }
+  },
+  {
+    dataField: 'filesize',
+    text: 'Size',
+    sort: true,
+    headerStyle: {
+      backgroundColor: '#6495ED'
+    },style: (cell, row, rowIndex, colIndex) => {
+      return {
+        backgroundColor: 'white'
+      };
     }
   }
 ];
@@ -107,6 +151,8 @@ class UploadList extends React.Component {
     }
     this.loadFileList = this.loadFileList.bind(this);
     this.updateRemoteData = this.updateRemoteData.bind(this);
+    this.updateGeojsonType = this.updateGeojsonType.bind(this);
+    this.updateFilename = this.updateFilename.bind(this);
   }
 
   componentDidMount() {
@@ -149,6 +195,7 @@ class UploadList extends React.Component {
             location: fileList[i].server_url,
             type:fileList[i].type,
             active: fileList[i].active,
+            filesize: fileList[i].filesize,
             _id: fileList[i]._id,
             delete:"Delete"
           });
@@ -211,6 +258,70 @@ class UploadList extends React.Component {
     promise.then(bool => this.loadFileList())
   }
 
+  updateGeojsonType(id, typevalue) {
+    console.log("Row ID: ", id);
+    console.log("Row Type Value: ", typevalue);
+
+    var promise = new Promise(function (resolve, reject) {
+      axios.put(`http://54.245.202.137:1337/fileuploads/${id}`, /*{
+      //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
+          /*{
+                 params: {
+                   _id:id
+                 }
+               },*/
+          {
+            type: typevalue
+          })
+        .then(function (responses) {
+          console.log("Respon Data: ", responses.data);
+          if (responses.data.ok == 1) {
+            alert('Success!');
+          }
+          resolve('true');
+        })
+        .catch(function (error) {
+          console.log(error);
+          alert(error);
+        });
+      // call resolve if the method succeeds
+      
+    })
+    promise.then(bool => this.loadFileList())
+  }
+
+  updateFilename(id, namevalue) {
+    console.log("Row ID: ", id);
+    console.log("Row Type Value: ", namevalue);
+
+    var promise = new Promise(function (resolve, reject) {
+      axios.put(`http://54.245.202.137:1337/fileuploads/${id}`, /*{
+      //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
+          /*{
+                 params: {
+                   _id:id
+                 }
+               },*/
+          {
+            filename: namevalue
+          })
+        .then(function (responses) {
+          console.log("Respon Data: ", responses.data);
+          if (responses.data.ok == 1) {
+            alert('Success!');
+          }
+          resolve('true');
+        })
+        .catch(function (error) {
+          console.log(error);
+          alert(error);
+        });
+      // call resolve if the method succeeds
+      
+    })
+    promise.then(bool => this.loadFileList())
+  }
+
   render() {
     return (
       <Grid container>
@@ -243,6 +354,20 @@ class UploadList extends React.Component {
                         newValue: newValue
                       });
                       this.updateRemoteData(row._id, newValue);
+                    }
+                    if (column.dataField == "type") {
+                      this.setState({
+                        rowID: row._id,
+                        newValue: newValue
+                      });
+                      this.updateGeojsonType(row._id, newValue);
+                    }
+                    if (column.dataField == "filename") {
+                      this.setState({
+                        rowID: row._id,
+                        newValue: newValue
+                      });
+                      this.updateFilename(row._id, newValue);
                     }
                     if(column.dataField == "delete"){
                       console.log("Delete activated!");

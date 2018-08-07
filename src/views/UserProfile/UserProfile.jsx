@@ -13,7 +13,7 @@ import {
 
 import avatar from "assets/img/faces/marc.jpg";
 
-//const SERVER_URL = 'http://192.168.1.12';
+//const SERVER_URL = 'http://192.168.1.14';
 const SERVER_URL = 'http://54.245.202.137';
 
 class UserProfile extends React.Component {
@@ -22,14 +22,14 @@ class UserProfile extends React.Component {
     this.state = {
       selected: [1],
       layers: [],
-      firstname:' ',
-      lastname:' ',
-      email:' ',
-      address:' ',
-      postcode:' ',
-      country:' ',
-      organization:' ',
-      storage:0
+      firstname: " ",
+      lastname: " ",
+      email: " ",
+      address: " ",
+      postcode: " ",
+      country: " ",
+      organization: " ",
+      storage: 0
     };
     this.loadUserProfile = this.loadUserProfile.bind(this);
   }
@@ -41,7 +41,7 @@ class UserProfile extends React.Component {
 
   loadUserProfile() {
     axios
-      .get(SERVER_URL + ':1337/userdetail', {
+      .get(SERVER_URL + ":1337/userdetail", {
         params: {
           username: auth.getUserInfo().username
         }
@@ -50,8 +50,32 @@ class UserProfile extends React.Component {
         // handle success
         if (response) {
           console.log(response);
-          const userdetails = response.data
+          const userdetails = response.data;
           console.log(userdetails);
+          switch (userdetails) {
+            case userdetails[0].firstname == null:
+              userdetails[0].firstname = "-";
+              break;
+            case userdetails[0].lastname == null:
+              userdetails[0].lastname = "-";
+              break;
+            case userdetails[0].email == null:
+              userdetails[0].email = "-";
+              break;
+            case userdetails[0].address == null:
+              userdetails[0].address = "-";
+              break;
+            case userdetails[0].postcode == null:
+              userdetails[0].postcode = "-";
+              break;
+            case userdetails[0].country == null:
+              userdetails[0].country = "-";
+              break;
+            case userdetails[0].organization == null:
+              userdetails[0].organization = "-";
+              break;
+            default:
+          }
           this.setState({
             firstname: userdetails[0].firstname,
             lastname: userdetails[0].lastname,
@@ -62,39 +86,40 @@ class UserProfile extends React.Component {
             organization: userdetails[0].organization
           });
         }
-
       });
   }
 
-updateUserProfile(){
-  var userid = auth.getUserInfo()._id;
-  var promise = new Promise(function (resolve, reject) {
-    axios.put(`http://192.168.1.12:1337/userdetail/${userid}`, /*{
+  updateUserProfile() {
+    var userid = auth.getUserInfo()._id;
+    var promise = new Promise(function(resolve, reject) {
+      axios
+        .put(
+          `http://192.168.1.12:1337/userdetail/${userid}` /*{
     //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
         /*{
                params: {
                  _id:id
                }
-             },*/
-        {
-          //active: activevalue
+             },*/,
+          {
+            //active: activevalue
+          }
+        )
+        .then(function(responses) {
+          console.log("Respon Data: ", responses.data);
+          if (responses.data.ok == 1) {
+            alert("Success!");
+          }
+          resolve("true");
         })
-      .then(function (responses) {
-        console.log("Respon Data: ", responses.data);
-        if (responses.data.ok == 1) {
-          alert('Success!');
-        }
-        resolve('true');
-      })
-      .catch(function (error) {
-        console.log(error);
-        alert(error);
-      });
-    // call resolve if the method succeeds
-    
-  })
-  promise.then(bool => this.loadFileList())
-}
+        .catch(function(error) {
+          console.log(error);
+          alert(error);
+        });
+      // call resolve if the method succeeds
+    });
+    promise.then(bool => this.loadFileList());
+  }
 
   isSelected = index => {
     return this.state.selected.indexOf(index) !== -1;
@@ -114,18 +139,17 @@ updateUserProfile(){
       .post("http://54.245.202.137:7555/createfolder", {
         username: auth.getUserInfo().username
       })
-      .then(function (response) {
+      .then(function(response) {
         console.log(response);
         console.log("Create Folder Success");
         alert("Create folder success!");
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }
 
   render() {
-
     return (
       <div>
         <Grid container>
@@ -146,7 +170,7 @@ updateUserProfile(){
                         }}
                       />
                     </ItemGrid>
-                    <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={1} />
                   </Grid>
                   <Grid container>
                     <ItemGrid xs={12} sm={12} md={11}>
@@ -158,7 +182,7 @@ updateUserProfile(){
                         }}
                       />
                     </ItemGrid>
-                    <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={1} />
                   </Grid>
                   <Grid container>
                     <ItemGrid xs={12} sm={12} md={11}>
@@ -170,7 +194,7 @@ updateUserProfile(){
                         }}
                       />
                     </ItemGrid>
-                    <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={1} />
                   </Grid>
                   <Grid container>
                     <ItemGrid xs={12} sm={12} md={11}>
@@ -182,7 +206,7 @@ updateUserProfile(){
                         }}
                       />
                     </ItemGrid>
-                    <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={1} />
                   </Grid>
                   <Grid container>
                     <ItemGrid xs={12} sm={12} md={11}>
@@ -194,7 +218,7 @@ updateUserProfile(){
                         }}
                       />
                     </ItemGrid>
-                    <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={1} />
                   </Grid>
                   <Grid container>
                     <ItemGrid xs={12} sm={12} md={11}>
@@ -206,7 +230,7 @@ updateUserProfile(){
                         }}
                       />
                     </ItemGrid>
-                    <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={1} />
                   </Grid>
                   <Grid container>
                     <ItemGrid xs={12} sm={12} md={11}>
@@ -218,7 +242,7 @@ updateUserProfile(){
                         }}
                       />
                     </ItemGrid>
-                    <ItemGrid xs={12} sm={12} md={1}></ItemGrid>
+                    <ItemGrid xs={12} sm={12} md={1} />
                   </Grid>
                 </div>
               }
@@ -233,27 +257,31 @@ updateUserProfile(){
                 title={auth.getUserInfo().username}
                 description={auth.getUserInfo().email}
                 footer={
-                  <Button color="bluemapid" round onClick={this.createFolderOnClick}>
+                  <Button
+                    color="bluemapid"
+                    round
+                    onClick={this.createFolderOnClick}
+                  >
                     Create Folder
-              </Button>
+                  </Button>
                 }
               />
             </Grid>
             <Grid container>
+              <ItemGrid xs={12} sm={12} md={4} />
               <ItemGrid xs={12} sm={12} md={4}>
-              
-              </ItemGrid>
-              <ItemGrid xs={12} sm={12} md={4}>
-                <Button color="danger"
+                <Button
+                  color="danger"
                   onClick={() => {
                     auth.clearAppStorage();
-                    this.props.history.push('/auth/login');
-                  }} round>
+                    this.props.history.push("/auth/login");
+                  }}
+                  round
+                >
                   Logout
                 </Button>
               </ItemGrid>
-              <ItemGrid xs={12} sm={12} md={4}>
-              </ItemGrid>
+              <ItemGrid xs={12} sm={12} md={4} />
             </Grid>
           </ItemGrid>
         </Grid>

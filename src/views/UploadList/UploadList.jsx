@@ -13,8 +13,8 @@ import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import auth from 'utils/auth';
 import request from 'utils/request';
 
-//const SERVER_URL = 'http://54.245.202.137';
-const SERVER_URL = 'http://192.168.1.14';
+const SERVER_URL = 'http://54.245.202.137';
+//const SERVER_URL = 'http://192.168.1.14';
 
 const columns = [{
     dataField: 'filename',
@@ -76,7 +76,7 @@ const columns = [{
       backgroundColor: '#6495ED'
     },
     style: (cell, row, rowIndex, colIndex) => {
-      if (row.active === 'true') {
+      if (row.active === 'show') {
         return {
           backgroundColor: '#87CEEB'
         };
@@ -88,11 +88,11 @@ const columns = [{
     editor: {
       type: Type.SELECT,
       options: [{
-        value: 'true',
-        label: 'true'
+        value: 'show',
+        label: 'show'
       }, {
-        value: 'false',
-        label: 'false'
+        value: 'hide',
+        label: 'hide'
       }]
     }
   },
@@ -103,6 +103,18 @@ const columns = [{
       backgroundColor: '#6495ED'
     },
     hidden: true
+  },
+  {
+    dataField: 'filesize',
+    text: 'Size (MB)',
+    sort: true,
+    headerStyle: {
+      backgroundColor: '#6495ED'
+    },style: (cell, row, rowIndex, colIndex) => {
+      return {
+        backgroundColor: 'white'
+      };
+    }
   },
   {
     dataField: 'delete',
@@ -117,18 +129,6 @@ const columns = [{
     },
     events: {
       onClick: () => alert('Click on Product ID field')
-    }
-  },
-  {
-    dataField: 'filesize',
-    text: 'Size',
-    sort: true,
-    headerStyle: {
-      backgroundColor: '#6495ED'
-    },style: (cell, row, rowIndex, colIndex) => {
-      return {
-        backgroundColor: 'white'
-      };
     }
   }
 ];
@@ -147,7 +147,8 @@ class UploadList extends React.Component {
       column: [],
       rowData: [],
       rowID: 0,
-      newValue: ''
+      newValue: '',
+      totalsize: 0
     }
     this.loadFileList = this.loadFileList.bind(this);
     this.updateRemoteData = this.updateRemoteData.bind(this);
@@ -188,6 +189,7 @@ class UploadList extends React.Component {
         console.log(fileList);
 
         var i;
+        var total = 0;
         for (i = 0; i < fileList.length; i++) {
           var modifiedDate = new Date(fileList[i].created_at);
           rows.push({
@@ -195,12 +197,13 @@ class UploadList extends React.Component {
             location: fileList[i].server_url,
             type:fileList[i].type,
             active: fileList[i].active,
-            filesize: fileList[i].filesize,
+            filesize: fileList[i].filesize/1000000,
             _id: fileList[i]._id,
             delete:"Delete"
           });
+          total = total + fileList[i].filesize;
         }
-        this.setState({ rowData:rows });
+        this.setState({ rowData:rows, totalsize: total });
       });
   }
 
@@ -330,7 +333,7 @@ class UploadList extends React.Component {
             headerColor="blue"
             plainCard
             cardTitle="Current Active Layers"
-            cardSubtitle="Uploaded by user"
+            cardSubtitle={'Upload Limit: '+ this.state.totalsize / 1000000+ ' MB / 1000 MB'}
             content={
               <BootstrapTable
                 keyField="id"

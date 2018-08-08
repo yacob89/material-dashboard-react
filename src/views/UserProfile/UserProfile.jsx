@@ -13,8 +13,8 @@ import {
 
 import avatar from "assets/img/faces/marc.jpg";
 
-//const SERVER_URL = 'http://192.168.1.14';
-const SERVER_URL = 'http://54.245.202.137';
+const SERVER_URL = 'http://192.168.1.13';
+//const SERVER_URL = 'http://54.245.202.137';
 
 class UserProfile extends React.Component {
   constructor(props) {

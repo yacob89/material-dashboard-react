@@ -14,7 +14,7 @@ import auth from 'utils/auth';
 import request from 'utils/request';
 
 const SERVER_URL = 'http://54.245.202.137';
-//const SERVER_URL = 'http://192.168.1.14';
+//const SERVER_URL = 'http://192.168.1.13';
 
 const columns = [{
     dataField: 'filename',
@@ -130,6 +130,21 @@ const columns = [{
     events: {
       onClick: () => alert('Click on Product ID field')
     }
+  },
+  {
+    dataField: 'edit',
+    text: 'Edit',
+    headerStyle: {
+      backgroundColor: '#6495ED'
+    },
+    style: (cell, row, rowIndex, colIndex) => {
+      return {
+        backgroundColor: 'white'
+      };
+    },
+    events: {
+      onClick: () => alert('Click on Product ID field')
+    }
   }
 ];
 
@@ -199,7 +214,8 @@ class UploadList extends React.Component {
             active: fileList[i].active,
             filesize: fileList[i].filesize/1000000,
             _id: fileList[i]._id,
-            delete:"Delete"
+            delete:"Delete",
+            edit:"Edit"
           });
           total = total + fileList[i].filesize;
         }
@@ -227,6 +243,10 @@ class UploadList extends React.Component {
       
     })
     promise.then(bool => this.loadFileList())
+  }
+
+  editRemoteData(location) {
+    var win = window.open('http://geojson.io/#data=data:text/x-url,'+location, '_blank');
   }
 
   updateRemoteData(id, activevalue) {
@@ -375,6 +395,10 @@ class UploadList extends React.Component {
                     if(column.dataField == "delete"){
                       console.log("Delete activated!");
                       this.deleteRemoteData(row._id);
+                    }
+                    if(column.dataField == "edit"){
+                      console.log("Edit Layer activated!");
+                      this.editRemoteData(row.location);
                     }
                   }
                 })}

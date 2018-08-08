@@ -23,7 +23,7 @@ import form from './forms.json';
 import './styles.css';
 
 const SERVER_URL = 'http://54.245.202.137:1337';
-//const SERVER_URL = 'http://192.168.1.12:1337';
+//const SERVER_URL = 'http://192.168.1.13:1337';
 
 var requestType = 'login';
 // This to determine what kind of request

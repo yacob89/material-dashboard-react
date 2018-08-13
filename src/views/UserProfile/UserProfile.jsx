@@ -36,6 +36,10 @@ class UserProfile extends React.Component {
 
   async componentDidMount() {
     console.log("User Info", auth.getUserInfo());
+    this.createFolderOnClick();
+  }
+
+  componentWillMount(){
     this.loadUserProfile();
   }
 
@@ -142,7 +146,6 @@ class UserProfile extends React.Component {
       .then(function(response) {
         console.log(response);
         console.log("Create Folder Success");
-        alert("Create folder success!");
       })
       .catch(function(error) {
         console.log(error);
@@ -256,15 +259,6 @@ class UserProfile extends React.Component {
                 subtitle={auth.getUserInfo().role.name}
                 title={auth.getUserInfo().username}
                 description={auth.getUserInfo().email}
-                footer={
-                  <Button
-                    color="bluemapid"
-                    round
-                    onClick={this.createFolderOnClick}
-                  >
-                    Create Folder
-                  </Button>
-                }
               />
             </Grid>
             <Grid container>

@@ -128,7 +128,7 @@ const columns = [{
       };
     },
     events: {
-      onClick: () => alert('Click on Product ID field')
+      onClick: () => alert('Delete layer')
     }
   },
   {
@@ -143,7 +143,7 @@ const columns = [{
       };
     },
     events: {
-      onClick: () => alert('Click on Product ID field')
+      onClick: () => console.log('Edit on this layer')
     }
   }
 ];
@@ -353,7 +353,7 @@ class UploadList extends React.Component {
             headerColor="blue"
             plainCard
             cardTitle="Current Active Layers"
-            cardSubtitle={'Upload Limit: '+ this.state.totalsize / 1000000+ ' MB / 1000 MB'}
+            cardSubtitle={'Total Upload Size: '+ this.state.totalsize / 1000000+ ' MB'}
             content={
               <BootstrapTable
                 keyField="id"

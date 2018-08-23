@@ -1,7 +1,7 @@
 // React Class
 
 import React, { Component } from "react";
-import { RegularCard, Table, ItemGrid } from "components";
+import { RegularCard, Table, ItemGrid, Button } from "components";
 import { Grid } from "material-ui";
 import axios from "axios";
 
@@ -166,7 +166,7 @@ const columns = [{
       };
     },
     events: {
-      onClick: () => console.log('Edit on this layer')
+      onClick: () => alert('Edit layer')
     }
   }, {
     dataField: 'color',
@@ -175,7 +175,7 @@ const columns = [{
       backgroundColor: '#6495ED'
     },
     events: {
-      onClick: () => alert('Delete layer')
+      onClick: () => alert('Select layer color')
     }
   }
   , {
@@ -193,13 +193,38 @@ const columns = [{
     },
     editor: {
       type: Type.SELECT,
-      options: [{
-        value: 'museum-15',
-        label: 'museum-15'
-      }, {
-        value: 'music-11',
-        label: 'music-11'
-      }]
+      options: [
+        {
+        value: 'airfield-11',label: 'airfield-11'}, {value: 'airfield-15',label: 'airfield-15'}, 
+        {
+        value: 'airport-11',label: 'airport-11'}, {value: 'airport-15',label: 'airport-15'}, 
+        {
+        value: 'alcohol-shop-11',label: 'alcohol-shop-11'}, {value: 'alcohol-shop-15',label: 'alcohol-shop-15'}, 
+        {
+        value: 'amusement-park-11',label: 'amusement-park-11'}, {value: 'amusement-park-15',label: 'amusement-park-15'}, 
+        {
+        value: 'aquarium-11',label: 'aquarium-11'}, {value: 'aquarium-15',label: 'aquarium-15'}, 
+        {
+        value: 'art-gallery-11',label: 'art-gallery-11'}, {value: 'art-gallery-15',label: 'art-gallery-15'}, 
+        {
+        value: 'attraction-11',label: 'attraction-11'}, {value: 'attraction-15',label: 'attraction-15'}, 
+        {
+        value: 'bakery-11',label: 'bakery-11'}, {value: 'bakery-15',label: 'bakery-15'}, 
+        {
+        value: 'bank-11',label: 'bank-11'}, {value: 'bank-15',label: 'bank-15'}, 
+        {
+        value: 'bar-11',label: 'bar-11'}, {value: 'bar-15',label: 'bar-15'}, 
+        {
+        value: 'beer-11',label: 'beer-11'}, {value: 'beer-15',label: 'beer-15'}, 
+        {
+        value: 'bicycle-11',label: 'bicycle-11'}, {value: 'bicycle-15',label: 'bicycle-15'}, 
+        {
+        value: 'bicycle-share-11',label: 'bicycle-share-11'}, {value: 'bicycle-share-15',label: 'bicycle-share-15'}, 
+        {
+        value: 'airport-11',label: 'airport-11'}, {value: 'airport-11',label: 'airport-11'}, 
+        {
+        value: 'airport-11',label: 'airport-11'}, {value: 'airport-11',label: 'airport-11'}
+      ]
     }
   }
 ];
@@ -249,6 +274,7 @@ class UploadList extends React.Component {
     this.openModal = this.openModal.bind(this);
     this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.cancelModal = this.cancelModal.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -329,7 +355,8 @@ class UploadList extends React.Component {
   }
 
   editRemoteData(location) {
-    var win = window.open('http://geojson.io/#data=data:text/x-url,'+location, '_blank');
+    //var win = window.open('http://geojson.io/#data=data:text/x-url,'+location, '_blank');
+    var win = window.open('http://34.209.242.8:8080/#data=data:text/x-url,'+location+'&user=mapid', '_blank');
   }
 
   updateRemoteData(id, activevalue) {
@@ -514,7 +541,7 @@ class UploadList extends React.Component {
       showModal: true
     });
     var promise = new Promise(function (resolve, reject) {
-      axios.post('http://192.168.1.14' + ':7555/updatelayer', {
+      axios.post('http://54.245.202.137' + ':7555/updatelayer', {
         location: location,
         color: color,
         icon: icon,
@@ -576,6 +603,10 @@ class UploadList extends React.Component {
     this.testGeojsonUpdate(this.state.selectedID, this.state.selectedLocation, this.state.selectedColor, this.state.selectedIcon, this.state.selectedFilename);
   }
 
+  cancelModal(){
+    this.setState({colorPicker: false});
+  }
+
   render() {
 
     const rowStyle2 = (row, rowIndex) => {
@@ -596,8 +627,9 @@ class UploadList extends React.Component {
           contentLabel="Example Modal"
         >
 
-          <h3 ref={subtitle => this.subtitle = subtitle}>Select layer color</h3>
-          <button onClick={this.closeModal}>close</button>
+          <h3 ref={subtitle => this.subtitle = subtitle}>Select Layer Color</h3>
+          <button onClick={this.closeModal}>Apply Color</button>
+          <button onClick={this.cancelModal}>Cancel</button>
           <SwatchesPicker onChange={ this.handleChange } />
         </Modal>
           <Grid container>
@@ -679,6 +711,9 @@ class UploadList extends React.Component {
               />
             </ItemGrid>
           </Grid>
+          <Button color="bluemapid" round onClick={() => {
+            console.log('Update');
+          }}>Update</Button>
         </Loader>
       </div>
     );

@@ -73,17 +73,30 @@ class AuthPage extends React.Component {
     const params = props.location.search
       ? replace(props.location.search, '?code=', '')
       : props.match.params.id;
+    console.log('Form params: ', params);
     this.setForm(props.match.params.authType, params);
   };
 
-  handleChange = ({ target }) =>
-    this.setState({
-      value: { ...this.state.value, [target.name]: target.value },
-    });
+  handleChange = ({ target }) => {
+    console.log('adfafaf');
+    if (target.name == 'username'){
+      console.log('username');
+      this.setState({
+        value: { ...this.state.value, ['username']: target.value.toLowerCase() },
+      });
+    }
+    else{
+      this.setState({
+        value: { ...this.state.value, [target.name]: target.value },
+      });
+    }
+  };
+  
 
   handleSubmit = e => {
     e.preventDefault();
     const body = this.state.value;
+    console.log('Submit Body: ', body);
     const requestURL = this.getRequestURL();
 
     // This line is required for the callback url to redirect your user to app
@@ -156,6 +169,7 @@ class AuthPage extends React.Component {
    */
   setForm = (formType, email) => {
     const value = get(form, ['data', formType], {});
+    console.log('Set Form const value: ', value);
 
     if (formType === 'reset-password') {
       set(value, 'code', email);

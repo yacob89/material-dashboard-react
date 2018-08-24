@@ -6,16 +6,25 @@
   background: #FAFAFB;
   height: 100vh;
   -webkit-font-smoothing: antialiased;
+  overflow: hidden;
 }
 
 .wrapper {
   height: 100%;
-  width: 685px;
+  width: 100%;
   text-align: center;
   /* background-image: url('../../images/background_empty.svg'); */
   background-position-x: center;
   font-size: 14px;
   overflow: auto;
+}
+
+.label{
+  color: #FAFAFB;
+}
+
+.labelCheckbox{
+  color: #FAFAFB;
 }
 
 .errorsContainer {

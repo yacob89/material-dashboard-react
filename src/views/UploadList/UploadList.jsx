@@ -16,6 +16,8 @@ import Loader from 'react-loader-advanced';
 import Spinner from 'react-spinkit';
 import { SwatchesPicker } from 'react-color';
 import Modal from 'react-modal';
+import Iframe from 'react-iframe';
+import Time from 'react-time'
 
 const customStyles = {
   content : {
@@ -168,15 +170,6 @@ const columns = [{
     events: {
       onClick: () => alert('Edit layer')
     }
-  }, {
-    dataField: 'color',
-    text: 'Color',
-    headerStyle: {
-      backgroundColor: '#6495ED'
-    },
-    events: {
-      onClick: () => alert('Select layer color')
-    }
   }
   , {
     dataField: 'icon',
@@ -248,7 +241,6 @@ class UploadList extends React.Component {
       newValue: '',
       totalsize: 0,
       showModal: false,
-      displayColorPicker: false,
       background: '#fff',
       color: {
         r: '241',
@@ -256,7 +248,7 @@ class UploadList extends React.Component {
         b: '19',
         a: '1',
       },
-      colorPicker: false,
+      geojsonModal: false,
       selectedID:'',
       selectedLocation:'',
       selectedColor:'',
@@ -276,6 +268,7 @@ class UploadList extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.cancelModal = this.cancelModal.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.generateNewLayer = this.generateNewLayer.bind(this);
   }
 
   componentDidMount() {
@@ -585,7 +578,7 @@ class UploadList extends React.Component {
   }
 
   openModal(id, location, color, icon, filename) {
-    this.setState({colorPicker: true,
+    this.setState({geojsonModal: true,
       selectedID:id,
       selectedLocation:location,
       selectedColor:color,
@@ -595,16 +588,39 @@ class UploadList extends React.Component {
 
   afterOpenModal() {
     // references are now sync'd and can be accessed.
-    this.subtitle.style.color = '#f00';
   }
 
   closeModal() {
-    this.setState({colorPicker: false});
-    this.testGeojsonUpdate(this.state.selectedID, this.state.selectedLocation, this.state.selectedColor, this.state.selectedIcon, this.state.selectedFilename);
+    this.setState({geojsonModal: false});
+    //this.testGeojsonUpdate(this.state.selectedID, this.state.selectedLocation, this.state.selectedColor, this.state.selectedIcon, this.state.selectedFilename);
   }
 
   cancelModal(){
-    this.setState({colorPicker: false});
+    this.setState({geojsonModal: false});
+  }
+
+  generateNewLayer(){
+    var username = auth.getUserInfo().username;
+    let now = new Date();
+    var filename = username+'_'+now.getFullYear()+now.getMonth().toLocaleString()+now.getDate().toLocaleString()+now.getHours().toLocaleString()+now.getMinutes().toLocaleString()+now.getSeconds().toLocaleString();
+    console.log('Auto Generate Filename: ', filename.toString());
+    var geojson = '{"type": "FeatureCollection","features": []}';
+
+    axios
+    .post(SERVER_URL + ':7555/api/newlayer', {
+      username: username,
+      filename: filename,
+      geojson: geojson
+    })
+    .then(function(response) {
+      console.log(response.data);
+      if (response.data == 'success') {
+        console.log('Server side converting success');
+      }
+    })
+    .catch(function(error) {
+      console.log('Server side converting error: ', error);
+    });
   }
 
   render() {
@@ -619,19 +635,24 @@ class UploadList extends React.Component {
     return (
       <div>
         <Loader show={this.state.showModal} message={spinner}>
-        <Modal
-          isOpen={this.state.colorPicker}
-          onAfterOpen={this.afterOpenModal}
-          onRequestClose={this.closeModal}
-          style={customStyles}
-          contentLabel="Example Modal"
-        >
-
-          <h3 ref={subtitle => this.subtitle = subtitle}>Select Layer Color</h3>
-          <button onClick={this.closeModal}>Apply Color</button>
-          <button onClick={this.cancelModal}>Cancel</button>
-          <SwatchesPicker onChange={ this.handleChange } />
-        </Modal>
+          <Modal
+            isOpen={this.state.geojsonModal}
+            onAfterOpen={this.afterOpenModal}
+            onRequestClose={this.closeModal}
+            style={customStyles}
+            contentLabel="Example Modal"
+          >
+          <ItemGrid xs={12} sm={12} md={12}>
+          <Iframe url={'http://mapid.io'}
+            width="100%"
+            height="768px"
+            id="myId"
+            className="myClassname"
+            display="initial"
+            position="relative"
+            allowFullScreen />
+        </ItemGrid>
+          </Modal>
           <Grid container>
             <ItemGrid xs={12} sm={12} md={12}>
               <RegularCard
@@ -647,7 +668,7 @@ class UploadList extends React.Component {
                     striped
                     hover
                     condensed
-                    rowStyle={ rowStyle2 }
+                    rowStyle={rowStyle2}
                     noDataIndication="No Layer is Uploaded"
                     filter={filterFactory()}
                     cellEdit={cellEditFactory({
@@ -685,7 +706,12 @@ class UploadList extends React.Component {
                         }
                         if (column.dataField == "edit") {
                           console.log("Edit Layer activated!");
-                          this.editRemoteData(row.location);
+                          //this.editRemoteData(row.location);
+                          this.setState({
+                            selectedLocation: row.location,
+                            selectedFilename: row.filename,
+                            geojsonModal: true
+                          });
                         }
                         if (column.dataField == "color") {
                           this.setState({
@@ -714,6 +740,9 @@ class UploadList extends React.Component {
           <Button color="bluemapid" round onClick={() => {
             console.log('Update');
           }}>Update</Button>
+          <Button color="bluemapid" round onClick={() => {
+            this.generateNewLayer();
+          }}>New Layer</Button>
         </Loader>
       </div>
     );

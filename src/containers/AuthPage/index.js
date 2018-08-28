@@ -58,10 +58,10 @@ class AuthPage extends React.Component {
         requestType = 'register';
         break;
       case 'reset-password':
-        requestURL = SERVER_URL+'/auth/reset-password';
+        requestURL = 'http://54.245.202.137:1337'+'/auth/reset-password';
         break;
       case 'forgot-password':
-        requestURL = SERVER_URL+'/auth/forgot-password';
+        requestURL = 'http://54.245.202.137:1337'+'/auth/forgot-password';
         break;
       default:
     }
@@ -101,7 +101,7 @@ class AuthPage extends React.Component {
 
     // This line is required for the callback url to redirect your user to app
     if (this.props.match.params.authType === 'forgot-password') {
-      set(body, 'url', 'http://54.245.202.137:3000/auth/reset-password');
+      set(body, 'url', 'http://flow.mapid.io/auth/reset-password');
     }
 
     //console.log('Form yang perlu disubmit: ', this.state.value);
@@ -194,7 +194,7 @@ class AuthPage extends React.Component {
 
     return (
       <div>
-        <Link to="/auth/login">Ready to signin</Link>
+        <Link to="/auth/login" style={linkColor}>Ready to signin</Link>
       </div>
     );
   };

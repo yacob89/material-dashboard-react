@@ -17,7 +17,6 @@ import Spinner from 'react-spinkit';
 import { SwatchesPicker } from 'react-color';
 import Modal from 'react-modal';
 import Iframe from 'react-iframe';
-import Time from 'react-time'
 
 const customStyles = {
   content : {
@@ -216,7 +215,139 @@ const columns = [{
         {
         value: 'airport-11',label: 'airport-11'}, {value: 'airport-11',label: 'airport-11'}, 
         {
-        value: 'airport-11',label: 'airport-11'}, {value: 'airport-11',label: 'airport-11'}
+        value: 'bus-11',label: 'bus-11'}, {value: 'bus-15',label: 'bus-15'},
+        {
+        value: 'cafe-11',label: 'cafe-11'}, {value: 'cafe-15',label: 'cafe-15'},
+        {
+        value: 'campsite-11',label: 'campsite-11'}, {value: 'campsite-15',label: 'campsite-15'},
+        {
+        value: 'car-11',label: 'car-11'}, {value: 'car-15',label: 'car-15'},
+        {
+        value: 'castle-11',label: 'castle-11'}, {value: 'castle-15',label: 'castle-15'},
+        {
+        value: 'cemetery-11',label: 'cemetery-11'}, {value: 'cemetery-15',label: 'cemetery-15'},
+        {
+        value: 'cinema-11',label: 'cinema-11'}, {value: 'cinema-15',label: 'cinema-15'},
+        {
+        value: 'circle-11',label: 'circle-11'}, {value: 'circle-15',label: 'circle-15'},
+        {
+        value: 'circle-stroked-11',label: 'circle-stroked-11'}, {value: 'circle-stroked-15',label: 'circle-stroked-15'},
+        {
+        value: 'clothing-store-11',label: 'clothing-store-11'}, {value: 'clothing-store-15',label: 'clothing-store-15'},
+        {
+        value: 'college-11',label: 'college-11'}, {value: 'college-15',label: 'college-15'},
+        {
+        value: 'dentist-11',label: 'dentist-11'}, {value: 'dentist-15',label: 'dentist-15'},
+        {
+        value: 'doctor-11',label: 'doctor-11'}, {value: 'doctor-15',label: 'doctor-15'},
+        {
+        value: 'dog-park-11',label: 'dog-park-11'}, {value: 'dog-park-15',label: 'dog-park-15'},
+        {
+        value: 'drinking-water-11',label: 'drinking-water-11'}, {value: 'drinking-water-15',label: 'drinking-water-15'},
+        {
+        value: 'embassy-11',label: 'embassy-11'}, {value: 'embassy-15',label: 'embassy-15'},
+        {
+        value: 'entrance-11',label: 'entrance-11'}, {value: 'entrance-15',label: 'entrance-15'},
+        {
+        value: 'fast-food-11',label: 'fast-food-11'}, {value: 'fast-food-15',label: 'fast-food-15'},
+        {
+        value: 'ferry-11',label: 'ferry-11'}, {value: 'ferry-15',label: 'ferry-15'},
+        {
+        value: 'fire-station-11',label: 'fire-station-11'}, {value: 'fire-station-15',label: 'fire-station-15'},
+        {
+        value: 'fuel-11',label: 'fuel-11'}, {value: 'fuel-15',label: 'fuel-15'},
+        {
+        value: 'garden-11',label: 'garden-11'}, {value: 'garden-15',label: 'garden-15'},
+        {
+        value: 'golf-11',label: 'golf-11'}, {value: 'golf-15',label: 'golf-15'},
+        {
+        value: 'grocery-11',label: 'grocery-11'}, {value: 'grocery-15',label: 'grocery-15'},
+        {
+        value: 'harbor-11',label: 'harbor-11'}, {value: 'harbor-15',label: 'harbor-15'},
+        {
+        value: 'heliport-11',label: 'heliport-11'}, {value: 'heliport-15',label: 'heliport-15'},
+        {
+        value: 'hospital-11',label: 'hospital-11'}, {value: 'hospital-15',label: 'hospital-15'},
+        {
+        value: 'ice-cream-11',label: 'ice-cream-11'}, {value: 'ice-cream-15',label: 'ice-cream-15'},
+        {
+        value: 'information-11',label: 'information-11'}, {value: 'information-15',label: 'information-15'},
+        {
+        value: 'laundry-11',label: 'laundry-11'}, {value: 'laundry-15',label: 'laundry-15'},
+        {
+        value: 'library-11',label: 'library-11'}, {value: 'library-15',label: 'library-15'},
+        {
+        value: 'lodging-11',label: 'lodging-11'}, {value: 'lodging-15',label: 'lodging-15'},
+        {
+        value: 'marker-11',label: 'marker-11'}, {value: 'marker-15',label: 'marker-15'},
+        {
+        value: 'monument-11',label: 'monument-11'}, {value: 'monument-15',label: 'monument-15'},
+        {
+        value: 'mountain-11',label: 'mountain-11'}, {value: 'mountain-15',label: 'mountain-15'},
+        {
+        value: 'museum-11',label: 'museum-11'}, {value: 'museum-15',label: 'museum-15'},
+        {
+        value: 'music-11',label: 'music-11'}, {value: 'music-15',label: 'music-15'},
+        {
+        value: 'park-11',label: 'park-11'}, {value: 'park-15',label: 'park-15'},
+        {
+        value: 'pharmacy-11',label: 'pharmacy-11'}, {value: 'pharmacy-15',label: 'pharmacy-15'},
+        {
+        value: 'picnic-site-11',label: 'picnic-site-11'}, {value: 'picnic-site-15',label: 'picnic-site-15'},
+        {
+        value: 'place-of-worship-11',label: 'place-of-worship-11'}, {value: 'place-of-worship-15',label: 'place-of-worship-15'},
+        {
+        value: 'playground-11',label: 'playground-11'}, {value: 'playground-15',label: 'playground-15'},
+        {
+        value: 'police-11',label: 'police-11'}, {value: 'police-15',label: 'police-15'},
+        {
+        value: 'post-11',label: 'post-11'}, {value: 'post-15',label: 'post-15'},
+        {
+        value: 'prison-11',label: 'prison-11'}, {value: 'prison-15',label: 'prison-15'},
+        {
+        value: 'rail-11',label: 'rail-11'}, {value: 'rail-15',label: 'rail-15'},
+        {
+        value: 'rail-light-11',label: 'rail-light-11'}, {value: 'rail-light-15',label: 'rail-light-15'},
+        {
+        value: 'rail-metro-11',label: 'rail-metro-11'}, {value: 'rail-metro-15',label: 'rail-metro-15'},
+        {
+        value: 'religious-christian-11',label: 'religious-christian-11'}, {value: 'religious-christian-15',label: 'religious-christian-15'},
+        {
+        value: 'religious-jewish-11',label: 'religious-jewish-11'}, {value: 'religious-jewish-15',label: 'religious-jewish-15'},
+        {
+        value: 'religious-muslim-11',label: 'religious-muslim-11'}, {value: 'religious-muslim-15',label: 'religious-muslim-15'},
+        {
+        value: 'restaurant-11',label: 'restaurant-11'}, {value: 'restaurant-15',label: 'restaurant-15'},
+        {
+        value: 'rocket-11',label: 'rocket-11'}, {value: 'rocket-15',label: 'rocket-15'},
+        {
+        value: 'school-11',label: 'school-11'}, {value: 'school-15',label: 'school-15'},
+        {
+        value: 'shop-11',label: 'shop-11'}, {value: 'shop-15',label: 'shop-15'},
+        {
+        value: 'stadium-11',label: 'stadium-11'}, {value: 'stadium-15',label: 'stadium-15'},
+        {
+        value: 'star-11',label: 'star-11'}, {value: 'star-15',label: 'star-15'},
+        {
+        value: 'suitcase-11',label: 'suitcase-11'}, {value: 'suitcase-15',label: 'suitcase-15'},
+        {
+        value: 'swimming-11',label: 'swimming-11'}, {value: 'swimming-15',label: 'swimming-15'},
+        {
+        value: 'theatre-11',label: 'theatre-11'}, {value: 'theatre-15',label: 'theatre-15'},
+        {
+        value: 'toilet-11',label: 'toilet-11'}, {value: 'toilet-15',label: 'toilet-15'},
+        {
+        value: 'town-hall-11',label: 'town-hall-11'}, {value: 'town-hall-15',label: 'town-hall-15'},
+        {
+        value: 'triangle-11',label: 'triangle-11'}, {value: 'triangle-15',label: 'triangle-15'},
+        {
+        value: 'triangle-stroked-11',label: 'triangle-stroked-11'}, {value: 'triangle-stroked-15',label: 'triangle-stroked-15'},
+        {
+        value: 'veterinary-11',label: 'veterinary-11'}, {value: 'veterinary-15',label: 'veterinary-15'},
+        {
+        value: 'volcano-11',label: 'volcano-11'}, {value: 'volcano-15',label: 'volcano-15'},
+        {
+        value: 'zoo-11',label: 'zoo-11'}, {value: 'zoo-15',label: 'zoo-15'}
       ]
     }
   }
@@ -349,7 +480,8 @@ class UploadList extends React.Component {
 
   editRemoteData(location) {
     //var win = window.open('http://geojson.io/#data=data:text/x-url,'+location, '_blank');
-    var win = window.open('http://34.209.242.8:8080/#data=data:text/x-url,'+location+'&user=mapid', '_blank');
+    var win = window.open('http://34.209.242.8:8080/#data=data:text/x-url,'+location, '_blank');
+    //var win = window.open('http://localhost:8080/#data=data:text/x-url,'+location, '_blank');
   }
 
   updateRemoteData(id, activevalue) {
@@ -599,28 +731,35 @@ class UploadList extends React.Component {
     this.setState({geojsonModal: false});
   }
 
-  generateNewLayer(){
+  generateNewLayer() {
+    this.setState({
+      showModal: true
+    });
     var username = auth.getUserInfo().username;
     let now = new Date();
-    var filename = username+'_'+now.getFullYear()+now.getMonth().toLocaleString()+now.getDate().toLocaleString()+now.getHours().toLocaleString()+now.getMinutes().toLocaleString()+now.getSeconds().toLocaleString();
+    var filename = username + '_' + now.getFullYear() + now.getMonth().toLocaleString() + now.getDate().toLocaleString() + now.getHours().toLocaleString() + now.getMinutes().toLocaleString() + now.getSeconds().toLocaleString()+'.geojson';
     console.log('Auto Generate Filename: ', filename.toString());
     var geojson = '{"type": "FeatureCollection","features": []}';
 
-    axios
-    .post(SERVER_URL + ':7555/api/newlayer', {
-      username: username,
-      filename: filename,
-      geojson: geojson
+    var promise = new Promise(function (resolve, reject) {
+      axios
+        .post(SERVER_URL + ':7555/api/newlayer', {
+          username: username,
+          filename: filename,
+          geojson: geojson
+        })
+        .then(function (response) {
+          console.log(response.data);
+          if (response.data == 'success') {
+            console.log('Server side converting success');
+            resolve('true');
+          }
+        })
+        .catch(function (error) {
+          console.log('Server side converting error: ', error);
+        });
     })
-    .then(function(response) {
-      console.log(response.data);
-      if (response.data == 'success') {
-        console.log('Server side converting success');
-      }
-    })
-    .catch(function(error) {
-      console.log('Server side converting error: ', error);
-    });
+    promise.then(bool => this.loadFileList())
   }
 
   render() {
@@ -639,19 +778,19 @@ class UploadList extends React.Component {
             isOpen={this.state.geojsonModal}
             onAfterOpen={this.afterOpenModal}
             onRequestClose={this.closeModal}
-            style={customStyles}
-            contentLabel="Example Modal"
           >
-          <ItemGrid xs={12} sm={12} md={12}>
-          <Iframe url={'http://mapid.io'}
-            width="100%"
-            height="768px"
-            id="myId"
-            className="myClassname"
-            display="initial"
-            position="relative"
-            allowFullScreen />
-        </ItemGrid>
+            <ItemGrid xs={12} sm={12} md={12}>
+              <Iframe
+                url={'http://34.209.242.8:8080/#data=data:text/x-url,' + this.state.selectedLocation}
+                width="100%"
+                height="768px"
+                id="myId"
+                className="myClassname"
+                display="initial"
+                position="relative"
+                allowFullScreen
+              />
+            </ItemGrid>
           </Modal>
           <Grid container>
             <ItemGrid xs={12} sm={12} md={12}>
@@ -706,12 +845,12 @@ class UploadList extends React.Component {
                         }
                         if (column.dataField == "edit") {
                           console.log("Edit Layer activated!");
-                          //this.editRemoteData(row.location);
-                          this.setState({
+                          this.editRemoteData(row.location);
+                          /*this.setState({
                             selectedLocation: row.location,
                             selectedFilename: row.filename,
                             geojsonModal: true
-                          });
+                          });*/
                         }
                         if (column.dataField == "color") {
                           this.setState({

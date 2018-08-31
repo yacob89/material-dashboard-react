@@ -17,6 +17,7 @@ import Spinner from 'react-spinkit';
 import { SwatchesPicker } from 'react-color';
 import Modal from 'react-modal';
 import Iframe from 'react-iframe';
+import 'typeface-roboto'
 
 const customStyles = {
   content : {
@@ -46,7 +47,7 @@ const columns = [{
     filter: textFilter(),
     sort: true,
     headerStyle: {
-      backgroundColor: '#6495ED'
+      backgroundColor: '#bec1ce'
     },style: (cell, row, rowIndex, colIndex) => {
       return {
         backgroundColor: 'white'
@@ -57,7 +58,7 @@ const columns = [{
     text: 'Location',
     sort: true,
     headerStyle: {
-      backgroundColor: '#6495ED'
+      backgroundColor: '#bec1ce'
     },
     style: (cell, row, rowIndex, colIndex) => {
       return {
@@ -65,13 +66,14 @@ const columns = [{
       };
     },
     hidden: true
-  }, {
+  }, 
+  {
     dataField: 'type',
     text: 'Geojson Type',
     filter: textFilter(),
     sort: true,
     headerStyle: {
-      backgroundColor: '#6495ED'
+      backgroundColor: '#bec1ce'
     },
     style: (cell, row, rowIndex, colIndex) => {
       return {
@@ -91,13 +93,44 @@ const columns = [{
         label: 'fill'
       }]
     }
-  }, {
+  },
+  {
+    dataField: 'view',
+    text: 'View Type',
+    filter: textFilter(),
+    sort: true,
+    headerStyle: {
+      backgroundColor: '#bec1ce'
+    },
+    style: (cell, row, rowIndex, colIndex) => {
+      return {
+        backgroundColor: 'white'
+      };
+    },
+    editor: {
+      type: Type.SELECT,
+      options: [{
+        value: 'standard',
+        label: 'standard'
+      }, {
+        value: 'insight',
+        label: 'insight'
+      }, {
+        value: 'television',
+        label: 'television'
+      }, {
+        value: 'ioT',
+        label: 'ioT'
+      }]
+    }
+  },  
+  {
     dataField: 'active',
     text: 'Show/Hide',
     filter: textFilter(),
     sort: true,
     headerStyle: {
-      backgroundColor: '#6495ED'
+      backgroundColor: '#bec1ce'
     },
     style: (cell, row, rowIndex, colIndex) => {
       if (row.active === 'show') {
@@ -124,7 +157,7 @@ const columns = [{
     dataField: '_id',
     text: 'ID',
     headerStyle: {
-      backgroundColor: '#6495ED'
+      backgroundColor: '#bec1ce'
     },
     hidden: true
   },
@@ -133,7 +166,7 @@ const columns = [{
     text: 'Size (MB)',
     sort: true,
     headerStyle: {
-      backgroundColor: '#6495ED'
+      backgroundColor: '#bec1ce'
     },style: (cell, row, rowIndex, colIndex) => {
       return {
         backgroundColor: 'white'
@@ -141,42 +174,12 @@ const columns = [{
     }
   },
   {
-    dataField: 'delete',
-    text: 'Delete',
-    headerStyle: {
-      backgroundColor: '#6495ED'
-    },
-    style: (cell, row, rowIndex, colIndex) => {
-      return {
-        backgroundColor: 'white'
-      };
-    },
-    events: {
-      onClick: () => alert('Delete layer')
-    }
-  },
-  {
-    dataField: 'edit',
-    text: 'Edit',
-    headerStyle: {
-      backgroundColor: '#6495ED'
-    },
-    style: (cell, row, rowIndex, colIndex) => {
-      return {
-        backgroundColor: 'white'
-      };
-    },
-    events: {
-      onClick: () => alert('Edit layer')
-    }
-  }
-  , {
     dataField: 'icon',
     text: 'Icon',
     filter: textFilter(),
     sort: true,
     headerStyle: {
-      backgroundColor: '#6495ED'
+      backgroundColor: '#bec1ce'
     },
     style: (cell, row, rowIndex, colIndex) => {
       return {
@@ -350,7 +353,37 @@ const columns = [{
         value: 'zoo-11',label: 'zoo-11'}, {value: 'zoo-15',label: 'zoo-15'}
       ]
     }
-  }
+  },
+  {
+    dataField: 'edit',
+    text: 'Edit',
+    headerStyle: {
+      backgroundColor: '#bec1ce'
+    },
+    style: (cell, row, rowIndex, colIndex) => {
+      return {
+        backgroundColor: 'white'
+      };
+    },
+    events: {
+      onClick: () => alert('Edit layer')
+    }
+  },
+  {
+    dataField: 'delete',
+    text: 'Delete',
+    headerStyle: {
+      backgroundColor: '#bec1ce'
+    },
+    style: (cell, row, rowIndex, colIndex) => {
+      return {
+        backgroundColor: 'white'
+      };
+    },
+    events: {
+      onClick: () => alert('Delete layer')
+    }
+  },
 ];
 
 const rowEvents = {
@@ -662,6 +695,8 @@ class UploadList extends React.Component {
   }
 
   testGeojsonUpdate(id, location, color, icon, filename){
+    console.log('Color: ', color);
+    console.log('Icon: ', icon);
     this.setState({
       showModal: true
     });
@@ -767,6 +802,7 @@ class UploadList extends React.Component {
     const rowStyle2 = (row, rowIndex) => {
       const style = {};
       style.backgroundColor = rows[rowIndex].color;
+      style.borderStyle = 'none';
     
       return style;
     };
@@ -807,6 +843,7 @@ class UploadList extends React.Component {
                     striped
                     hover
                     condensed
+                    bordered={ true }
                     rowStyle={rowStyle2}
                     noDataIndication="No Layer is Uploaded"
                     filter={filterFactory()}
@@ -867,7 +904,7 @@ class UploadList extends React.Component {
                             newValue: newValue
                           });
                           //this.updateGeojsonIcon(row._id, newValue);
-                          this.testGeojsonUpdate(row._id, row.location, row.color, newValue, row.filename, row._id)
+                          this.testGeojsonUpdate(row._id, row.location, 'default' , newValue, row.filename, row._id)
                         }
                       }
                     })}

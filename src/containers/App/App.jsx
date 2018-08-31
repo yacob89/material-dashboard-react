@@ -47,7 +47,7 @@ class App extends React.Component {
   render() {
     const { classes, ...rest } = this.props;
     const mapBackgroundImage = { 
-      backgroundImage: 'url("https://s3-us-west-2.amazonaws.com/geomapid-assets/img/background.png")', 
+      backgroundImage: 'url("https://s3-us-west-2.amazonaws.com/geomapid-assets/img/background-light.png")', 
       backgroundSize: 'cover',
       overflow: 'hidden'
     };

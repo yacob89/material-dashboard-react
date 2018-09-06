@@ -14,7 +14,7 @@ import {
 import avatar from "assets/img/faces/marc.jpg";
 
 //const SERVER_URL = 'http://192.168.1.13';
-const SERVER_URL = 'http://54.245.202.137';
+const SERVER_URL = 'http://34.219.155.147';
 
 class UserProfile extends React.Component {
   constructor(props) {
@@ -98,7 +98,7 @@ class UserProfile extends React.Component {
     var promise = new Promise(function(resolve, reject) {
       axios
         .put(
-          `http://192.168.1.12:1337/userdetail/${userid}` /*{
+          `http://34.219.155.147:1337/userdetail/${userid}` /*{
     //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
         /*{
                params: {
@@ -140,7 +140,7 @@ class UserProfile extends React.Component {
     console.log("User yang akan dibuatkan folder", auth.getUserInfo().username);
     axios
       //.post("http://192.168.1.2:7555/createfolder", {
-      .post("http://54.245.202.137:7555/createfolder", {
+      .post("http://34.219.155.147:7555/createfolder", {
         username: auth.getUserInfo().username
       })
       .then(function(response) {

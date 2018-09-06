@@ -22,7 +22,7 @@ import request from 'utils/request';
 import form from './forms.json';
 import './styles.css';
 
-const SERVER_URL = 'http://54.245.202.137:1337';
+const SERVER_URL = 'http://34.219.155.147:1337';
 //const SERVER_URL = 'http://192.168.1.13:1337';
 
 var requestType = 'login';
@@ -58,10 +58,10 @@ class AuthPage extends React.Component {
         requestType = 'register';
         break;
       case 'reset-password':
-        requestURL = 'http://54.245.202.137:1337'+'/auth/reset-password';
+        requestURL = 'http://34.219.155.147:1337'+'/auth/reset-password';
         break;
       case 'forgot-password':
-        requestURL = 'http://54.245.202.137:1337'+'/auth/forgot-password';
+        requestURL = 'http://34.219.155.147:1337'+'/auth/forgot-password';
         break;
       default:
     }

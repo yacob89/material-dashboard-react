@@ -16,9 +16,9 @@ const { Dashboard, DashboardModal, DragDrop, ProgressBar } = require('uppy/lib/r
 
 const AWS = require('aws-sdk/dist/aws-sdk-react-native');
 
-const strapi_url = 'http://54.245.202.137:1337';
-const backend_url = 'http://54.245.202.137:7555';
-const server_url = 'http://54.245.202.137:7555/geojson/';
+const strapi_url = 'http://34.219.155.147:1337';
+const backend_url = 'http://34.219.155.147:7555';
+const server_url = 'http://34.219.155.147:7555/geojson/';
 
 /*const strapi_url = 'http://192.168.1.8:1337';
 const backend_url = 'http://192.168.1.8:7555';
@@ -71,11 +71,11 @@ class Upload extends React.Component {
   }
   componentWillMount () {
     this.uppy = new Uppy({ autoProceed: false })
-      .use(Tus, { endpoint: 'http://54.245.202.137:7555' })
+      .use(Tus, { endpoint: 'http://34.219.155.147:7555' })
       .use(GoogleDrive, { host: 'https://server.uppy.io' })
 
     this.uppy2 = new Uppy({ autoProceed: false })
-      .use(Tus, { endpoint: 'http://54.245.202.137:7555' })
+      .use(Tus, { endpoint: 'http://34.219.155.147:7555' })
   }
   componentWillUnmount () {
     this.uppy.close()

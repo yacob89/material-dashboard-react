@@ -38,7 +38,7 @@ const spinner = (
   <Spinner name="line-scale"/>
 );
 
-const SERVER_URL = 'http://54.245.202.137';
+const SERVER_URL = 'http://34.219.155.147';
 //const SERVER_URL = 'http://192.168.1.13';
 
 const columns = [{
@@ -493,7 +493,7 @@ class UploadList extends React.Component {
     console.log("Row ID: ", id);
 
     var promise = new Promise(function (resolve, reject) {
-      axios.delete(`http://54.245.202.137:1337/fileuploads/${id}`)
+      axios.delete(`http://34.219.155.147:1337/fileuploads/${id}`)
         .then(function (responses) {
           console.log("Respon Data: ", responses.data);
           if (responses.data.ok == 1) {
@@ -513,7 +513,7 @@ class UploadList extends React.Component {
 
   editRemoteData(location) {
     //var win = window.open('http://geojson.io/#data=data:text/x-url,'+location, '_blank');
-    var win = window.open('http://34.209.242.8:8080/#data=data:text/x-url,'+location, '_blank');
+    var win = window.open('http://flow.mapid.io:8080/#data=data:text/x-url,'+location, '_blank');
     //var win = window.open('http://localhost:8080/#data=data:text/x-url,'+location, '_blank');
   }
 
@@ -525,7 +525,7 @@ class UploadList extends React.Component {
     });
 
     var promise = new Promise(function (resolve, reject) {
-      axios.put(`http://54.245.202.137:1337/fileuploads/${id}`, /*{
+      axios.put(`http://34.219.155.147:1337/fileuploads/${id}`, /*{
       //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
           /*{
                  params: {
@@ -560,7 +560,7 @@ class UploadList extends React.Component {
     console.log("Row Type Value: ", typevalue);
 
     var promise = new Promise(function (resolve, reject) {
-      axios.put(`http://54.245.202.137:1337/fileuploads/${id}`, /*{
+      axios.put(`http://34.219.155.147:1337/fileuploads/${id}`, /*{
       //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
           /*{
                  params: {
@@ -595,7 +595,7 @@ class UploadList extends React.Component {
     console.log("Row Type Value: ", namevalue);
 
     var promise = new Promise(function (resolve, reject) {
-      axios.put(`http://54.245.202.137:1337/fileuploads/${id}`, /*{
+      axios.put(`http://34.219.155.147:1337/fileuploads/${id}`, /*{
       //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
           /*{
                  params: {
@@ -630,7 +630,7 @@ class UploadList extends React.Component {
     console.log("Row Type Value: ", color);
 
     var promise = new Promise(function (resolve, reject) {
-      axios.put(`http://54.245.202.137:1337/fileuploads/${id}`, /*{
+      axios.put(`http://34.219.155.147:1337/fileuploads/${id}`, /*{
       //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
           /*{
                  params: {
@@ -666,7 +666,7 @@ class UploadList extends React.Component {
     console.log("Row Type Value: ", icon);
 
     var promise = new Promise(function (resolve, reject) {
-      axios.put(`http://54.245.202.137:1337/fileuploads/${id}`, /*{
+      axios.put(`http://34.219.155.147:1337/fileuploads/${id}`, /*{
       //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
           /*{
                  params: {
@@ -697,11 +697,12 @@ class UploadList extends React.Component {
   testGeojsonUpdate(id, location, color, icon, filename){
     console.log('Color: ', color);
     console.log('Icon: ', icon);
+    console.log('Nomer ID: ', id);
     this.setState({
       showModal: true
     });
     var promise = new Promise(function (resolve, reject) {
-      axios.post('http://54.245.202.137' + ':7555/updatelayer', {
+      axios.post('http://34.219.155.147' + ':7555/updatelayer', {
         location: location,
         color: color,
         icon: icon,

@@ -25,7 +25,7 @@ const spinner = (
   <Spinner name="line-scale"/>
 );
 
-const SERVER_URL = 'http://54.245.202.137';
+const SERVER_URL = 'http://34.219.155.147';
 //const SERVER_URL = 'http://192.168.1.13';
 
 class Typography extends React.Component {

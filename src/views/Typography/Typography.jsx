@@ -25,7 +25,8 @@ const spinner = (
   <Spinner name="line-scale"/>
 );
 
-const SERVER_URL = 'http://34.219.155.147';
+const STRAPI_URL = 'https://db.mapid.io';
+const SERVER_URL = 'https://geo.mapid.io';
 //const SERVER_URL = 'http://192.168.1.13';
 
 class Typography extends React.Component {
@@ -172,7 +173,7 @@ class Typography extends React.Component {
     // Make a request for a user with a given ID
     let rows = [];
 
-      axios.get(SERVER_URL+':7555/api/filelist', {
+      axios.get(SERVER_URL+'/api/filelist', {
           params: {
             username: auth.getUserInfo().username
           }
@@ -259,7 +260,7 @@ class Typography extends React.Component {
     console.log("Nama filenya adalah: ", file.name);
     console.log("Filekey nya adalah: ", file.name);
 
-    const url = SERVER_URL+':7555/apiuploads';
+    const url = SERVER_URL+'/apiuploads';
     const config = {
       headers: {
         'content-type': 'multipart/form-data'
@@ -269,7 +270,7 @@ class Typography extends React.Component {
   }
 
   deleteObject(fileKey){
-    axios.post(SERVER_URL+':7555/api/deleteobject', {
+    axios.post(SERVER_URL+'/api/deleteobject', {
       bucket: auth.getUserInfo().username,
       key: fileKey
     })
@@ -286,7 +287,7 @@ class Typography extends React.Component {
   }
 
   createFolder(fileKey){
-    axios.post(SERVER_URL+':7555/api/createfolder', {
+    axios.post(SERVER_URL+'/api/createfolder', {
       bucket: auth.getUserInfo().username,
       key: fileKey
     })

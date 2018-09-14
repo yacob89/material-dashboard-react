@@ -14,7 +14,8 @@ import {
 import avatar from "assets/img/faces/marc.jpg";
 
 //const SERVER_URL = 'http://192.168.1.13';
-const SERVER_URL = 'http://34.219.155.147';
+const STRAPI_URL = 'https://db.mapid.io';
+const SERVER_URL = 'https://geo.mapid.io';
 
 class UserProfile extends React.Component {
   constructor(props) {
@@ -32,20 +33,21 @@ class UserProfile extends React.Component {
       storage: 0
     };
     this.loadUserProfile = this.loadUserProfile.bind(this);
+    this.createFolderOnClick = this.createFolderOnClick.bind(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     console.log("User Info", auth.getUserInfo());
     this.createFolderOnClick();
   }
 
-  componentWillMount(){
+  async componentWillMount(){
     this.loadUserProfile();
   }
 
   loadUserProfile() {
     axios
-      .get(SERVER_URL + ":1337/userdetail", {
+      .get(STRAPI_URL + "/userdetail", {
         params: {
           username: auth.getUserInfo().username
         }
@@ -98,7 +100,7 @@ class UserProfile extends React.Component {
     var promise = new Promise(function(resolve, reject) {
       axios
         .put(
-          `http://34.219.155.147:1337/userdetail/${userid}` /*{
+          `https://db.mapid.io/userdetail/${userid}` /*{
     //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
         /*{
                params: {
@@ -136,18 +138,16 @@ class UserProfile extends React.Component {
   };
 
   createFolderOnClick() {
-    // Setelah selesai upload, baru insert data di strapi
+    // Create Folder
     console.log("User yang akan dibuatkan folder", auth.getUserInfo().username);
-    axios
-      //.post("http://192.168.1.2:7555/createfolder", {
-      .post("http://34.219.155.147:7555/createfolder", {
-        username: auth.getUserInfo().username
+    axios.post(SERVER_URL + '/createfolder', {
+      username: auth.getUserInfo().username
+    })
+      .then(function (response) {
+        console.log("Create Folder Success ", response);
+        // Setelah create folder sukses, create config
       })
-      .then(function(response) {
-        console.log(response);
-        console.log("Create Folder Success");
-      })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }

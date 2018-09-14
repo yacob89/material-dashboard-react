@@ -22,7 +22,7 @@ import request from 'utils/request';
 import form from './forms.json';
 import './styles.css';
 
-const SERVER_URL = 'http://34.219.155.147:1337';
+const SERVER_URL = 'https://db.mapid.io';
 //const SERVER_URL = 'http://192.168.1.13:1337';
 
 var requestType = 'login';
@@ -58,10 +58,10 @@ class AuthPage extends React.Component {
         requestType = 'register';
         break;
       case 'reset-password':
-        requestURL = 'http://34.219.155.147:1337'+'/auth/reset-password';
+        requestURL = 'https://db.mapid.io'+'/auth/reset-password';
         break;
       case 'forgot-password':
-        requestURL = 'http://34.219.155.147:1337'+'/auth/forgot-password';
+        requestURL = 'https://db.mapid.io'+'/auth/forgot-password';
         break;
       default:
     }
@@ -101,7 +101,7 @@ class AuthPage extends React.Component {
 
     // This line is required for the callback url to redirect your user to app
     if (this.props.match.params.authType === 'forgot-password') {
-      set(body, 'url', 'http://flow.mapid.io/auth/reset-password');
+      set(body, 'url', 'https://flow.mapid.io/auth/reset-password');
     }
 
     //console.log('Form yang perlu disubmit: ', this.state.value);

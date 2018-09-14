@@ -38,7 +38,8 @@ const spinner = (
   <Spinner name="line-scale"/>
 );
 
-const SERVER_URL = 'http://34.219.155.147';
+const SERVER_URL = 'https://geo.mapid.io';
+const STRAPI_URL = 'https://db.mapid.io';
 //const SERVER_URL = 'http://192.168.1.13';
 
 const columns = [{
@@ -457,7 +458,7 @@ class UploadList extends React.Component {
     // Make a request for a user with a given ID
     rows = [];
 
-      axios.get(SERVER_URL+':1337/fileuploads', {
+      axios.get(STRAPI_URL+'/fileuploads', {
           params: {
             username: auth.getUserInfo().username
           }
@@ -480,6 +481,7 @@ class UploadList extends React.Component {
             _id: fileList[i]._id,
             color: fileList[i].color,
             icon: fileList[i].icon,
+            view: fileList[i].display_type,
             delete:"Delete",
             edit:"Edit"
           });
@@ -493,7 +495,7 @@ class UploadList extends React.Component {
     console.log("Row ID: ", id);
 
     var promise = new Promise(function (resolve, reject) {
-      axios.delete(`http://34.219.155.147:1337/fileuploads/${id}`)
+      axios.delete(`https://db.mapid.io/fileuploads/${id}`)
         .then(function (responses) {
           console.log("Respon Data: ", responses.data);
           if (responses.data.ok == 1) {
@@ -525,7 +527,7 @@ class UploadList extends React.Component {
     });
 
     var promise = new Promise(function (resolve, reject) {
-      axios.put(`http://34.219.155.147:1337/fileuploads/${id}`, /*{
+      axios.put(`https://db.mapid.io/fileuploads/${id}`, /*{
       //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
           /*{
                  params: {
@@ -560,7 +562,7 @@ class UploadList extends React.Component {
     console.log("Row Type Value: ", typevalue);
 
     var promise = new Promise(function (resolve, reject) {
-      axios.put(`http://34.219.155.147:1337/fileuploads/${id}`, /*{
+      axios.put(`https://db.mapid.io/fileuploads/${id}`, /*{
       //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
           /*{
                  params: {
@@ -595,7 +597,7 @@ class UploadList extends React.Component {
     console.log("Row Type Value: ", namevalue);
 
     var promise = new Promise(function (resolve, reject) {
-      axios.put(`http://34.219.155.147:1337/fileuploads/${id}`, /*{
+      axios.put(`https://db.mapid.io/fileuploads/${id}`, /*{
       //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
           /*{
                  params: {
@@ -630,7 +632,7 @@ class UploadList extends React.Component {
     console.log("Row Type Value: ", color);
 
     var promise = new Promise(function (resolve, reject) {
-      axios.put(`http://34.219.155.147:1337/fileuploads/${id}`, /*{
+      axios.put(`https://db.mapid.io/fileuploads/${id}`, /*{
       //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
           /*{
                  params: {
@@ -666,7 +668,7 @@ class UploadList extends React.Component {
     console.log("Row Type Value: ", icon);
 
     var promise = new Promise(function (resolve, reject) {
-      axios.put(`http://34.219.155.147:1337/fileuploads/${id}`, /*{
+      axios.put(`https://db.mapid.io/fileuploads/${id}`, /*{
       //axios.put(`http://192.168.1.2:1337/fileuploads/${id}`,
           /*{
                  params: {
@@ -694,18 +696,19 @@ class UploadList extends React.Component {
     
   }
 
-  testGeojsonUpdate(id, location, color, icon, filename){
-    console.log('Color: ', color);
+  testGeojsonUpdate(id, location, color, icon, view, filename){
+    console.log('View: ', view);
     console.log('Icon: ', icon);
     console.log('Nomer ID: ', id);
     this.setState({
       showModal: true
     });
     var promise = new Promise(function (resolve, reject) {
-      axios.post('http://34.219.155.147' + ':7555/updatelayer', {
+      axios.post(SERVER_URL + '/updatelayer', {
         location: location,
         color: color,
         icon: icon,
+        view: view,
         id: id,
         username: auth.getUserInfo().username,
         filename: filename
@@ -779,7 +782,7 @@ class UploadList extends React.Component {
 
     var promise = new Promise(function (resolve, reject) {
       axios
-        .post(SERVER_URL + ':7555/api/newlayer', {
+        .post(SERVER_URL + '/api/newlayer', {
           username: username,
           filename: filename,
           geojson: geojson
@@ -905,7 +908,16 @@ class UploadList extends React.Component {
                             newValue: newValue
                           });
                           //this.updateGeojsonIcon(row._id, newValue);
-                          this.testGeojsonUpdate(row._id, row.location, 'default' , newValue, row.filename, row._id)
+                          this.testGeojsonUpdate(row._id, row.location, 'default' , newValue, row.view, row.filename)
+                        }
+                        if (column.dataField == "view") {
+                          console.log("Set view type");
+                          this.setState({
+                            rowID: row._id,
+                            newValue: newValue
+                          });
+                          //this.updateGeojsonIcon(row._id, newValue);
+                          this.testGeojsonUpdate(row._id, row.location, 'default' , row.icon, newValue, row.filename)
                         }
                       }
                     })}

@@ -38,7 +38,7 @@ class Maps extends React.Component {
           cardSubtitle={'geomapid.co.id/'+this.state.username}
           content={
             <ItemGrid xs={12} sm={12} md={12}>
-              <Iframe url={'http://geomapid.co.id/' + this.state.username}
+              <Iframe url={'https://geo.mapid.io/' + this.state.username}
                 width="100%"
                 height="768px"
                 id="myId"

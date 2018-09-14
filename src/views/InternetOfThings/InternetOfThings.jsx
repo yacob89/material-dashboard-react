@@ -21,7 +21,8 @@ import {
 import avatar from "assets/img/faces/marc.jpg";
 
 //const SERVER_URL = 'http://192.168.1.13';
-const SERVER_URL = 'http://34.219.155.147';
+const STRAPI_URL = 'https://db.mapid.io';
+const SERVER_URL = 'https://geo.mapid.io';
 const TEMP_URL = 'http://localhost';
 
 class InternetOfThings extends React.Component {
@@ -89,7 +90,7 @@ class InternetOfThings extends React.Component {
   handleSubmit(event) {
     //alert('URL: ' + this.state.url +' Name: '+ this.state.name +' Interval: '+ this.state.interval +' Dynamic Value: '+ this.state.dynamicValue);
     console.log('Handle Submit New Internet Of Things');
-    axios.post(SERVER_URL+':7555/generatesensor', {
+    axios.post(SERVER_URL+'/generatesensor', {
       url: this.state.url,
       name: this.state.name,
       interval: this.state.interval,

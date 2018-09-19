@@ -31,7 +31,7 @@ class InternetOfThings extends React.Component {
     this.state = {
       url: '',
       name: '',
-      interval: '',
+      interval: '30',
       dynamicValue: '',
       username: ''
     };
@@ -99,7 +99,7 @@ class InternetOfThings extends React.Component {
     })
     .then(function (response) {
       console.log(response);
-      if(response.data === 'success'){
+      if(response.data == 'success'){
         alert('IoT Layer Created in Layer List!');
       }
       else{
@@ -175,8 +175,8 @@ class InternetOfThings extends React.Component {
                         <FormGroup controlId="formControlsSelect">
                           <ControlLabel>Refresh Interval</ControlLabel>
                           <FormControl componentClass="select" placeholder="select" id="interval" value={this.state.interval} onChange={this.handleChange}>
-                            <option value="30">30 detik</option>
-                            <option value="60">1 menit</option>
+                            <option value='30'>30 detik</option>
+                            <option value='60'>1 menit</option>
                           </FormControl>
                         </FormGroup>
                       </ItemGrid>

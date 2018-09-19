@@ -27,7 +27,7 @@ const spinner = (
 
 const STRAPI_URL = 'https://db.mapid.io';
 const SERVER_URL = 'https://geo.mapid.io';
-//const SERVER_URL = 'http://192.168.1.13';
+//const SERVER_URL = 'http://192.168.1.10:7555';
 
 class Typography extends React.Component {
 
@@ -250,20 +250,17 @@ class Typography extends React.Component {
     var FormData = require('form-data');
 
     var formData = new FormData();
-    formData.set('file', file);
-    formData.set('username', auth.getUserInfo().username);
-    formData.set('filekey', file.name);
 
     formData.append("file", file);
     formData.append("username", auth.getUserInfo().username);
     formData.append("filekey", file.name);
-    console.log("Nama filenya adalah: ", file.name);
-    console.log("Filekey nya adalah: ", file.name);
+    console.log("Filekey: ", file.name);
 
     const url = SERVER_URL+'/apiuploads';
     const config = {
       headers: {
-        'content-type': 'multipart/form-data'
+        'content-type': 'multipart/form-data',
+        'content-language': auth.getUserInfo().username
       }
     }
     return post(url, formData, config)

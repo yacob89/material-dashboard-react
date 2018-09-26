@@ -1,6 +1,7 @@
 import React from "react";
 import { Grid, InputLabel } from "material-ui";
 import axios from "axios";
+import Dropzone from 'react-dropzone';
 import auth from 'utils/auth';
 
 import {
@@ -19,10 +20,11 @@ import {
 } from "react-bootstrap";
 
 import avatar from "assets/img/faces/marc.jpg";
+import 'views/UserProfile/userprofile.css'
 
-const SERVER_URL = 'http://192.168.1.11:7555';
+//const SERVER_URL = 'http://192.168.1.11:7555';
 const STRAPI_URL = 'https://db.mapid.io';
-//const SERVER_URL = 'https://geo.mapid.io';
+const SERVER_URL = 'https://geo.mapid.io';
 
 class UserProfile extends React.Component {
   constructor(props) {
@@ -38,7 +40,9 @@ class UserProfile extends React.Component {
       postcode: " ",
       country: " ",
       organization: " ",
-      storage: 0
+      storage: 0,
+      accepted: [],
+      rejected: []
     };
     this.loadUserProfile = this.loadUserProfile.bind(this);
     this.createFolderOnClick = this.createFolderOnClick.bind(this);
@@ -110,7 +114,7 @@ class UserProfile extends React.Component {
       .catch(function (error) {
         // handle error
         console.log(error);
-        setTimeout(this.loadUserProfile(),3000);
+        //setTimeout(this.loadUserProfile(),3000);
       })
       .then(function () {
         // always executed
@@ -304,7 +308,7 @@ class UserProfile extends React.Component {
                             value={this.state.email}
                             placeholder="Email Address"
                             onChange={this.handleChange}
-                            disabled = "true"
+                            disabled="true"
                           />
                           <FormControl.Feedback />
                           <HelpBlock></HelpBlock>
@@ -404,30 +408,38 @@ class UserProfile extends React.Component {
             </form>
           </ItemGrid>
           <ItemGrid xs={12} sm={12} md={4}>
-            <Grid container>
-              <ProfileCard
-                avatar={avatar}
-                subtitle={auth.getUserInfo().role.name}
-                title={auth.getUserInfo().username}
-                description={auth.getUserInfo().email}
-              />
-            </Grid>
-            <Grid container>
-              <ItemGrid xs={12} sm={12} md={4} />
+            <Dropzone
+              accept="image/jpeg, image/png"
+              multiple={false}
+              onDrop={(accepted, rejected) => { this.setState({ accepted, rejected }); }}
+            >
+
+
+              <Grid container>
+                <ProfileCard
+                  avatar={avatar}
+                  subtitle={auth.getUserInfo().role.name}
+                  title={auth.getUserInfo().username}
+                  description={auth.getUserInfo().email}
+                />
+              </Grid>
+              <Grid container>
               <ItemGrid xs={12} sm={12} md={4}>
-                <Button
-                  color="danger"
-                  onClick={() => {
-                    auth.clearAppStorage();
-                    this.props.history.push("/auth/login");
-                  }}
-                  round
-                >
-                  Logout
-                </Button>
-              </ItemGrid>
-              <ItemGrid xs={12} sm={12} md={4} />
-            </Grid>
+              <Button
+                color="danger"
+                onClick={() => {
+                  auth.clearAppStorage();
+                  this.props.history.push("/auth/login");
+                }}
+                round
+              >
+                Logout
+            </Button>
+            </ItemGrid>
+                <ItemGrid xs={12} sm={12} md={4} />
+                <ItemGrid xs={12} sm={12} md={4} />
+              </Grid>
+            </Dropzone>
           </ItemGrid>
         </Grid>
       </div>

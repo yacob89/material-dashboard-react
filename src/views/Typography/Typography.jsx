@@ -26,8 +26,8 @@ const spinner = (
 );
 
 const STRAPI_URL = 'https://db.mapid.io';
-const SERVER_URL = 'https://geo.mapid.io';
-//const SERVER_URL = 'http://192.168.1.10:7555';
+//const SERVER_URL = 'https://geo.mapid.io';
+const SERVER_URL = 'http://192.168.1.10:7555';
 
 class Typography extends React.Component {
 
@@ -344,7 +344,7 @@ class Typography extends React.Component {
                           <aside>
                             <ul>
                               {
-                                this.state.filesDrop.map(f => <li key={f.name}>{f.name} - {f.size} bytes</li>)
+                                this.state.filesDrop.map(f => <li key={f.name}>{f.name} - {f.size / 1000000} MB</li>)
                               }
                             </ul>
                           </aside>

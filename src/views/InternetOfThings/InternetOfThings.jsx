@@ -20,9 +20,9 @@ import {
 
 import avatar from "assets/img/faces/marc.jpg";
 
-//const SERVER_URL = 'http://192.168.1.13';
+const SERVER_URL = 'http://192.168.1.11:7555';
 const STRAPI_URL = 'https://db.mapid.io';
-const SERVER_URL = 'https://geo.mapid.io';
+//const SERVER_URL = 'https://geo.mapid.io';
 const TEMP_URL = 'http://localhost';
 
 class InternetOfThings extends React.Component {

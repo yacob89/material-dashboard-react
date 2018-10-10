@@ -35,7 +35,7 @@
         "label": "Username",
         "name": "username",
         "type": "text",
-        "placeholder": "Bob"
+        "placeholder": "bagusdarmawan"
       },
       {
         "customBootstrapClass": "col-md-12",
@@ -60,14 +60,14 @@
         "customBootstrapClass": "col-md-12",
         "label": "First Name",
         "name": "first_name",
-        "placeholder": "John",
+        "placeholder": "bagus",
         "type": "text"
       },
       {
         "customBootstrapClass": "col-md-12",
         "label": "Last Name",
         "name": "last_name",
-        "placeholder": "Doe",
+        "placeholder": "darmawan",
         "type": "text"
       },
       {
@@ -95,7 +95,7 @@
         "customBootstrapClass": "col-md-12",
         "label": "Your Organization",
         "name": "organization",
-        "placeholder": "MAPID",
+        "placeholder": "Your Organization",
         "type": "text"
       }
     ],

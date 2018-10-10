@@ -89,6 +89,17 @@ class AuthPage extends React.Component {
         });
       }
     }
+    if (target.name == 'identifier'){
+      // Prevent user from inserting space characters
+      if (/\s/.test(target.value)) {
+        alert('Username cannot contain spaces');
+      }
+      else{
+        this.setState({
+          value: { ...this.state.value, ['identifier']: target.value.toLowerCase() },
+        });
+      }
+    }
     else{
       this.setState({
         value: { ...this.state.value, [target.name]: target.value },

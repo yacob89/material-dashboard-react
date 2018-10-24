@@ -418,9 +418,12 @@ class UploadList extends React.Component {
       selectedLocation:'',
       selectedColor:'',
       selectedIcon:'',
-      selectedFilename:''
+      selectedFilename:'',
+      account_type:'',
+      totalUploaded: 0
     }
     this.loadFileList = this.loadFileList.bind(this);
+    this.loadUserProfile = this.loadUserProfile.bind(this);
     this.updateRemoteData = this.updateRemoteData.bind(this);
     this.updateGeojsonType = this.updateGeojsonType.bind(this);
     this.updateFilename = this.updateFilename.bind(this);
@@ -452,6 +455,7 @@ class UploadList extends React.Component {
     });*/
 
     this.loadFileList();
+    this.loadUserProfile();
   }
 
   loadFileList() {
@@ -487,7 +491,36 @@ class UploadList extends React.Component {
           });
           total = total + fileList[i].filesize;
         }
-        this.setState({ rowData:rows, totalsize: total, showModal: false });
+        this.setState({ rowData:rows, totalsize: total, showModal: false, totalUploaded: fileList.length });
+      });
+  }
+
+  loadUserProfile() {
+    axios
+      .get(STRAPI_URL + "/userdetail", {
+        params: {
+          username: auth.getUserInfo().username
+        }
+      })
+      .then(response => {
+        // handle success
+        if (response.data) {
+          console.log(response);
+          const userdetails = response.data;
+          console.log(userdetails);
+          this.setState({
+            account_type: userdetails[0].account_type
+          });
+        }
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+        //setTimeout(this.loadUserProfile(),3000);
+      })
+      .then(function () {
+        // always executed
+        //setTimeout(this.loadUserProfile(),3000);
       });
   }
 
@@ -771,34 +804,40 @@ class UploadList extends React.Component {
   }
 
   generateNewLayer() {
-    this.setState({
-      showModal: true
-    });
-    var username = auth.getUserInfo().username;
-    let now = new Date();
-    var filename = username + '_' + now.getFullYear() + now.getMonth().toLocaleString() + now.getDate().toLocaleString() + now.getHours().toLocaleString() + now.getMinutes().toLocaleString() + now.getSeconds().toLocaleString()+'.geojson';
-    console.log('Auto Generate Filename: ', filename.toString());
-    var geojson = '{"type": "FeatureCollection","features": []}';
 
-    var promise = new Promise(function (resolve, reject) {
-      axios
-        .post(SERVER_URL + '/api/newlayer', {
-          username: username,
-          filename: filename,
-          geojson: geojson
-        })
-        .then(function (response) {
-          console.log(response.data);
-          if (response.data == 'success') {
-            console.log('Server side converting success');
-            resolve('true');
-          }
-        })
-        .catch(function (error) {
-          console.log('Server side converting error: ', error);
-        });
-    })
-    promise.then(bool => this.loadFileList())
+    if(this.state.account_type === 'free' && this.state.totalUploaded >= 5){
+      alert("The Limit for free user is 5 layer");
+    }
+    else{
+      this.setState({
+        showModal: true
+      });
+      var username = auth.getUserInfo().username;
+      let now = new Date();
+      var filename = username + '_' + now.getFullYear() + now.getMonth().toLocaleString() + now.getDate().toLocaleString() + now.getHours().toLocaleString() + now.getMinutes().toLocaleString() + now.getSeconds().toLocaleString()+'.geojson';
+      console.log('Auto Generate Filename: ', filename.toString());
+      var geojson = '{"type": "FeatureCollection","features": []}';
+  
+      var promise = new Promise(function (resolve, reject) {
+        axios
+          .post(SERVER_URL + '/api/newlayer', {
+            username: username,
+            filename: filename,
+            geojson: geojson
+          })
+          .then(function (response) {
+            console.log(response.data);
+            if (response.data == 'success') {
+              console.log('Server side converting success');
+              resolve('true');
+            }
+          })
+          .catch(function (error) {
+            console.log('Server side converting error: ', error);
+          });
+      })
+      promise.then(bool => this.loadFileList())
+    }
   }
 
   render() {
@@ -838,7 +877,7 @@ class UploadList extends React.Component {
                 headerColor="blue"
                 plainCard
                 cardTitle="Current Active Layers"
-                cardSubtitle={'Total Upload Size: ' + this.state.totalsize / 1000000 + ' MB'}
+                cardSubtitle={'Total Uploaded Layer: ' + this.state.totalUploaded + " / 5" }
                 content={
                   <BootstrapTable
                     keyField="id"

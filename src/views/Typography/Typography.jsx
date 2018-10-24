@@ -26,8 +26,8 @@ const spinner = (
 );
 
 const STRAPI_URL = 'https://db.mapid.io';
-//const SERVER_URL = 'https://geo.mapid.io';
-const SERVER_URL = 'http://192.168.1.11:7555';
+const SERVER_URL = 'https://geo.mapid.io';
+//const SERVER_URL = 'http://192.168.1.11:7555';
 
 class Typography extends React.Component {
 
@@ -40,8 +40,12 @@ class Typography extends React.Component {
       multifilesDrop:[],
       files:[],
       showModal: false,
-      errormessage:''
+      errormessage:'',
+      totalUploaded:0,
+      account_type:''
     };
+    this.loadUploadList = this.loadUploadList.bind(this);
+    this.loadUserProfile = this.loadUserProfile.bind(this);
     this.loadFileList = this.loadFileList.bind(this);
     this.deleteObject = this.deleteObject.bind(this);
     this.createFolder = this.createFolder.bind(this);
@@ -56,6 +60,53 @@ class Typography extends React.Component {
   componentDidMount(){
     console.log("User info: ", auth.getUserInfo().username);
     this.loadFileList();
+    this.loadUploadList();
+    this.loadUserProfile();
+  }
+
+  loadUploadList() {
+    // Make a request for a user with a given ID
+
+      axios.get(STRAPI_URL+'/fileuploads', {
+          params: {
+            username: auth.getUserInfo().username
+          }
+        }).then(response => {
+        // handle success
+        console.log(response);
+        const fileList = response.data
+        console.log(fileList.length);
+        this.setState({ totalUploaded: fileList.length });
+      });
+  }
+
+  loadUserProfile() {
+    axios
+      .get(STRAPI_URL + "/userdetail", {
+        params: {
+          username: auth.getUserInfo().username
+        }
+      })
+      .then(response => {
+        // handle success
+        if (response.data) {
+          console.log(response);
+          const userdetails = response.data;
+          console.log(userdetails);
+          this.setState({
+            account_type: userdetails[0].account_type
+          });
+        }
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+        //setTimeout(this.loadUserProfile(),3000);
+      })
+      .then(function () {
+        // always executed
+        //setTimeout(this.loadUserProfile(),3000);
+      });
   }
 
   /* File Browser Functions */
@@ -212,36 +263,41 @@ class Typography extends React.Component {
   onFormSubmit(e) {
     e.preventDefault(); // Stop form submit
 
-    if(this.state.file){
-      this.setState({
-        showModal: true
-      });
-  
-      this.fileUpload(this.state.file).then(response => {
-        console.log("Respon dari sebuah data: ", response.data);
-        if(response.data === 'success'){
-          this.setState({
-            showModal: false,
-            errormessage: 'File Uploaded successfully'
-          });
-          this.loadFileList();
-        }
-        else if(response.data === 'extension'){
-          this.setState({
-            showModal: false
-          });
-          alert("File extension error make sure you uploaded .geojson file!");
-        }
-        else{
-          this.setState({
-            showModal: false,
-            errormessage: 'Upload error, please try again'
-          });
-        }
-      });
+    if(this.state.account_type === 'free' && this.state.totalUploaded >= 5){
+      alert("The Limit for free user is 5 layer");
     }
     else{
-      alert('There is no file selected!');
+      if(this.state.file){
+        this.setState({
+          showModal: true
+        });
+    
+        this.fileUpload(this.state.file).then(response => {
+          console.log("Respon dari sebuah data: ", response.data);
+          if(response.data === 'success'){
+            this.setState({
+              showModal: false,
+              errormessage: 'File Uploaded successfully'
+            });
+            this.loadFileList();
+          }
+          else if(response.data === 'extension'){
+            this.setState({
+              showModal: false
+            });
+            alert("File extension error make sure you uploaded .geojson file!");
+          }
+          else{
+            this.setState({
+              showModal: false,
+              errormessage: 'Upload error, please try again'
+            });
+          }
+        });
+      }
+      else{
+        alert('There is no file selected!');
+      }
     }
 
   }
@@ -318,7 +374,7 @@ class Typography extends React.Component {
             <RegularCard
               headerColor="blue"
               cardTitle="Uploads"
-              cardSubtitle={'Upload Your geojson and zipped shapefiles here'}
+              cardSubtitle={'Total Uploaded Layer: ' + this.state.totalUploaded + " / 5" }
               content={
                 <div>
                   <FileBrowser

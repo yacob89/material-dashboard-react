@@ -40,6 +40,7 @@ class UserProfile extends React.Component {
       postcode: " ",
       country: " ",
       organization: " ",
+      account_type: " ",
       storage: 0,
       accepted: [],
       rejected: []
@@ -49,6 +50,7 @@ class UserProfile extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getValidationState = this.getValidationState.bind(this);
+    this.pembayaran = this.pembayaran.bind(this);
   }
 
   componentDidMount() {
@@ -97,6 +99,9 @@ class UserProfile extends React.Component {
             case userdetails[0].organization == null:
               userdetails[0].organization = "-";
               break;
+            case userdetails[0].account_type == null:
+              userdetails[0].organization = "-";
+              break;
             default:
           }
           this.setState({
@@ -107,7 +112,8 @@ class UserProfile extends React.Component {
             address: userdetails[0].address,
             postcode: userdetails[0].postcode,
             country: userdetails[0].country,
-            organization: userdetails[0].organization
+            organization: userdetails[0].organization,
+            account_type: userdetails[0].account_type
           });
         }
       })
@@ -120,6 +126,48 @@ class UserProfile extends React.Component {
         // always executed
         //setTimeout(this.loadUserProfile(),3000);
       });
+  }
+
+  pembayaran(){
+    axios.post('https://my.ipaymu.com/payment.htm', {
+      params: {
+        key: 'IyFyPYQBU9BZoUqJ1Dp3ZymUaGGkK.',
+      action: 'payment',
+      product: 'Peta Buta',
+      price: '1000',
+      quantity: 1,
+      comments: 'Keterangan Produk',
+      ureturn: 'https://flow.mapid.io',
+      unotify: 'https://www.microsoft.com/id-id',
+      ucancel: 'https://www.apple.com/id/',
+      format: 'json'
+      }
+    })
+    .then(function (response) {
+      console.log('iPayMu Response: ',response);
+    })
+    .catch(function (error) {
+      console.log('iPayMu request error',error);
+    });
+
+    /*axios.post('https://my.ipaymu.com/payment.htm', {
+      key: 'IyFyPYQBU9BZoUqJ1Dp3ZymUaGGkK.',
+      action: 'payment',
+      product: 'Peta Buta',
+      price: '1000',
+      quantity: 1,
+      comments: 'Keterangan Produk',
+      ureturn: 'https://flow.mapid.io',
+      unotify: 'https://www.microsoft.com/id-id',
+      ucancel: 'https://www.apple.com/id/',
+      format: 'json'
+    })
+    .then(function (response) {
+      console.log('iPayMu Response: ',response);
+    })
+    .catch(function (error) {
+      console.log('iPayMu request error',error);
+    });*/
   }
 
   updateUserProfile() {
@@ -408,38 +456,39 @@ class UserProfile extends React.Component {
             </form>
           </ItemGrid>
           <ItemGrid xs={12} sm={12} md={4}>
-            <Dropzone
-              accept="image/jpeg, image/png"
-              multiple={false}
-              onDrop={(accepted, rejected) => { this.setState({ accepted, rejected }); }}
-            >
-
-
-              <Grid container>
-                <ProfileCard
-                  avatar={avatar}
-                  subtitle={auth.getUserInfo().role.name}
-                  title={auth.getUserInfo().username}
-                  description={auth.getUserInfo().email}
-                />
-              </Grid>
-              <Grid container>
-              <ItemGrid xs={12} sm={12} md={4}>
-              <Button
-                color="danger"
-                onClick={() => {
-                  auth.clearAppStorage();
-                  this.props.history.push("/auth/login");
-                }}
-                round
-              >
-                Logout
-            </Button>
-            </ItemGrid>
-                <ItemGrid xs={12} sm={12} md={4} />
-                <ItemGrid xs={12} sm={12} md={4} />
-              </Grid>
-            </Dropzone>
+          <Grid container>
+          <ProfileCard
+            avatar={avatar}
+            subtitle={this.state.account_type + " Membership"}
+            title={auth.getUserInfo().username}
+            description={auth.getUserInfo().email}
+          />
+        </Grid>
+        <Grid container>
+        <ItemGrid xs={12} sm={12} md={4}>
+        <Button
+          color="danger"
+          onClick={() => {
+            auth.clearAppStorage();
+            this.props.history.push("/auth/login");
+          }}
+          round
+        >
+          Logout
+      </Button>
+      <Button
+          color="danger"
+          onClick={() => {
+            var win = window.open('https://my.ipaymu.com/process.htm?product=3893&member=yacob.madiana@gmail.com&action=product&send=yes', '_blank');
+          }}
+          round
+        >
+          Upgrade
+      </Button>
+      </ItemGrid>
+          <ItemGrid xs={12} sm={12} md={4} />
+          <ItemGrid xs={12} sm={12} md={4} />
+        </Grid>
           </ItemGrid>
         </Grid>
       </div>

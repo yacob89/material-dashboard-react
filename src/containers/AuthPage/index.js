@@ -135,7 +135,8 @@ class AuthPage extends React.Component {
             address: this.state.value.address,
             postcode: this.state.value.post_code,
             country: this.state.value.country,
-            organization: this.state.value.organization
+            organization: this.state.value.organization,
+            account_type: 'free'
           })
           .then(function (response) {
             console.log(response.data);

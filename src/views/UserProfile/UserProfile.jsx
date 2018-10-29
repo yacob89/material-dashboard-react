@@ -479,7 +479,7 @@ class UserProfile extends React.Component {
       <Button
           color="danger"
           onClick={() => {
-            var win = window.open('https://my.ipaymu.com/process.htm?product=3893&member=yacob.madiana@gmail.com&action=product&send=yes', '_blank');
+            var win = window.open('https://my.ipaymu.com/process.htm?product=3896&member=BagusID@me.com&action=subscription&send=yes', '_blank');
           }}
           round
         >

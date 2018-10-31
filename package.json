@@ -23,6 +23,7 @@
     "aws-sdk": "^2.271.1",
     "axios": "^0.18.0",
     "bootstrap": "^4.1.1",
+    "braintree-web-drop-in": "^1.13.0",
     "chartist": "^0.10.1",
     "classnames": "^2.2.5",
     "core-decorators": "^0.20.0",

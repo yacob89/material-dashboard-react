@@ -3,6 +3,7 @@ import { Grid, InputLabel } from "material-ui";
 import axios from "axios";
 import Dropzone from 'react-dropzone';
 import auth from 'utils/auth';
+import DropIn from "braintree-web-drop-in-react";
 
 import {
   ProfileCard,
@@ -32,7 +33,7 @@ class UserProfile extends React.Component {
     this.state = {
       selected: [1],
       layers: [],
-      id:'',
+      id: "",
       firstname: " ",
       lastname: " ",
       email: " ",
@@ -43,7 +44,8 @@ class UserProfile extends React.Component {
       account_type: " ",
       storage: 0,
       accepted: [],
-      rejected: []
+      rejected: [],
+      clientToken: null
     };
     this.loadUserProfile = this.loadUserProfile.bind(this);
     this.createFolderOnClick = this.createFolderOnClick.bind(this);
@@ -53,14 +55,24 @@ class UserProfile extends React.Component {
     this.pembayaran = this.pembayaran.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     console.log("User Info", auth.getUserInfo());
     this.createFolderOnClick();
-    setTimeout(this.loadUserProfile(),2000);
+    setTimeout(this.loadUserProfile(), 2000);
     //this.loadUserProfile();
+
+    // Get a client token for authorization from your server
+
+    axios.get(SERVER_URL + "/client_token").then(response => {
+      // handle success
+      console.log("Client Token: ", response.data);
+      this.setState({
+        clientToken: response.data
+      });
+    });
   }
 
-  async componentWillMount(){
+  async componentWillMount() {
     //this.loadUserProfile();
   }
 
@@ -105,7 +117,7 @@ class UserProfile extends React.Component {
             default:
           }
           this.setState({
-            id:userdetails[0]._id,
+            id: userdetails[0]._id,
             firstname: userdetails[0].firstname,
             lastname: userdetails[0].lastname,
             email: auth.getUserInfo().email,
@@ -117,38 +129,39 @@ class UserProfile extends React.Component {
           });
         }
       })
-      .catch(function (error) {
+      .catch(function(error) {
         // handle error
         console.log(error);
         //setTimeout(this.loadUserProfile(),3000);
       })
-      .then(function () {
+      .then(function() {
         // always executed
         //setTimeout(this.loadUserProfile(),3000);
       });
   }
 
-  pembayaran(){
-    axios.post('https://my.ipaymu.com/payment.htm', {
-      params: {
-        key: 'IyFyPYQBU9BZoUqJ1Dp3ZymUaGGkK.',
-      action: 'payment',
-      product: 'Peta Buta',
-      price: '1000',
-      quantity: 1,
-      comments: 'Keterangan Produk',
-      ureturn: 'https://flow.mapid.io',
-      unotify: 'https://www.microsoft.com/id-id',
-      ucancel: 'https://www.apple.com/id/',
-      format: 'json'
-      }
-    })
-    .then(function (response) {
-      console.log('iPayMu Response: ',response);
-    })
-    .catch(function (error) {
-      console.log('iPayMu request error',error);
-    });
+  pembayaran() {
+    axios
+      .post("https://my.ipaymu.com/payment.htm", {
+        params: {
+          key: "IyFyPYQBU9BZoUqJ1Dp3ZymUaGGkK.",
+          action: "payment",
+          product: "Peta Buta",
+          price: "1000",
+          quantity: 1,
+          comments: "Keterangan Produk",
+          ureturn: "https://flow.mapid.io",
+          unotify: "https://www.microsoft.com/id-id",
+          ucancel: "https://www.apple.com/id/",
+          format: "json"
+        }
+      })
+      .then(function(response) {
+        console.log("iPayMu Response: ", response);
+      })
+      .catch(function(error) {
+        console.log("iPayMu request error", error);
+      });
 
     /*axios.post('https://my.ipaymu.com/payment.htm', {
       key: 'IyFyPYQBU9BZoUqJ1Dp3ZymUaGGkK.',
@@ -221,278 +234,299 @@ class UserProfile extends React.Component {
   }
 
   handleChange(event) {
-    console.log('URL: ', event.target.value);
-    console.log('URL ID: ', event.target.id);
-    if (event.target.id == 'firstname'){
-      this.setState({firstname: event.target.value});
+    console.log("URL: ", event.target.value);
+    console.log("URL ID: ", event.target.id);
+    if (event.target.id == "firstname") {
+      this.setState({ firstname: event.target.value });
     }
-    if (event.target.id == 'lastname'){
-      this.setState({lastname: event.target.value});
+    if (event.target.id == "lastname") {
+      this.setState({ lastname: event.target.value });
     }
-    if (event.target.id == 'address'){
-      this.setState({address: event.target.value});
+    if (event.target.id == "address") {
+      this.setState({ address: event.target.value });
     }
-    if (event.target.id == 'postcode'){
-      this.setState({postcode: event.target.value});
+    if (event.target.id == "postcode") {
+      this.setState({ postcode: event.target.value });
     }
-    if (event.target.id == 'country'){
-      this.setState({country: event.target.value});
+    if (event.target.id == "country") {
+      this.setState({ country: event.target.value });
     }
-    if (event.target.id == 'organization'){
-      this.setState({organization: event.target.value});
+    if (event.target.id == "organization") {
+      this.setState({ organization: event.target.value });
     }
   }
 
   handleSubmit(event) {
     //alert('URL: ' + this.state.url +' Name: '+ this.state.name +' Interval: '+ this.state.interval +' Dynamic Value: '+ this.state.dynamicValue);
-    console.log('Handle Submit New Internet Of Things');
-    axios.post(SERVER_URL+'/updateuser', {
-      id: this.state.id,
-      username: auth.getUserInfo().username,
-      firstname: this.state.firstname,
-      lastname: this.state.lastname,
-      email: this.state.email,
-      address: this.state.address,
-      postcode: this.state.postcode,
-      country: this.state.country,
-      organization: this.state.organization
-    })
-    .then(function (response) {
-      console.log(response);
-      if(response.data == 'success'){
-        alert('Successfully Update User Profile!');
-      }
-      else{
-        alert('Update User Profile Error!');
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-      alert(error);
-    });
+    console.log("Handle Submit New Internet Of Things");
+    axios
+      .post(SERVER_URL + "/updateuser", {
+        id: this.state.id,
+        username: auth.getUserInfo().username,
+        firstname: this.state.firstname,
+        lastname: this.state.lastname,
+        email: this.state.email,
+        address: this.state.address,
+        postcode: this.state.postcode,
+        country: this.state.country,
+        organization: this.state.organization
+      })
+      .then(function(response) {
+        console.log(response);
+        if (response.data == "success") {
+          alert("Successfully Update User Profile!");
+        } else {
+          alert("Update User Profile Error!");
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+        alert(error);
+      });
     event.preventDefault();
   }
 
   createFolderOnClick() {
     // Create Folder
     console.log("User yang akan dibuatkan folder", auth.getUserInfo().username);
-    axios.post(SERVER_URL + '/createfolder', {
-      username: auth.getUserInfo().username
-    })
-      .then(function (response) {
+    axios
+      .post(SERVER_URL + "/createfolder", {
+        username: auth.getUserInfo().username
+      })
+      .then(function(response) {
         console.log("Create Folder Success ", response);
         // Setelah create folder sukses, create config
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }
 
   render() {
-    return (
-      <div>
-        <Grid container>
-          <ItemGrid xs={12} sm={12} md={8}>
-            <form onSubmit={this.handleSubmit}>
-              <RegularCard
-                headerColor="blue"
-                cardTitle="My Profile"
-                cardSubtitle={auth.getUserInfo().username}
-                content={
-                  <div>
-
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup
-                          controlId="formBasicText"
-                          validationState={this.getValidationState()}
-                        >
-                          <ControlLabel>First Name</ControlLabel>
-                          <FormControl
-                            id="firstname"
-                            type="text"
-                            value={this.state.firstname}
-                            placeholder="Enter text"
-                            onChange={this.handleChange}
-                          />
-                          <FormControl.Feedback />
-                          <HelpBlock></HelpBlock>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup
-                          controlId="formBasicText"
-                          validationState={this.getValidationState()}
-                        >
-                          <ControlLabel>Last Name</ControlLabel>
-                          <FormControl
-                            id="lastname"
-                            type="text"
-                            value={this.state.lastname}
-                            placeholder="Enter text"
-                            onChange={this.handleChange}
-                          />
-                          <FormControl.Feedback />
-                          <HelpBlock></HelpBlock>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup
-                          controlId="formBasicText"
-                          validationState={this.getValidationState()}
-                        >
-                          <ControlLabel>Email Address</ControlLabel>
-                          <FormControl
-                            id="email"
-                            type="email"
-                            value={this.state.email}
-                            placeholder="Email Address"
-                            onChange={this.handleChange}
-                            disabled="true"
-                          />
-                          <FormControl.Feedback />
-                          <HelpBlock></HelpBlock>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup
-                          controlId="formBasicText"
-                          validationState={this.getValidationState()}
-                        >
-                          <ControlLabel>Street Address</ControlLabel>
-                          <FormControl
-                            id="address"
-                            type="text"
-                            value={this.state.address}
-                            placeholder="Enter Street Address"
-                            onChange={this.handleChange}
-                          />
-                          <FormControl.Feedback />
-                          <HelpBlock></HelpBlock>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup
-                          controlId="formBasicText"
-                          validationState={this.getValidationState()}
-                        >
-                          <ControlLabel>Post Code</ControlLabel>
-                          <FormControl
-                            id="postcode"
-                            type="text"
-                            value={this.state.postcode}
-                            placeholder="Enter Post Code"
-                            onChange={this.handleChange}
-                          />
-                          <FormControl.Feedback />
-                          <HelpBlock></HelpBlock>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup
-                          controlId="formBasicText"
-                          validationState={this.getValidationState()}
-                        >
-                          <ControlLabel>Country</ControlLabel>
-                          <FormControl
-                            id="country"
-                            type="text"
-                            value={this.state.country}
-                            placeholder="Enter Country"
-                            onChange={this.handleChange}
-                          />
-                          <FormControl.Feedback />
-                          <HelpBlock></HelpBlock>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup
-                          controlId="formBasicText"
-                          validationState={this.getValidationState()}
-                        >
-                          <ControlLabel>Organization</ControlLabel>
-                          <FormControl
-                            id="organization"
-                            type="text"
-                            value={this.state.organization}
-                            placeholder="Enter Organization"
-                            onChange={this.handleChange}
-                          />
-                          <FormControl.Feedback />
-                          <HelpBlock></HelpBlock>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-
-                  </div>
-                }
-                footer={<Button color="bluemapid" type="submit" value="Submit">Update Profile</Button>}
-              />
-            </form>
-          </ItemGrid>
-          <ItemGrid xs={12} sm={12} md={4}>
+    if (!this.state.clientToken) {
+      return (
+        <div>
+          <h1>Loading...</h1>
+        </div>
+      );
+    } else {
+      return (
+        <div>
           <Grid container>
-          <ProfileCard
-            avatar={avatar}
-            subtitle={this.state.account_type + " Membership"}
-            title={auth.getUserInfo().username}
-            description={auth.getUserInfo().email}
-          />
-        </Grid>
-        <Grid container>
-        <ItemGrid xs={12} sm={12} md={4}>
-        <Button
-          color="danger"
-          onClick={() => {
-            auth.clearAppStorage();
-            this.props.history.push("/auth/login");
-          }}
-          round
-        >
-          Logout
-      </Button>
-      <Button
-          color="danger"
-          onClick={() => {
-            var win = window.open('https://my.ipaymu.com/process.htm?product=3896&member=BagusID@me.com&action=subscription&send=yes', '_blank');
-          }}
-          round
-        >
-          Upgrade
-      </Button>
-      </ItemGrid>
-          <ItemGrid xs={12} sm={12} md={4} />
-          <ItemGrid xs={12} sm={12} md={4} />
-        </Grid>
-          </ItemGrid>
-        </Grid>
-      </div>
-    );
+            <ItemGrid xs={12} sm={12} md={8}>
+              <form onSubmit={this.handleSubmit}>
+                <RegularCard
+                  headerColor="blue"
+                  cardTitle="My Profile"
+                  cardSubtitle={auth.getUserInfo().username}
+                  content={
+                    <div>
+                      <Grid container>
+                        <ItemGrid xs={12} sm={12} md={11}>
+                          <FormGroup
+                            controlId="formBasicText"
+                            validationState={this.getValidationState()}
+                          >
+                            <ControlLabel>First Name</ControlLabel>
+                            <FormControl
+                              id="firstname"
+                              type="text"
+                              value={this.state.firstname}
+                              placeholder="Enter text"
+                              onChange={this.handleChange}
+                            />
+                            <FormControl.Feedback />
+                            <HelpBlock />
+                          </FormGroup>
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={12} md={1} />
+                      </Grid>
+
+                      <Grid container>
+                        <ItemGrid xs={12} sm={12} md={11}>
+                          <FormGroup
+                            controlId="formBasicText"
+                            validationState={this.getValidationState()}
+                          >
+                            <ControlLabel>Last Name</ControlLabel>
+                            <FormControl
+                              id="lastname"
+                              type="text"
+                              value={this.state.lastname}
+                              placeholder="Enter text"
+                              onChange={this.handleChange}
+                            />
+                            <FormControl.Feedback />
+                            <HelpBlock />
+                          </FormGroup>
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={12} md={1} />
+                      </Grid>
+
+                      <Grid container>
+                        <ItemGrid xs={12} sm={12} md={11}>
+                          <FormGroup
+                            controlId="formBasicText"
+                            validationState={this.getValidationState()}
+                          >
+                            <ControlLabel>Email Address</ControlLabel>
+                            <FormControl
+                              id="email"
+                              type="email"
+                              value={this.state.email}
+                              placeholder="Email Address"
+                              onChange={this.handleChange}
+                              disabled="true"
+                            />
+                            <FormControl.Feedback />
+                            <HelpBlock />
+                          </FormGroup>
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={12} md={1} />
+                      </Grid>
+
+                      <Grid container>
+                        <ItemGrid xs={12} sm={12} md={11}>
+                          <FormGroup
+                            controlId="formBasicText"
+                            validationState={this.getValidationState()}
+                          >
+                            <ControlLabel>Street Address</ControlLabel>
+                            <FormControl
+                              id="address"
+                              type="text"
+                              value={this.state.address}
+                              placeholder="Enter Street Address"
+                              onChange={this.handleChange}
+                            />
+                            <FormControl.Feedback />
+                            <HelpBlock />
+                          </FormGroup>
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={12} md={1} />
+                      </Grid>
+
+                      <Grid container>
+                        <ItemGrid xs={12} sm={12} md={11}>
+                          <FormGroup
+                            controlId="formBasicText"
+                            validationState={this.getValidationState()}
+                          >
+                            <ControlLabel>Post Code</ControlLabel>
+                            <FormControl
+                              id="postcode"
+                              type="text"
+                              value={this.state.postcode}
+                              placeholder="Enter Post Code"
+                              onChange={this.handleChange}
+                            />
+                            <FormControl.Feedback />
+                            <HelpBlock />
+                          </FormGroup>
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={12} md={1} />
+                      </Grid>
+
+                      <Grid container>
+                        <ItemGrid xs={12} sm={12} md={11}>
+                          <FormGroup
+                            controlId="formBasicText"
+                            validationState={this.getValidationState()}
+                          >
+                            <ControlLabel>Country</ControlLabel>
+                            <FormControl
+                              id="country"
+                              type="text"
+                              value={this.state.country}
+                              placeholder="Enter Country"
+                              onChange={this.handleChange}
+                            />
+                            <FormControl.Feedback />
+                            <HelpBlock />
+                          </FormGroup>
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={12} md={1} />
+                      </Grid>
+
+                      <Grid container>
+                        <ItemGrid xs={12} sm={12} md={11}>
+                          <FormGroup
+                            controlId="formBasicText"
+                            validationState={this.getValidationState()}
+                          >
+                            <ControlLabel>Organization</ControlLabel>
+                            <FormControl
+                              id="organization"
+                              type="text"
+                              value={this.state.organization}
+                              placeholder="Enter Organization"
+                              onChange={this.handleChange}
+                            />
+                            <FormControl.Feedback />
+                            <HelpBlock />
+                          </FormGroup>
+                        </ItemGrid>
+                        <ItemGrid xs={12} sm={12} md={1} />
+                      </Grid>
+                    </div>
+                  }
+                  footer={
+                    <Button color="bluemapid" type="submit" value="Submit">
+                      Update Profile
+                    </Button>
+                  }
+                />
+              </form>
+            </ItemGrid>
+            <ItemGrid xs={12} sm={12} md={4}>
+              <Grid container>
+                <ProfileCard
+                  avatar={avatar}
+                  subtitle={this.state.account_type + " Membership"}
+                  title={auth.getUserInfo().username}
+                  description={auth.getUserInfo().email}
+                />
+              </Grid>
+              <Grid container>
+                <ItemGrid xs={12} sm={12} md={4}>
+                  <Button
+                    color="danger"
+                    onClick={() => {
+                      auth.clearAppStorage();
+                      this.props.history.push("/auth/login");
+                    }}
+                    round
+                  >
+                    Logout
+                  </Button>
+                  <Button
+                    color="danger"
+                    onClick={() => {
+                      var win = window.open(
+                        "https://my.ipaymu.com/process.htm?product=3896&member=BagusID@me.com&action=subscription&send=yes",
+                        "_blank"
+                      );
+                    }}
+                    round
+                  >
+                    Upgrade
+                  </Button>
+                  <div>
+                    <DropIn
+                      options={{ authorization: this.state.clientToken }}
+                      onInstance={instance => (this.instance = instance)}
+                    />
+                    <button>Buy</button>
+                  </div>
+                </ItemGrid>
+                <ItemGrid xs={12} sm={12} md={4} />
+                <ItemGrid xs={12} sm={12} md={4} />
+              </Grid>
+            </ItemGrid>
+          </Grid>
+        </div>
+      );
+    }
   }
 }
 

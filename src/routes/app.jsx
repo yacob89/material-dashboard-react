@@ -7,6 +7,7 @@ import Icons from "views/Icons/Icons.jsx";
 import Maps from "views/Maps/Maps.jsx";
 import NotificationsPage from "views/Notifications/Notifications.jsx";
 import InternetOfThings from "views/InternetOfThings/InternetOfThings.jsx";
+import PaymentPage from "views/Payment/PaymentPage.jsx";
 
 import {
   Dashboard,
@@ -76,6 +77,13 @@ const appRoutes = [
     navbarName: "InternetOfThings",
     icon: BubbleChart,
     component: InternetOfThings
+  },
+  {
+    path: "/payment",
+    sidebarName: "Payment",
+    navbarName: "Payment",
+    icon: BubbleChart,
+    component: PaymentPage
   },
   /*{
     path: "/upload",

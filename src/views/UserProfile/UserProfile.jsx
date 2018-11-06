@@ -21,13 +21,14 @@ import {
 } from "react-bootstrap";
 
 import avatar from "assets/img/faces/marc.jpg";
-import 'views/UserProfile/userprofile.css'
+import 'views/UserProfile/userprofile.css';
 
 //const SERVER_URL = 'http://192.168.1.11:7555';
 const STRAPI_URL = 'https://db.mapid.io';
 const SERVER_URL = 'https://geo.mapid.io';
 
 class UserProfile extends React.Component {
+  instance;
   constructor(props) {
     super(props);
     this.state = {
@@ -53,6 +54,8 @@ class UserProfile extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getValidationState = this.getValidationState.bind(this);
     this.pembayaran = this.pembayaran.bind(this);
+    this.buy = this.buy.bind(this);
+    this.createUserPayment = this.createUserPayment.bind(this);
   }
 
   async componentDidMount() {
@@ -74,6 +77,51 @@ class UserProfile extends React.Component {
 
   async componentWillMount() {
     //this.loadUserProfile();
+  }
+
+  buy() {
+    // Get User Payment Token First, then continue to Subscribe
+
+    axios
+      .get(STRAPI_URL + "/userpayment", {
+        params: {
+          username: auth.getUserInfo().username
+        }
+      })
+      .then(response => {
+        // handle success
+        console.log("Payment Token: ", response.data[0].token);
+        var userPaymentToken = response.data[0].token;
+
+        // Subscribe
+        axios
+          .post(SERVER_URL + "/subscribe", {
+            paymenttoken: userPaymentToken,
+            username: auth.getUserInfo().username
+          })
+          .then(function(response) {
+            console.log("Subscribe request Response: ", response);
+          })
+          .catch(function(error) {
+            console.log("Subscribe request error", error);
+          });
+      });
+  }
+
+  async createUserPayment() {
+    // Send the nonce to your server
+    const { nonce } = await this.instance.requestPaymentMethod();
+    axios
+      .post(SERVER_URL + "/create_user", {
+        payment_method_nonce: nonce,
+        username: auth.getUserInfo().username
+      })
+      .then(function(response) {
+        console.log("SERVER Response: ", response);
+      })
+      .catch(function(error) {
+        console.log("iPayMu request error", error);
+      });
   }
 
   loadUserProfile() {
@@ -502,21 +550,13 @@ class UserProfile extends React.Component {
                   <Button
                     color="danger"
                     onClick={() => {
-                      var win = window.open(
-                        "https://my.ipaymu.com/process.htm?product=3896&member=BagusID@me.com&action=subscription&send=yes",
-                        "_blank"
-                      );
+                      this.buy();
                     }}
                     round
                   >
                     Upgrade
                   </Button>
                   <div>
-                    <DropIn
-                      options={{ authorization: this.state.clientToken }}
-                      onInstance={instance => (this.instance = instance)}
-                    />
-                    <button>Buy</button>
                   </div>
                 </ItemGrid>
                 <ItemGrid xs={12} sm={12} md={4} />

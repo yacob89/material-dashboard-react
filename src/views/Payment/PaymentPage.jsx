@@ -21,6 +21,17 @@ import {
   HelpBlock
 } from "react-bootstrap";
 
+import Card from 'react-credit-cards';
+import SupportedCards from './Cards';
+import {
+  formatCreditCardNumber,
+  formatCVC,
+  formatExpirationDate,
+  formatFormData,
+} from './utils';
+import styles from './styles.css';
+import 'react-credit-cards/es/styles-compiled.css';
+
 import avatar from "assets/img/faces/marc.jpg";
 
 //const SERVER_URL = 'http://192.168.1.11:7555';
@@ -200,7 +211,7 @@ onClick: (e, row, rowIndex) => {
 
 let rows = [];
 
-class InternetOfThings extends React.Component {
+class PaymentPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -214,7 +225,14 @@ class InternetOfThings extends React.Component {
       max_value:'',
       circle_color:'#1a66ff',
       inner_color:'#6699ff',
-      username: ''
+      username: '',
+      number: '',
+      cardname: '',
+      expiry: '',
+      cvc: '',
+      issuer: '',
+      focused: '',
+      formData: null
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -318,35 +336,43 @@ class InternetOfThings extends React.Component {
     
   }
 
-  handleSubmit(event) {
-    //alert('URL: ' + this.state.url +' Name: '+ this.state.name +' Interval: '+ this.state.interval +' Dynamic Value: '+ this.state.dynamicValue);
-    console.log('Handle Submit New Internet Of Things');
-    axios.post(SERVER_URL+'/generatesensor', {
-      url: this.state.url,
-      name: this.state.name,
-      interval: this.state.interval,
-      dynamicValue: this.state.dynamicValue,
-      min_value: this.state.min_value,
-      max_value: this.state.max_value,
-      circle_color: this.state.circle_color,
-      inner_color: this.state.inner_color,
-      username: this.state.username
-    })
-    .then(function (response) {
-      console.log(response);
-      if(response.data == 'success'){
-        alert('IoT Layer Created in Layer List!');
-      }
-      else{
-        alert('IoT Layer Creation Error!');
-      }
-    })
-    .catch(function (error) {
-      console.log(error);
-      alert(error);
+  handleCallback = ({ issuer }, isValid) => {
+    if (isValid) {
+      this.setState({ issuer });
+    }
+  };
+
+  handleInputFocus = ({ target }) => {
+    this.setState({
+      focused: target.name,
     });
-    event.preventDefault();
-  }
+  };
+
+  handleInputChange = ({ target }) => {
+    if (target.name === 'number') {
+      target.value = formatCreditCardNumber(target.value);
+    } else if (target.name === 'expiry') {
+      target.value = formatExpirationDate(target.value);
+    } else if (target.name === 'cvc') {
+      target.value = formatCVC(target.value);
+    }
+
+    this.setState({ [target.name]: target.value });
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    const { issuer } = this.state;
+    const formData = [...e.target.elements]
+      .filter(d => d.name)
+      .reduce((acc, d) => {
+        acc[d.name] = d.value;
+        return acc;
+      }, {});
+
+    this.setState({ formData });
+    this.form.reset();
+  };
 
   render() {
 
@@ -362,186 +388,122 @@ class InternetOfThings extends React.Component {
       return style;
     };
 
-    return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <Grid container>
-            <ItemGrid xs={12} sm={12} md={8}>
-              <RegularCard
-                headerColor="blue"
-                cardTitle="Insert IoT Channel URL"
-                cardSubtitle="Please define your IoT url and dynamic value"
-                content={
-                  <div>
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup
-                          controlId="formBasicText"
-                          validationState={this.getValidationState()}
-                        >
-                          <ControlLabel>Enter Channel URL</ControlLabel>
-                          <FormControl
-                            id="url"
-                            type="text"
-                            value={this.state.url}
-                            placeholder="Enter text"
-                            onChange={this.handleChange}
-                          />
-                          <FormControl.Feedback />
-                          <HelpBlock></HelpBlock>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup
-                          controlId="formBasicText"
-                          validationState={this.getValidationState()}
-                        >
-                          <ControlLabel>Enter Layer Name</ControlLabel>
-                          <FormControl
-                            id="name"
-                            type="text"
-                            value={this.state.name}
-                            placeholder="Enter text"
-                            onChange={this.handleChange}
-                          />
-                          <FormControl.Feedback />
-                          <HelpBlock></HelpBlock>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup controlId="formControlsSelect">
-                          <ControlLabel>Refresh Interval</ControlLabel>
-                          <FormControl componentClass="select" placeholder="select" id="interval" value={this.state.interval} onChange={this.handleChange}>
-                            <option value='30'>30 detik</option>
-                            <option value='60'>1 menit</option>
-                          </FormControl>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup
-                          controlId="formBasicText"
-                          validationState={this.getValidationState()}
-                        >
-                          <ControlLabel>Enter Dynamic Value Name (e.g: depth, speed, etc)</ControlLabel>
-                          <FormControl
-                            id="dynamicValue"
-                            type="text"
-                            value={this.state.dynamicValue}
-                            placeholder="Enter text"
-                            onChange={this.handleChange}
-                          />
-                          <FormControl.Feedback />
-                          <HelpBlock></HelpBlock>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup
-                          controlId="formBasicText"
-                          validationState={this.getValidationState()}
-                        >
-                          <ControlLabel>Enter Minimum Value Number</ControlLabel>
-                          <FormControl
-                            id="min_value"
-                            type="text"
-                            value={this.state.min_value}
-                            placeholder="Enter Number"
-                            onChange={this.handleChange}
-                          />
-                          <FormControl.Feedback />
-                          <HelpBlock></HelpBlock>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup
-                          controlId="formBasicText"
-                          validationState={this.getValidationState()}
-                        >
-                          <ControlLabel>Enter Maximum Value Number</ControlLabel>
-                          <FormControl
-                            id="max_value"
-                            type="text"
-                            value={this.state.max_value}
-                            placeholder="Enter Number"
-                            onChange={this.handleChange}
-                          />
-                          <FormControl.Feedback />
-                          <HelpBlock></HelpBlock>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup
-                          controlId="formBasicText"
-                          validationState={this.getValidationState()}
-                        >
-                          <ControlLabel>Circle Color</ControlLabel>
-                          <FormControl
-                            id="circle_color"
-                            type="text"
-                            value={this.state.circle_color}
-                            placeholder="#1a66ff"
-                            onChange={this.handleChange}
-                          />
-                          <FormControl.Feedback />
-                          <HelpBlock></HelpBlock>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-                    <Grid container>
-                      <ItemGrid xs={12} sm={12} md={11}>
-                        <FormGroup
-                          controlId="formBasicText"
-                          validationState={this.getValidationState()}
-                        >
-                          <ControlLabel>Inner Indicator Color</ControlLabel>
-                          <FormControl
-                            id="inner_color"
-                            type="text"
-                            value={this.state.inner_color}
-                            placeholder="#6699ff"
-                            onChange={this.handleChange}
-                          />
-                          <FormControl.Feedback />
-                          <HelpBlock></HelpBlock>
-                        </FormGroup>
-                      </ItemGrid>
-                      <ItemGrid xs={12} sm={12} md={1} />
-                    </Grid>
-                  </div>
-                }
-                footer={<Button color="bluemapid" type="submit" value="Submit">Insert Channel</Button>}
-              />
-            </ItemGrid>
-            <ItemGrid xs={12} sm={12} md={4}>
+    const { cardname, number, expiry, cvc, focused, issuer, formData } = this.state;
 
-            </ItemGrid>
-          </Grid>
-        </form>
+    return (
+      
+      <div>
+        <Grid container>
+          <ItemGrid xs={12} sm={12} md={6}>
+            <RegularCard
+              headerColor="blue"
+              plainCard
+              cardTitle="Subscribe to mapid"
+              cardSubtitle={'Enter your payment method'}
+              content={
+                <div key="Payment">
+                  <div className="App-payment">
+                    <Card
+                      number={number}
+                      name={cardname}
+                      expiry={expiry}
+                      cvc={cvc}
+                      focused={focused}
+                      callback={this.handleCallback}
+                    />
+                    <form ref={c => (this.form = c)} onSubmit={this.handleSubmit}>
+                      <div className="form-group">
+                        <input
+                          type="tel"
+                          name="number"
+                          className="form-control"
+                          placeholder="Card Number"
+                          pattern="[\d| ]{16,22}"
+                          required
+                          onChange={this.handleInputChange}
+                          onFocus={this.handleInputFocus}
+                        />
+                        <small>E.g.: 49..., 51..., 36..., 37...</small>
+                      </div>
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          name="name"
+                          className="form-control"
+                          placeholder="Name"
+                          required
+                          onChange={this.handleInputChange}
+                          onFocus={this.handleInputFocus}
+                        />
+                      </div>
+                      <div className="row">
+                        <div className="col-6">
+                          <input
+                            type="tel"
+                            name="expiry"
+                            className="form-control"
+                            placeholder="Valid Thru"
+                            pattern="\d\d/\d\d"
+                            required
+                            onChange={this.handleInputChange}
+                            onFocus={this.handleInputFocus}
+                          />
+                        </div>
+                        <div className="col-6">
+                          <input
+                            type="tel"
+                            name="cvc"
+                            className="form-control"
+                            placeholder="CVC"
+                            pattern="\d{3,4}"
+                            required
+                            onChange={this.handleInputChange}
+                            onFocus={this.handleInputFocus}
+                          />
+                        </div>
+                      </div>
+                      <input type="hidden" name="issuer" value={issuer} />
+                      <div className="form-actions">
+                        <button className="btn btn-primary btn-block">Save Payment Method</button>
+                      </div>
+                    </form>
+                    {formData && (
+                      <div className="App-highlight">
+                        {formatFormData(formData).map((d, i) => <div key={i}>{d}</div>)}
+                      </div>
+                    )}
+                    <hr style={{ margin: '60px 0 30px' }} />
+
+                  </div>
+                </div>
+              }
+            />
+
+          </ItemGrid>
+          <ItemGrid xs={12} sm={12} md={6}>
+            <RegularCard
+              headerColor="blue"
+              plainCard
+              cardTitle="Your Current Plan"
+              cardSubtitle={'Valid Date: '}
+              content={<h4>Free</h4>}
+            />
+          </ItemGrid>
+        </Grid>
+
+        <Grid container>
+          <ItemGrid xs={12} sm={12} md={12}>
+            <SupportedCards />
+          </ItemGrid>
+        </Grid>
+
         <Grid container>
           <ItemGrid xs={12} sm={12} md={12}>
             <RegularCard
               headerColor="blue"
               plainCard
-              cardTitle="Current Active Sensors"
-              cardSubtitle={'Active ioT Sensors'}
+              cardTitle="Current Active Payment"
+              cardSubtitle={'Your Active Subscription'}
               content={
                 <BootstrapTable
                   keyField="id"
@@ -587,6 +549,6 @@ class InternetOfThings extends React.Component {
   }
 }
 
-<InternetOfThings />;
+<PaymentPage />;
 
-export default InternetOfThings;
+export default PaymentPage;

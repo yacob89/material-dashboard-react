@@ -49,6 +49,7 @@
     "react-bootstrap-table2-filter": "^0.3.0",
     "react-chartist": "^0.13.1",
     "react-color": "^2.14.1",
+    "react-credit-cards": "^0.7.0",
     "react-data-grid": "^4.0.7",
     "react-data-grid-addons": "^4.0.8",
     "react-dnd": "^5.0.0",

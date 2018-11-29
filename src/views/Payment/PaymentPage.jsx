@@ -370,6 +370,23 @@ class PaymentPage extends React.Component {
         return acc;
       }, {});
 
+    console.log('FormData: ', formData);
+    axios.post(SERVER_URL+'/midtrans-token', {
+      cardnumber: formData.number,
+      name: formData.name,
+      issuer: formData.issuer,
+      expiry: formData.expiry,
+      cvc: formData.cvc,
+      username: auth.getUserInfo().username
+    })
+      .then(function (response) {
+        console.log('Midtrans Token Response: ', response);
+      })
+      .catch(function (error) {
+        console.log('Midtrans Token error', error);
+      });
+
+
     this.setState({ formData });
     this.form.reset();
   };
@@ -394,7 +411,7 @@ class PaymentPage extends React.Component {
       
       <div>
         <Grid container>
-          <ItemGrid xs={12} sm={12} md={6}>
+          <ItemGrid xs={12} sm={12} md={8}>
             <RegularCard
               headerColor="blue"
               plainCard
@@ -480,7 +497,7 @@ class PaymentPage extends React.Component {
             />
 
           </ItemGrid>
-          <ItemGrid xs={12} sm={12} md={6}>
+          <ItemGrid xs={12} sm={12} md={4}>
             <RegularCard
               headerColor="blue"
               plainCard

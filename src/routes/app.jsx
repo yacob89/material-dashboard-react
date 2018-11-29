@@ -8,6 +8,7 @@ import Maps from "views/Maps/Maps.jsx";
 import NotificationsPage from "views/Notifications/Notifications.jsx";
 import InternetOfThings from "views/InternetOfThings/InternetOfThings.jsx";
 import PaymentPage from "views/Payment/PaymentPage.jsx";
+import BankForm from "views/BankForm/BankForm.jsx";
 
 import {
   Dashboard,
@@ -79,11 +80,11 @@ const appRoutes = [
     component: InternetOfThings
   },
   {
-    path: "/payment",
-    sidebarName: "Payment",
-    navbarName: "Payment",
+    path: "/bankform",
+    sidebarName: "Upgrade",
+    navbarName: "Upgrade",
     icon: BubbleChart,
-    component: PaymentPage
+    component: BankForm
   },
   /*{
     path: "/upload",

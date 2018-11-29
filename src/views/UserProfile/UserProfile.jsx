@@ -1,9 +1,8 @@
 import React from "react";
 import { Grid, InputLabel } from "material-ui";
-import axios from "axios";
+import axios, { post } from "axios";
 import Dropzone from 'react-dropzone';
 import auth from 'utils/auth';
-import DropIn from "braintree-web-drop-in-react";
 
 import {
   ProfileCard,
@@ -27,11 +26,44 @@ import 'views/UserProfile/userprofile.css';
 const STRAPI_URL = 'https://db.mapid.io';
 const SERVER_URL = 'https://geo.mapid.io';
 
+const thumbsContainer = {
+  display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  marginTop: 16
+};
+
+const thumb = {
+  display: 'inline-flex',
+  borderRadius: 2,
+  border: '1px solid #eaeaea',
+  marginBottom: 8,
+  marginRight: 8,
+  width: 100,
+  height: 100,
+  padding: 4,
+  boxSizing: 'border-box'
+};
+
+const thumbInner = {
+  display: 'flex',
+  minWidth: 0,
+  overflow: 'hidden'
+}
+
+const img = {
+  display: 'block',
+  width: 'auto',
+  height: '100%'
+};
+
 class UserProfile extends React.Component {
   instance;
   constructor(props) {
     super(props);
     this.state = {
+      file: null,
+      files: [],
       selected: [1],
       layers: [],
       id: "",
@@ -43,6 +75,7 @@ class UserProfile extends React.Component {
       country: " ",
       organization: " ",
       account_type: " ",
+      avatarimg:null,
       storage: 0,
       accepted: [],
       rejected: [],
@@ -56,6 +89,7 @@ class UserProfile extends React.Component {
     this.pembayaran = this.pembayaran.bind(this);
     this.buy = this.buy.bind(this);
     this.createUserPayment = this.createUserPayment.bind(this);
+    this.fileUpload = this.fileUpload.bind(this);
   }
 
   async componentDidMount() {
@@ -173,7 +207,8 @@ class UserProfile extends React.Component {
             postcode: userdetails[0].postcode,
             country: userdetails[0].country,
             organization: userdetails[0].organization,
-            account_type: userdetails[0].account_type
+            account_type: userdetails[0].account_type,
+            avatarimg: userdetails[0].image_url
           });
         }
       })
@@ -304,6 +339,55 @@ class UserProfile extends React.Component {
     }
   }
 
+  /* Dropzone */
+  onDrop(files) {
+    /*this.setState({
+      files: files.map(file => ({
+        ...file,
+        preview: URL.createObjectURL(file)
+      }))
+    });*/
+
+    this.setState({
+      files,
+      file:files[0]
+    });
+    console.log('File Dropped: ', this.state.file);
+    this.fileUpload(this.state.file).then(response => {
+      console.log("Respon : ", response.data);
+      if (response.data === 'success') {
+        this.loadUserProfile();
+      }
+      else if (response.data === 'error') {
+
+      }
+      else {
+
+      }
+    });
+  }
+
+  fileUpload(file) {
+    var FormData = require('form-data');
+
+    var formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("username", auth.getUserInfo().username);
+    //formData.append("filekey", file.name);
+    formData.append("_id", this.state.id);
+    //console.log("Filekey: ", file.name);
+
+    const url = SERVER_URL+'/api-profilepicupload';
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+        'content-language': auth.getUserInfo().username
+      }
+    }
+    return post(url, formData, config)
+  }
+
   handleSubmit(event) {
     //alert('URL: ' + this.state.url +' Name: '+ this.state.name +' Interval: '+ this.state.interval +' Dynamic Value: '+ this.state.dynamicValue);
     console.log("Handle Submit New Internet Of Things");
@@ -351,6 +435,29 @@ class UserProfile extends React.Component {
   }
 
   render() {
+
+    const { files } = this.state;
+
+    var avatardisplay;
+
+    if (!this.state.avatarimg) {
+      avatardisplay = avatar;
+    }
+    else {
+      avatardisplay = this.state.avatarimg;
+    }
+
+    const thumbs = files.map(file => (
+      <div style={thumb}>
+        <div style={thumbInner}>
+          <img
+            src={file.preview}
+            style={img}
+          />
+        </div>
+      </div>
+    ));
+
     if (!this.state.clientToken) {
       return (
         <div>
@@ -529,7 +636,7 @@ class UserProfile extends React.Component {
             <ItemGrid xs={12} sm={12} md={4}>
               <Grid container>
                 <ProfileCard
-                  avatar={avatar}
+                  avatar={avatardisplay}
                   subtitle={this.state.account_type + " Membership"}
                   title={auth.getUserInfo().username}
                   description={auth.getUserInfo().email}
@@ -547,20 +654,30 @@ class UserProfile extends React.Component {
                   >
                     Logout
                   </Button>
-                  <Button
-                    color="danger"
-                    onClick={() => {
-                      this.buy();
-                    }}
-                    round
-                  >
-                    Upgrade
-                  </Button>
-                  <div>
-                  </div>
                 </ItemGrid>
                 <ItemGrid xs={12} sm={12} md={4} />
                 <ItemGrid xs={12} sm={12} md={4} />
+              </Grid>
+              <Grid container>
+                <ItemGrid xs={12} sm={12} md={12}>
+                  <RegularCard
+                    headerColor="blue"
+                    plainCard
+                    cardTitle="Upload Profile Picture"
+                    cardSubtitle={'Drag your photo here '}
+                    content={<section>
+                      <div className="dropzone">
+                        <Dropzone
+                          accept="image/*"
+                          onDrop={this.onDrop.bind(this)}
+                        />
+                      </div>
+                      <aside style={thumbsContainer}>
+                        {thumbs}
+                      </aside>
+                    </section>}
+                  />
+                </ItemGrid>
               </Grid>
             </ItemGrid>
           </Grid>

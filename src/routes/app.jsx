@@ -18,7 +18,8 @@ import {
   BubbleChart,
   LocationOn,
   FileUpload,
-  Notifications
+  Notifications,
+  CardMembership
 } from "material-ui-icons";
 import Upload from "../views/Upload/Upload";
 
@@ -83,7 +84,7 @@ const appRoutes = [
     path: "/bankform",
     sidebarName: "Upgrade",
     navbarName: "Upgrade",
-    icon: BubbleChart,
+    icon: CardMembership,
     component: BankForm
   },
   /*{

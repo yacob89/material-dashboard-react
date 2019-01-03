@@ -75,6 +75,7 @@ class UserProfile extends React.Component {
       country: " ",
       organization: " ",
       account_type: " ",
+      expired_date:'',
       avatarimg:null,
       storage: 0,
       accepted: [],
@@ -102,7 +103,6 @@ class UserProfile extends React.Component {
 
     axios.get(SERVER_URL + "/client_token").then(response => {
       // handle success
-      console.log("Client Token: ", response.data);
       this.setState({
         clientToken: response.data
       });
@@ -111,6 +111,11 @@ class UserProfile extends React.Component {
 
   async componentWillMount() {
     //this.loadUserProfile();
+  }
+
+  componentWillUnmount() {
+    // Make sure to revoke the data uris to avoid memory leaks
+    //URL.revokeObjectURL(this.state.file.preview);
   }
 
   buy() {
@@ -221,6 +226,37 @@ class UserProfile extends React.Component {
         // always executed
         //setTimeout(this.loadUserProfile(),3000);
       });
+  }
+
+  loadPaymentInfo() {
+    // Make a request for a user with a given ID
+    var rows = [];
+
+    axios.get(STRAPI_URL + '/manualpayment', {
+      params: {
+        username: auth.getUserInfo().username
+      }
+    }).then(response => {
+      // handle success
+      console.log(response);
+      const paymentList = response.data
+      console.log(paymentList);
+
+      var i;
+      var total = 0;
+      for (i = 0; i < paymentList.length; i++) {
+        rows.push({
+          username: paymentList[i].username,
+          fullname: paymentList[i].fullname,
+          user_bank: paymentList[i].user_bank,
+          amount: paymentList[i].amount,
+          payment_date: paymentList[i].payment_date,
+          expired_date: paymentList[i].expired_date,
+          status: paymentList[i].status
+        });
+      }
+      this.setState({ expired_date: paymentList[i].expired_date});
+    });
   }
 
   pembayaran() {
@@ -352,7 +388,7 @@ class UserProfile extends React.Component {
       files,
       file:files[0]
     });
-    console.log('File Dropped: ', this.state.file);
+
     this.fileUpload(this.state.file).then(response => {
       console.log("Respon : ", response.data);
       if (response.data === 'success') {

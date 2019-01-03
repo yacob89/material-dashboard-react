@@ -6,6 +6,9 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
 import Dropzone from 'react-dropzone';
+import Moment from 'react-moment';
+import Img from 'react-image';
+import NumberFormat from 'react-number-format';
 
 import {
   ProfileCard,
@@ -29,6 +32,9 @@ import avatar from "assets/img/faces/marc.jpg";
 const STRAPI_URL = 'https://db.mapid.io';
 const SERVER_URL = 'https://geo.mapid.io';
 const TEMP_URL = 'http://localhost';
+const LITE_PRICE = 250000;
+const PRO_PRICE = 500000;
+const PROMO_CODE_MAPID = 'mapidseeit';
 
 const thumbsContainer = {
   display: 'flex',
@@ -156,6 +162,7 @@ onClick: (e, row, rowIndex) => {
 };
 
 let rows = [];
+var payment_count = 0;
 
 class BankForm extends React.Component {
   constructor(props) {
@@ -175,13 +182,16 @@ class BankForm extends React.Component {
       inner_color:'#6699ff',
       username: '',
       fullname: '',
-      bank: 'bca',
-      amount: 0,
+      bank: 'mandiri',
+      amount: 250000,
       payment_date: '',
       expired_date: '',
       trial:'',
       etc:'',
+      promo_code:'',
       license:'lite',
+      cycle_count:0,
+      duration:1,
       account_number: '',
       bank_source:'bca',
       status:'',
@@ -194,7 +204,9 @@ class BankForm extends React.Component {
       postcode: "",
       country: "",
       organization: "",
-      account_type: ""
+      account_type: "",
+      current_license:'',
+      current_expire_date:''
     };
     this.fileUpload = this.fileUpload.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -235,11 +247,11 @@ class BankForm extends React.Component {
 
   componentWillUnmount() {
     // Make sure to revoke the data uris to avoid memory leaks
-    const {files} = this.state;
+    /*const {files} = this.state;
     for (let i = files.length; i >= 0; i--) {
       const file = files[0];
       URL.revokeObjectURL(file.preview);
-    }
+    }*/
   }
 
   loadUserProfile() {
@@ -262,7 +274,7 @@ class BankForm extends React.Component {
             postcode: userdetails[0].postcode,
             country: userdetails[0].country,
             organization: userdetails[0].organization,
-            account_type: userdetails[0].account_type,
+            account_type: userdetails[0].account_type
           });
         }
       })
@@ -293,6 +305,7 @@ class BankForm extends React.Component {
 
       var i;
       var total = 0;
+      payment_count = 0;
       for (i = 0; i < paymentList.length; i++) {
         rows.push({
           username: paymentList[i].username,
@@ -301,10 +314,17 @@ class BankForm extends React.Component {
           amount: paymentList[i].amount,
           payment_date: paymentList[i].payment_date,
           expired_date: paymentList[i].expired_date,
-          status: paymentList[i].status
+          status: paymentList[i].status,
+          cycle_count: paymentList[i].cycle_count
         });
+        if (paymentList[i].status === 'pending'){
+          payment_count = payment_count + 1;
+        }
+        if (paymentList[i].status === 'accept'){
+          this.setState({ current_license: paymentList[i].license, current_expire_date: paymentList[i].expired_date });
+        }
       }
-      this.setState({ rowData: rows, showModal: false });
+      this.setState({ rowData: rows });
     });
   }
 
@@ -327,8 +347,6 @@ class BankForm extends React.Component {
   }
 
   handleChange(event) {
-    console.log('URL: ', event.target.value);
-    console.log('URL ID: ', event.target.id);
     if (event.target.id == 'fullname'){
       this.setState({fullname: event.target.value});
     }
@@ -347,14 +365,130 @@ class BankForm extends React.Component {
     if (event.target.id == 'etc'){
       this.setState({etc: event.target.value});
     }
+    if (event.target.id == 'promo_code'){
+      this.setState({promo_code: event.target.value});
+      if(event.target.value === 'mapidseeit'){
+        if(this.state.duration == 3 || this.state.duration == 6){
+          this.setState({amount: this.state.amount * 0.8});
+        }
+        if(this.state.duration == 12){
+          this.setState({amount: this.state.amount * 0.5});
+        }
+        if(this.state.duration == 1){
+          this.setState({amount: this.state.amount});
+        }
+      }
+      else{
+        var price;
+        if(this.state.license === 'lite'){
+          price = LITE_PRICE * this.state.duration;
+          this.setState({amount: price});
+        }
+        else{
+          price = PRO_PRICE * this.state.duration;
+          this.setState({amount: price});
+        }
+      }
+    }
     if (event.target.id == 'license1'){
       this.setState({license: event.target.value});
+      if(this.state.promo_code === PROMO_CODE_MAPID){
+        if(this.state.duration === '3' || this.state.duration === '6'){
+          this.setState({amount: (LITE_PRICE * this.state.duration)*0.8});
+        }
+        if(this.state.duration === '12'){
+          this.setState({amount: (LITE_PRICE * this.state.duration)*0.5});
+        }
+        else{
+          this.setState({amount: LITE_PRICE * this.state.duration});
+        }
+      }
+      else{
+        this.setState({amount: LITE_PRICE * this.state.duration});
+      }
     }
     if (event.target.id == 'license2'){
       this.setState({license: event.target.value});
+      if(this.state.promo_code === PROMO_CODE_MAPID){
+        if(this.state.duration === '3' || this.state.duration === '6'){
+          this.setState({amount: (PRO_PRICE * this.state.duration)*0.8});
+        }
+        if(this.state.duration === '12'){
+          this.setState({amount: (PRO_PRICE * this.state.duration)*0.5});
+        }
+        else{
+          this.setState({amount: PRO_PRICE * this.state.duration});
+        }
+      }
+      else{
+        this.setState({amount: PRO_PRICE * this.state.duration});
+      }
     }
-    if (event.target.id == 'license3'){
-      this.setState({license: event.target.value});
+    if (event.target.id == 'duration1'){
+      this.setState({duration: event.target.value});
+      if (this.state.license === 'lite'){
+        this.setState({amount: LITE_PRICE * 1});
+      }
+      else{
+        this.setState({amount: PRO_PRICE * 1});
+      }
+    }
+    if (event.target.id == 'duration2'){
+      this.setState({duration: event.target.value});
+      if(this.state.promo_code === PROMO_CODE_MAPID){
+        if (this.state.license === 'lite'){
+          this.setState({amount: (LITE_PRICE * 3)*0.8});
+        }
+        else{
+          this.setState({amount: (PRO_PRICE * 3)*0.8});
+        }
+      }
+      else{
+        if (this.state.license === 'lite'){
+          this.setState({amount: LITE_PRICE * 3});
+        }
+        else{
+          this.setState({amount: PRO_PRICE * 3});
+        }
+      }
+    }
+    if (event.target.id == 'duration3'){
+      this.setState({duration: event.target.value});
+      if(this.state.promo_code === PROMO_CODE_MAPID){
+        if (this.state.license === 'lite'){
+          this.setState({amount: (LITE_PRICE * 6)*0.8});
+        }
+        else{
+          this.setState({amount: (PRO_PRICE * 6)*0.8});
+        }
+      }
+      else{
+        if (this.state.license === 'lite'){
+          this.setState({amount: LITE_PRICE * 6});
+        }
+        else{
+          this.setState({amount: PRO_PRICE * 6});
+        }
+      }
+    }
+    if (event.target.id == 'duration4'){
+      this.setState({duration: event.target.value});
+      if(this.state.promo_code === PROMO_CODE_MAPID){
+        if (this.state.license === 'lite'){
+          this.setState({amount: (LITE_PRICE * 12)*0.5});
+        }
+        else{
+          this.setState({amount: (PRO_PRICE * 12)*0.5});
+        }
+      }
+      else{
+        if (this.state.license === 'lite'){
+          this.setState({amount: LITE_PRICE * 12});
+        }
+        else{
+          this.setState({amount: PRO_PRICE * 12});
+        }
+      }
     }
     
   }
@@ -362,22 +496,27 @@ class BankForm extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    if (!this.state.file || !this.state.fullname || !this.state.bank || !this.state.amount || !this.state.bank_source || !this.state.account_number){
-      alert('Silahkan Lengkapi Data Pembayaran Dengan Bukti Pembayaran');
+    if(payment_count >= 1){
+      alert('You already have a payment pending. Please wait until your payment get confirmed.');
     }
     else{
-      this.fileUpload(this.state.file).then(response => {
-        console.log("Respon dari sebuah data: ", response.data);
-        if(response.data === 'success'){
-          
-        }
-        else if(response.data === 'extension'){
-  
-        }
-        else{
-  
-        }
-      });
+      if (!this.state.file || !this.state.fullname || !this.state.bank || !this.state.amount || !this.state.bank_source || !this.state.account_number){
+        alert('Silahkan Lengkapi Data Pembayaran Dengan Bukti Pembayaran');
+      }
+      else{
+        this.fileUpload(this.state.file).then(response => {
+          console.log("Respon dari sebuah data: ", response.data);
+          if(response.data === 'success'){
+            alert('Payment info submitted, please wait for confirmation');
+          }
+          else if(response.data === 'error'){
+            alert('Cannot submit payment info, please try again');
+          }
+          else{
+            alert('Something goes wrong, please try again');
+          }
+        });
+      }
     }
   };
 
@@ -396,7 +535,10 @@ class BankForm extends React.Component {
     formData.append("bank_source", this.state.bank_source);
     formData.append("amount", this.state.amount);
     formData.append("etc", this.state.etc);
+    formData.append("promo_code", this.state.promo_code);
     formData.append("license", this.state.license);
+    formData.append("duration", this.state.duration);
+    formData.append("cycle_count", this.state.cycle_count);
     console.log("Filekey: ", file.name);
 
     const url = SERVER_URL+'/api-paymentupload';
@@ -413,6 +555,16 @@ class BankForm extends React.Component {
 
     const customInputText = {
       color: 'black'
+    };
+
+    var imgsource = 'https://s3-us-west-2.amazonaws.com/geomapid-assets/img/price.jpeg';
+
+    var priceStyle = {
+      width: '1000px',
+      height: '600px',
+      backgroundImage: 'url(' + imgsource + ')',
+      backgroundSize: 'contain',
+      backgroundRepeat: 'no-repeat'
     };
 
     const rowStyle2 = (row, rowIndex) => {
@@ -439,11 +591,16 @@ class BankForm extends React.Component {
     return (
 
       <div>
+      <Grid container>
+              <ItemGrid xs={12} sm={12} md={12}>
+              <div style = {priceStyle}></div>
+              </ItemGrid>
+              </Grid>
         <Grid container>
           <ItemGrid xs={12} sm={12} md={11}>
             <form onSubmit={this.handleSubmit}>
               <Grid container>
-                <ItemGrid xs={12} sm={12} md={8}>
+                <ItemGrid xs={12} sm={12} md={11}>
                   <RegularCard
                     headerColor="blue"
                     cardTitle="Insert your payment information"
@@ -472,7 +629,7 @@ class BankForm extends React.Component {
                         <Grid container>
                           <ItemGrid xs={12} sm={12} md={12}>
                             <FormGroup controlId="formControlsSelect">
-                              <ControlLabel>Bank Asal</ControlLabel>
+                              <ControlLabel>Source Bank</ControlLabel>
                               <FormControl componentClass="select" placeholder="select" id="bank_source" value={this.state.bank_source} onChange={this.handleChange}>
                                 <option value='bca'>Bank BCA</option>
                                 <option value='mandiri'>Bank Mandiri</option>
@@ -508,7 +665,7 @@ class BankForm extends React.Component {
                               controlId="formBasicText"
                               validationState={this.getValidationState()}
                             >
-                              <ControlLabel>Nomer Rekening</ControlLabel>
+                              <ControlLabel>Bank Account Number</ControlLabel>
                               <FormControl
                                 id="account_number"
                                 type="text"
@@ -524,9 +681,8 @@ class BankForm extends React.Component {
                         <Grid container>
                           <ItemGrid xs={12} sm={12} md={12}>
                             <FormGroup controlId="formControlsSelect">
-                              <ControlLabel>Bank Tujuan</ControlLabel>
+                              <ControlLabel>Destination Bank Mandiri (130-00-8877878-5 a.n PT. Multi Areal Planing Indonesia)</ControlLabel>
                               <FormControl componentClass="select" placeholder="select" id="bank" value={this.state.bank} onChange={this.handleChange}>
-                                <option value='bca'>BCA</option>
                                 <option value='mandiri'>Bank Mandiri</option>
                               </FormControl>
                             </FormGroup>
@@ -538,26 +694,7 @@ class BankForm extends React.Component {
                               controlId="formBasicText"
                               validationState={this.getValidationState()}
                             >
-                              <ControlLabel>Jumlah Transfer</ControlLabel>
-                              <FormControl
-                                id="amount"
-                                type="number"
-                                value={this.state.amount}
-                                placeholder="Enter Amount"
-                                onChange={this.handleChange}
-                              />
-                              <FormControl.Feedback />
-                              <HelpBlock></HelpBlock>
-                            </FormGroup>
-                          </ItemGrid>
-                        </Grid>
-                        <Grid container>
-                          <ItemGrid xs={12} sm={12} md={12}>
-                            <FormGroup
-                              controlId="formBasicText"
-                              validationState={this.getValidationState()}
-                            >
-                              <ControlLabel>Keterangan</ControlLabel>
+                              <ControlLabel>Notes</ControlLabel>
                               <FormControl
                                 id="etc"
                                 type="text"
@@ -572,17 +709,66 @@ class BankForm extends React.Component {
                         </Grid>
                         <Grid container>
                           <ItemGrid xs={12} sm={12} md={12}>
+                            <FormGroup
+                              controlId="formBasicText"
+                              validationState={this.getValidationState()}
+                            >
+                              <ControlLabel>Transfer Amount (IDR)</ControlLabel>
+                              
+                              <p><span><strong><NumberFormat value={this.state.amount} displayType={'text'} thousandSeparator={true} prefix={'Rp '} /></strong></span></p>
+                              <HelpBlock></HelpBlock>
+                            </FormGroup>
+                          </ItemGrid>
+                        </Grid>
+                        <Grid container>
+                          <ItemGrid xs={12} sm={12} md={12}>
+                          <ControlLabel>Select Your Plan</ControlLabel>
                             <FormGroup>
-                            <Radio name="radioGroup" defaultChecked defaultValue id="license1" value="lite" onChange={this.handleChange} inline>
+                              <Radio name="radioGroup" defaultChecked defaultValue id="license1" value="lite" onChange={this.handleChange} inline>
                               Lite
                             </Radio>{' '}
-                            <Radio name="radioGroup" id="license2" value="pro" onChange={this.handleChange} inline>
-                              Pro
-                            </Radio>{' '}
-                            <Radio name="radioGroup" id="license3" value="enterprise" onChange={this.handleChange} inline>
-                              Enterprise
+                              <Radio name="radioGroup" id="license2" value="pro" onChange={this.handleChange} inline>
+                                Pro
                             </Radio>
-                          </FormGroup>
+                            </FormGroup>
+                          </ItemGrid>
+                        </Grid>
+                        <Grid container>
+                          <ItemGrid xs={12} sm={12} md={12}>
+                          <ControlLabel>Membership Duration</ControlLabel>
+                            <FormGroup>
+                              <Radio name="durationRadioGroup" defaultChecked defaultValue id="duration1" value="1" onChange={this.handleChange} inline>
+                                1 month
+                            </Radio>{' '}
+                              <Radio name="durationRadioGroup" id="duration2" value="3" onChange={this.handleChange} inline>
+                                3 month
+                            </Radio>{' '}
+                              <Radio name="durationRadioGroup" id="duration3" value="6" onChange={this.handleChange} inline>
+                                6 month
+                            </Radio>
+                              <Radio name="durationRadioGroup" id="duration4" value="12" onChange={this.handleChange} inline>
+                                  1 Year
+                              </Radio>
+                            </FormGroup>
+                          </ItemGrid>
+                        </Grid>
+                        <Grid container>
+                          <ItemGrid xs={12} sm={12} md={12}>
+                            <FormGroup
+                              controlId="formBasicText"
+                              validationState={this.getValidationState()}
+                            >
+                              <ControlLabel>Promo Code</ControlLabel>
+                              <FormControl
+                                id="promo_code"
+                                type="text"
+                                value={this.state.promo_code}
+                                placeholder="Enter promo code here to get limited offers"
+                                onChange={this.handleChange}
+                              />
+                              <FormControl.Feedback />
+                              <HelpBlock></HelpBlock>
+                            </FormGroup>
                           </ItemGrid>
                         </Grid>
                         <Grid container>
@@ -611,8 +797,7 @@ class BankForm extends React.Component {
                     footer={<Button color="bluemapid" type="submit" value="Submit">Submit Payment</Button>}
                   />
                 </ItemGrid>
-                <ItemGrid xs={12} sm={12} md={4}>
-
+                <ItemGrid xs={12} sm={12} md={1}>
                 </ItemGrid>
               </Grid>
             </form>
@@ -624,7 +809,6 @@ class BankForm extends React.Component {
 
         <Grid container>
           <ItemGrid xs={12} sm={12} md={12}>
-
           </ItemGrid>
         </Grid>
 
@@ -633,44 +817,57 @@ class BankForm extends React.Component {
             <RegularCard
               headerColor="blue"
               plainCard
-              cardTitle="Current Active Payment"
+              cardTitle={'Current Active Membership ' + this.state.current_license}
               cardSubtitle={'Your Active Subscription'}
               content={
-                <BootstrapTable
-                  keyField="id"
-                  data={this.state.rowData}
-                  columns={columns}
-                  striped
-                  hover
-                  condensed
-                  bordered={true}
-                  rowStyle={rowStyle2}
-                  noDataIndication="No ioT Layer is Uploaded"
-                  filter={filterFactory()}
-                  cellEdit={cellEditFactory({
-                    mode: 'click',
-                    blurToSave: true,
-                    beforeSaveCell: (oldValue, newValue, row, column) => { console.log('Before Saving Cell!!'); },
-                    afterSaveCell: (oldValue, newValue, row, column) => {
-                      console.log('After Saving Cell!!', ' row ', row._id);
-                      console.log('After saving cell column: ', column);
-                      if (column.dataField == "delete") {
-                        console.log("Delete activated!");
-                        //this.deleteRemoteData(row._id);
-                        //this.testGeojsonUpdate(row._id, row.location, row.color, row.icon, row.filename, row._id)
-                      }
-                      if (column.dataField == "edit") {
-                        console.log("Edit Layer activated!");
-                        //this.editRemoteData(row.location);
-                        /*this.setState({
-                          selectedLocation: row.location,
-                          selectedFilename: row.filename,
-                          geojsonModal: true
-                        });*/
-                      }
-                    }
-                  })}
-                />
+                <div>
+                  <Grid container>
+                    <ItemGrid xs={12} sm={12} md={12}>
+                      <p><strong>{'Membership expired '}<Moment fromNow>{this.state.current_expire_date}</Moment></strong></p>
+                    </ItemGrid>
+
+                  </Grid>
+                  <Grid container>
+                    <ItemGrid xs={12} sm={12} md={12}>
+                      <BootstrapTable
+                        keyField="id"
+                        data={this.state.rowData}
+                        columns={columns}
+                        striped
+                        hover
+                        condensed
+                        bordered={true}
+                        rowStyle={rowStyle2}
+                        noDataIndication="No Payment is Submitted"
+                        filter={filterFactory()}
+                        cellEdit={cellEditFactory({
+                          mode: 'click',
+                          blurToSave: true,
+                          beforeSaveCell: (oldValue, newValue, row, column) => { console.log('Before Saving Cell!!'); },
+                          afterSaveCell: (oldValue, newValue, row, column) => {
+                            console.log('After Saving Cell!!', ' row ', row._id);
+                            console.log('After saving cell column: ', column);
+                            if (column.dataField == "delete") {
+                              console.log("Delete activated!");
+                              //this.deleteRemoteData(row._id);
+                              //this.testGeojsonUpdate(row._id, row.location, row.color, row.icon, row.filename, row._id)
+                            }
+                            if (column.dataField == "edit") {
+                              console.log("Edit Layer activated!");
+                              //this.editRemoteData(row.location);
+                              /*this.setState({
+                                selectedLocation: row.location,
+                                selectedFilename: row.filename,
+                                geojsonModal: true
+                              });*/
+                            }
+                          }
+                        })}
+                      />
+                    </ItemGrid>
+
+                  </Grid>
+                </div>
               }
             />
           </ItemGrid>

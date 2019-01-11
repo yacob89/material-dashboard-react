@@ -548,7 +548,7 @@ class UploadList extends React.Component {
 
   editRemoteData(location) {
     //var win = window.open('http://geojson.io/#data=data:text/x-url,'+location, '_blank');
-    var win = window.open('http://flow.mapid.io:8080/#data=data:text/x-url,'+location, '_blank');
+    var win = window.open('http://34.209.242.8:8080/#data=data:text/x-url,'+location, '_blank');
     //var win = window.open('http://localhost:8080/#data=data:text/x-url,'+location, '_blank');
   }
 

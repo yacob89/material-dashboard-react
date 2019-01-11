@@ -3,6 +3,7 @@ import UserProfile from "views/UserProfile/UserProfile.jsx";
 import TableList from "views/TableList/TableList.jsx";
 import UploadList from "views/UploadList/UploadList.jsx";
 import Typography from "views/Typography/Typography.jsx";
+import Community from "views/Community/Community.jsx";
 import Icons from "views/Icons/Icons.jsx";
 import Maps from "views/Maps/Maps.jsx";
 import NotificationsPage from "views/Notifications/Notifications.jsx";
@@ -79,6 +80,13 @@ const appRoutes = [
     navbarName: "InternetOfThings",
     icon: BubbleChart,
     component: InternetOfThings
+  },
+  {
+    path: "/community",
+    sidebarName: "Community",
+    navbarName: "Community",
+    icon: LibraryBooks,
+    component: Community
   },
   {
     path: "/bankform",

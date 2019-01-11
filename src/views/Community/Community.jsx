@@ -12,9 +12,7 @@ import Loader from 'react-loader-advanced';
 import Spinner from 'react-spinkit';
 
 // Components
-import FileBrowser, { BaseFileConnectors, FileRenderers } from 'react-keyed-file-browser'
-import 'views/Typography/react-keyed-file-browser.css'
-import 'views/Typography/typography.css'
+import 'views/Community/typography.css'
 import Moment from 'moment'
 
 const customMessageElement = (
@@ -377,17 +375,6 @@ class Community extends React.Component {
               cardSubtitle={'Total Uploaded Layer: ' + this.state.totalUploaded + " / 5" }
               content={
                 <div>
-                  <FileBrowser
-                    files={this.state.files}
-                    onCreateFolder={this.handleCreateFolder}
-                    onCreateFiles={this.handleCreateFiles}
-                    onMoveFolder={this.handleRenameFolder}
-                    onMoveFile={this.handleRenameFile}
-                    onRenameFolder={this.handleRenameFolder}
-                    onRenameFile={this.handleRenameFile}
-                    onDeleteFolder={this.handleDeleteFolder}
-                    onDeleteFile={this.handleDeleteFile}
-                  />
                   <Grid container>
                     <ItemGrid xs={12} sm={12} md={8}>
                       <form onSubmit={this.onFormSubmit}>

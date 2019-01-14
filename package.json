@@ -85,7 +85,7 @@
     "uuid": "^3.3.2"
   },
   "scripts": {
-    "start": "serve -s build",
+    "start": "NODE_PATH=./src react-scripts start",
     "build": "NODE_PATH=./src react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
@@ -101,7 +101,7 @@
   "bugs": {
     "url": "https://github.com/creativetimofficial/material-dashboard-react/issues"
   },
-  "homepage": "https://flow.mapid.io",
+  "homepage": "http://localhost:5000",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-flow": "^6.23.0",

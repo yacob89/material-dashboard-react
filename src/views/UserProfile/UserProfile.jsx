@@ -79,8 +79,7 @@ class UserProfile extends React.Component {
       avatarimg:null,
       storage: 0,
       accepted: [],
-      rejected: [],
-      clientToken: null
+      rejected: []
     };
     this.loadUserProfile = this.loadUserProfile.bind(this);
     this.createFolderOnClick = this.createFolderOnClick.bind(this);
@@ -98,15 +97,6 @@ class UserProfile extends React.Component {
     this.createFolderOnClick();
     setTimeout(this.loadUserProfile(), 2000);
     //this.loadUserProfile();
-
-    // Get a client token for authorization from your server
-
-    axios.get(SERVER_URL + "/client_token").then(response => {
-      // handle success
-      this.setState({
-        clientToken: response.data
-      });
-    });
   }
 
   async componentWillMount() {
@@ -494,232 +484,224 @@ class UserProfile extends React.Component {
       </div>
     ));
 
-    if (!this.state.clientToken) {
-      return (
-        <div>
-          <h1>Loading...</h1>
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <Grid container>
-            <ItemGrid xs={12} sm={12} md={8}>
-              <form onSubmit={this.handleSubmit}>
+    return (
+      <div>
+        <Grid container>
+          <ItemGrid xs={12} sm={12} md={8}>
+            <form onSubmit={this.handleSubmit}>
+              <RegularCard
+                headerColor="blue"
+                cardTitle="My Profile"
+                cardSubtitle={auth.getUserInfo().username}
+                content={
+                  <div>
+                    <Grid container>
+                      <ItemGrid xs={12} sm={12} md={11}>
+                        <FormGroup
+                          controlId="formBasicText"
+                          validationState={this.getValidationState()}
+                        >
+                          <ControlLabel>First Name</ControlLabel>
+                          <FormControl
+                            id="firstname"
+                            type="text"
+                            value={this.state.firstname}
+                            placeholder="Enter text"
+                            onChange={this.handleChange}
+                          />
+                          <FormControl.Feedback />
+                          <HelpBlock />
+                        </FormGroup>
+                      </ItemGrid>
+                      <ItemGrid xs={12} sm={12} md={1} />
+                    </Grid>
+
+                    <Grid container>
+                      <ItemGrid xs={12} sm={12} md={11}>
+                        <FormGroup
+                          controlId="formBasicText"
+                          validationState={this.getValidationState()}
+                        >
+                          <ControlLabel>Last Name</ControlLabel>
+                          <FormControl
+                            id="lastname"
+                            type="text"
+                            value={this.state.lastname}
+                            placeholder="Enter text"
+                            onChange={this.handleChange}
+                          />
+                          <FormControl.Feedback />
+                          <HelpBlock />
+                        </FormGroup>
+                      </ItemGrid>
+                      <ItemGrid xs={12} sm={12} md={1} />
+                    </Grid>
+
+                    <Grid container>
+                      <ItemGrid xs={12} sm={12} md={11}>
+                        <FormGroup
+                          controlId="formBasicText"
+                          validationState={this.getValidationState()}
+                        >
+                          <ControlLabel>Email Address</ControlLabel>
+                          <FormControl
+                            id="email"
+                            type="email"
+                            value={this.state.email}
+                            placeholder="Email Address"
+                            onChange={this.handleChange}
+                            disabled="true"
+                          />
+                          <FormControl.Feedback />
+                          <HelpBlock />
+                        </FormGroup>
+                      </ItemGrid>
+                      <ItemGrid xs={12} sm={12} md={1} />
+                    </Grid>
+
+                    <Grid container>
+                      <ItemGrid xs={12} sm={12} md={11}>
+                        <FormGroup
+                          controlId="formBasicText"
+                          validationState={this.getValidationState()}
+                        >
+                          <ControlLabel>Street Address</ControlLabel>
+                          <FormControl
+                            id="address"
+                            type="text"
+                            value={this.state.address}
+                            placeholder="Enter Street Address"
+                            onChange={this.handleChange}
+                          />
+                          <FormControl.Feedback />
+                          <HelpBlock />
+                        </FormGroup>
+                      </ItemGrid>
+                      <ItemGrid xs={12} sm={12} md={1} />
+                    </Grid>
+
+                    <Grid container>
+                      <ItemGrid xs={12} sm={12} md={11}>
+                        <FormGroup
+                          controlId="formBasicText"
+                          validationState={this.getValidationState()}
+                        >
+                          <ControlLabel>Post Code</ControlLabel>
+                          <FormControl
+                            id="postcode"
+                            type="text"
+                            value={this.state.postcode}
+                            placeholder="Enter Post Code"
+                            onChange={this.handleChange}
+                          />
+                          <FormControl.Feedback />
+                          <HelpBlock />
+                        </FormGroup>
+                      </ItemGrid>
+                      <ItemGrid xs={12} sm={12} md={1} />
+                    </Grid>
+
+                    <Grid container>
+                      <ItemGrid xs={12} sm={12} md={11}>
+                        <FormGroup
+                          controlId="formBasicText"
+                          validationState={this.getValidationState()}
+                        >
+                          <ControlLabel>Country</ControlLabel>
+                          <FormControl
+                            id="country"
+                            type="text"
+                            value={this.state.country}
+                            placeholder="Enter Country"
+                            onChange={this.handleChange}
+                          />
+                          <FormControl.Feedback />
+                          <HelpBlock />
+                        </FormGroup>
+                      </ItemGrid>
+                      <ItemGrid xs={12} sm={12} md={1} />
+                    </Grid>
+
+                    <Grid container>
+                      <ItemGrid xs={12} sm={12} md={11}>
+                        <FormGroup
+                          controlId="formBasicText"
+                          validationState={this.getValidationState()}
+                        >
+                          <ControlLabel>Organization</ControlLabel>
+                          <FormControl
+                            id="organization"
+                            type="text"
+                            value={this.state.organization}
+                            placeholder="Enter Organization"
+                            onChange={this.handleChange}
+                          />
+                          <FormControl.Feedback />
+                          <HelpBlock />
+                        </FormGroup>
+                      </ItemGrid>
+                      <ItemGrid xs={12} sm={12} md={1} />
+                    </Grid>
+                  </div>
+                }
+                footer={
+                  <Button color="bluemapid" type="submit" value="Submit">
+                    Update Profile
+                  </Button>
+                }
+              />
+            </form>
+          </ItemGrid>
+          <ItemGrid xs={12} sm={12} md={4}>
+            <Grid container>
+              <ProfileCard
+                avatar={avatardisplay}
+                subtitle={this.state.account_type + " Membership"}
+                title={auth.getUserInfo().username}
+                description={auth.getUserInfo().email}
+              />
+            </Grid>
+            <Grid container>
+              <ItemGrid xs={12} sm={12} md={4}>
+                <Button
+                  color="danger"
+                  onClick={() => {
+                    auth.clearAppStorage();
+                    this.props.history.push("/auth/login");
+                  }}
+                  round
+                >
+                  Logout
+                </Button>
+              </ItemGrid>
+              <ItemGrid xs={12} sm={12} md={4} />
+              <ItemGrid xs={12} sm={12} md={4} />
+            </Grid>
+            <Grid container>
+              <ItemGrid xs={12} sm={12} md={12}>
                 <RegularCard
                   headerColor="blue"
-                  cardTitle="My Profile"
-                  cardSubtitle={auth.getUserInfo().username}
-                  content={
-                    <div>
-                      <Grid container>
-                        <ItemGrid xs={12} sm={12} md={11}>
-                          <FormGroup
-                            controlId="formBasicText"
-                            validationState={this.getValidationState()}
-                          >
-                            <ControlLabel>First Name</ControlLabel>
-                            <FormControl
-                              id="firstname"
-                              type="text"
-                              value={this.state.firstname}
-                              placeholder="Enter text"
-                              onChange={this.handleChange}
-                            />
-                            <FormControl.Feedback />
-                            <HelpBlock />
-                          </FormGroup>
-                        </ItemGrid>
-                        <ItemGrid xs={12} sm={12} md={1} />
-                      </Grid>
-
-                      <Grid container>
-                        <ItemGrid xs={12} sm={12} md={11}>
-                          <FormGroup
-                            controlId="formBasicText"
-                            validationState={this.getValidationState()}
-                          >
-                            <ControlLabel>Last Name</ControlLabel>
-                            <FormControl
-                              id="lastname"
-                              type="text"
-                              value={this.state.lastname}
-                              placeholder="Enter text"
-                              onChange={this.handleChange}
-                            />
-                            <FormControl.Feedback />
-                            <HelpBlock />
-                          </FormGroup>
-                        </ItemGrid>
-                        <ItemGrid xs={12} sm={12} md={1} />
-                      </Grid>
-
-                      <Grid container>
-                        <ItemGrid xs={12} sm={12} md={11}>
-                          <FormGroup
-                            controlId="formBasicText"
-                            validationState={this.getValidationState()}
-                          >
-                            <ControlLabel>Email Address</ControlLabel>
-                            <FormControl
-                              id="email"
-                              type="email"
-                              value={this.state.email}
-                              placeholder="Email Address"
-                              onChange={this.handleChange}
-                              disabled="true"
-                            />
-                            <FormControl.Feedback />
-                            <HelpBlock />
-                          </FormGroup>
-                        </ItemGrid>
-                        <ItemGrid xs={12} sm={12} md={1} />
-                      </Grid>
-
-                      <Grid container>
-                        <ItemGrid xs={12} sm={12} md={11}>
-                          <FormGroup
-                            controlId="formBasicText"
-                            validationState={this.getValidationState()}
-                          >
-                            <ControlLabel>Street Address</ControlLabel>
-                            <FormControl
-                              id="address"
-                              type="text"
-                              value={this.state.address}
-                              placeholder="Enter Street Address"
-                              onChange={this.handleChange}
-                            />
-                            <FormControl.Feedback />
-                            <HelpBlock />
-                          </FormGroup>
-                        </ItemGrid>
-                        <ItemGrid xs={12} sm={12} md={1} />
-                      </Grid>
-
-                      <Grid container>
-                        <ItemGrid xs={12} sm={12} md={11}>
-                          <FormGroup
-                            controlId="formBasicText"
-                            validationState={this.getValidationState()}
-                          >
-                            <ControlLabel>Post Code</ControlLabel>
-                            <FormControl
-                              id="postcode"
-                              type="text"
-                              value={this.state.postcode}
-                              placeholder="Enter Post Code"
-                              onChange={this.handleChange}
-                            />
-                            <FormControl.Feedback />
-                            <HelpBlock />
-                          </FormGroup>
-                        </ItemGrid>
-                        <ItemGrid xs={12} sm={12} md={1} />
-                      </Grid>
-
-                      <Grid container>
-                        <ItemGrid xs={12} sm={12} md={11}>
-                          <FormGroup
-                            controlId="formBasicText"
-                            validationState={this.getValidationState()}
-                          >
-                            <ControlLabel>Country</ControlLabel>
-                            <FormControl
-                              id="country"
-                              type="text"
-                              value={this.state.country}
-                              placeholder="Enter Country"
-                              onChange={this.handleChange}
-                            />
-                            <FormControl.Feedback />
-                            <HelpBlock />
-                          </FormGroup>
-                        </ItemGrid>
-                        <ItemGrid xs={12} sm={12} md={1} />
-                      </Grid>
-
-                      <Grid container>
-                        <ItemGrid xs={12} sm={12} md={11}>
-                          <FormGroup
-                            controlId="formBasicText"
-                            validationState={this.getValidationState()}
-                          >
-                            <ControlLabel>Organization</ControlLabel>
-                            <FormControl
-                              id="organization"
-                              type="text"
-                              value={this.state.organization}
-                              placeholder="Enter Organization"
-                              onChange={this.handleChange}
-                            />
-                            <FormControl.Feedback />
-                            <HelpBlock />
-                          </FormGroup>
-                        </ItemGrid>
-                        <ItemGrid xs={12} sm={12} md={1} />
-                      </Grid>
+                  plainCard
+                  cardTitle="Upload Profile Picture"
+                  cardSubtitle={'Drag your photo here '}
+                  content={<section>
+                    <div className="dropzone">
+                      <Dropzone
+                        accept="image/*"
+                        onDrop={this.onDrop.bind(this)}
+                      />
                     </div>
-                  }
-                  footer={
-                    <Button color="bluemapid" type="submit" value="Submit">
-                      Update Profile
-                    </Button>
-                  }
+                    <aside style={thumbsContainer}>
+                      {thumbs}
+                    </aside>
+                  </section>}
                 />
-              </form>
-            </ItemGrid>
-            <ItemGrid xs={12} sm={12} md={4}>
-              <Grid container>
-                <ProfileCard
-                  avatar={avatardisplay}
-                  subtitle={this.state.account_type + " Membership"}
-                  title={auth.getUserInfo().username}
-                  description={auth.getUserInfo().email}
-                />
-              </Grid>
-              <Grid container>
-                <ItemGrid xs={12} sm={12} md={4}>
-                  <Button
-                    color="danger"
-                    onClick={() => {
-                      auth.clearAppStorage();
-                      this.props.history.push("/auth/login");
-                    }}
-                    round
-                  >
-                    Logout
-                  </Button>
-                </ItemGrid>
-                <ItemGrid xs={12} sm={12} md={4} />
-                <ItemGrid xs={12} sm={12} md={4} />
-              </Grid>
-              <Grid container>
-                <ItemGrid xs={12} sm={12} md={12}>
-                  <RegularCard
-                    headerColor="blue"
-                    plainCard
-                    cardTitle="Upload Profile Picture"
-                    cardSubtitle={'Drag your photo here '}
-                    content={<section>
-                      <div className="dropzone">
-                        <Dropzone
-                          accept="image/*"
-                          onDrop={this.onDrop.bind(this)}
-                        />
-                      </div>
-                      <aside style={thumbsContainer}>
-                        {thumbs}
-                      </aside>
-                    </section>}
-                  />
-                </ItemGrid>
-              </Grid>
-            </ItemGrid>
-          </Grid>
-        </div>
-      );
-    }
+              </ItemGrid>
+            </Grid>
+          </ItemGrid>
+        </Grid>
+      </div>
+    );
   }
 }
 
